@@ -143,6 +143,38 @@
   .stat .val{font-size:2.2rem;font-weight:800;letter-spacing:-1px;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
   .stat .lbl{color:var(--muted);font-size:.88rem;margin-top:6px}
 
+  /* ---------- team ---------- */
+  .team{display:flex;gap:20px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+  .member{
+    background:var(--panel);border:1px solid var(--border);border-radius:16px;
+    padding:32px 24px;text-align:center;width:270px;transition:.25s;
+  }
+  .member:hover{transform:translateY(-5px);border-color:var(--accent)}
+  .member.ceo{
+    border-color:rgba(124,92,255,.55);
+    background:linear-gradient(180deg,rgba(124,92,255,.1),var(--panel) 60%);
+    padding-top:40px;padding-bottom:40px;
+  }
+  .avatar{
+    width:96px;height:96px;border-radius:50%;margin:0 auto 18px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:1.6rem;font-weight:700;color:#fff;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    border:2px solid var(--border);transition:.3s;
+  }
+  .member.ceo .avatar{width:112px;height:112px;font-size:1.9rem}
+  .member:hover .avatar{transform:scale(1.08);box-shadow:0 0 32px rgba(124,92,255,.45)}
+  .member h3{font-size:1.08rem}
+  .member .role{font-family:var(--mono);font-size:.78rem;color:var(--accent-2);margin:4px 0 14px}
+  .member .bio-short{color:var(--muted);font-size:.86rem}
+  .member .bio-full{
+    color:var(--muted);font-size:.86rem;
+    max-height:0;opacity:0;overflow:hidden;transition:max-height .35s ease,opacity .35s ease;
+  }
+  .member:hover .bio-short{display:none}
+  .member:hover .bio-full{max-height:200px;opacity:1}
+  @media(max-width:900px){.team{flex-direction:column;align-items:center}.member.ceo{order:-1}}
+
   /* ---------- faq ---------- */
   details{
     background:var(--panel);border:1px solid var(--border);border-radius:12px;
@@ -188,6 +220,7 @@
       <a href="#servicos">Serviços</a>
       <a href="#processo">Como funciona</a>
       <a href="#resultados">Resultados</a>
+      <a href="#socios">Sócios</a>
       <a href="#faq">FAQ</a>
     </div>
     <a href="#contato" class="nav-cta">Falar com a Zync</a>
@@ -260,6 +293,16 @@
       <h3>Segundo Cérebro de IA</h3>
       <p>Uma central de conhecimento com IA que organiza as informações do seu negócio e responde como alguém do time.</p>
     </div>
+    <div class="card reveal">
+      <span class="icon">consult/</span>
+      <h3>Consultoria Empresarial</h3>
+      <p>Diagnóstico e direcionamento estratégico para destravar o crescimento: processos, posicionamento e plano de ação.</p>
+    </div>
+    <div class="card reveal">
+      <span class="icon">launch/</span>
+      <h3>Co-produção de Lançamentos</h3>
+      <p>Entramos como sócios do seu infoproduto: estratégia, tráfego, páginas e automação do lançamento de ponta a ponta.</p>
+    </div>
   </div>
 </section>
 
@@ -303,6 +346,35 @@
   </div>
 </section>
 
+<section id="socios" class="container">
+  <div class="sec-tag">socios</div>
+  <h2 class="sec-title">Quem está por trás da Zync.</h2>
+  <p class="sec-sub">Três sócios, três especialidades — um só objetivo: fazer sua empresa crescer.</p>
+  <div class="team">
+    <div class="member reveal">
+      <div class="avatar">GB</div>
+      <h3>Gabriel Briglia</h3>
+      <div class="role">CMO</div>
+      <p class="bio-short">Estratégia de marketing e aquisição.</p>
+      <p class="bio-full">Lidera o marketing da Zync e dos clientes: posicionamento, tráfego pago e estratégias de aquisição que transformam atenção em receita.</p>
+    </div>
+    <div class="member ceo reveal">
+      <div class="avatar">NG</div>
+      <h3>Natham Gil</h3>
+      <div class="role">CEO</div>
+      <p class="bio-short">Visão, estratégia e crescimento.</p>
+      <p class="bio-full">À frente da visão e da operação da Zync. Conecta estratégia de negócio com execução, garantindo que cada projeto entregue crescimento real ao cliente.</p>
+    </div>
+    <div class="member reveal">
+      <div class="avatar">DV</div>
+      <h3>Daniel Vaz</h3>
+      <div class="role">CTO</div>
+      <p class="bio-short">Tecnologia, IA e automação.</p>
+      <p class="bio-full">Responsável pela engenharia da Zync: agentes de IA, sistemas web e automações que fazem o motor de crescimento rodar 24/7.</p>
+    </div>
+  </div>
+</section>
+
 <section id="faq" class="container" style="max-width:760px">
   <div class="sec-tag">faq</div>
   <h2 class="sec-title">Perguntas frequentes</h2>
@@ -341,6 +413,9 @@
 </footer>
 
 <script>
+  if('scrollRestoration' in history)history.scrollRestoration='manual';
+  if(!location.hash)window.scrollTo(0,0);
+  addEventListener('load',()=>{if(!location.hash)window.scrollTo(0,0)});
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
