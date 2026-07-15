@@ -70,11 +70,15 @@
   ul.clean li::before{content:'✓';color:var(--green);position:absolute;left:0;font-family:var(--mono)}
 
   @media print{
-    body{overflow:visible;background:var(--bg)}
-    .slide{display:flex!important;position:relative;inset:auto;height:100vh;page-break-after:always;animation:none}
-    .hud,.hint,.bar-prog{display:none}
+    *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+    html,body{overflow:visible;background:var(--bg);width:13.33in}
+    .slide{display:flex!important;position:relative;inset:auto;width:13.33in;height:7.5in;page-break-after:always;break-after:page;animation:none;padding:0.6in 1in}
+    .grad{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:var(--accent-2)!important}
+    .stat .v{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:var(--accent-2)!important}
+    .hud,.hint,.bar-prog{display:none!important}
+    .foot{position:absolute;bottom:0.5in;left:1in}
   }
-  @page{size:landscape;margin:0}
+  @page{size:13.33in 7.5in;margin:0}
 </style>
 </head>
 <body>
