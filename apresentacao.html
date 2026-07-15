@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zync — Apresentação Comercial</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --bg:#0a0a0f;--panel:#13131d;--border:#22222f;--text:#e8e8f0;--muted:#8b8b9e;
+    --dim:#5c5c70;--accent:#7c5cff;--accent-2:#4dd0e1;--green:#4ade80;
+    --mono:'SFMono-Regular',Consolas,Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#000;color:var(--text);font-family:var(--sans);overflow:hidden}
+  ::selection{background:var(--accent);color:#fff}
+
+  .slide{
+    position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;
+    padding:6vh 8vw;background:var(--bg);
+    background-image:linear-gradient(#1a1a26 1px,transparent 1px),linear-gradient(90deg,#1a1a26 1px,transparent 1px);
+    background-size:48px 48px;
+  }
+  .slide.active{display:flex;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  .tag{font-family:var(--mono);font-size:clamp(.7rem,1.2vw,.95rem);color:var(--accent);margin-bottom:2vh}
+  .tag::before{content:'// '}
+  h1{font-size:clamp(2rem,5.5vw,4.2rem);letter-spacing:-2px;line-height:1.1;font-weight:800}
+  h2{font-size:clamp(1.5rem,3.6vw,2.8rem);letter-spacing:-1px;margin-bottom:3.5vh;font-weight:700}
+  .grad{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);font-size:clamp(.95rem,1.8vw,1.35rem);max-width:60ch;margin-top:2.5vh}
+  .mono{font-family:var(--mono)}
+
+  .grid{display:grid;gap:1.4vw}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:2.2vh 1.4vw}
+  .box.feat{border-color:rgba(124,92,255,.6);background:linear-gradient(180deg,rgba(124,92,255,.1),var(--panel) 60%)}
+  .box .ic{font-family:var(--mono);font-size:clamp(.65rem,1vw,.8rem);color:var(--accent-2);background:var(--bg);border:1px solid var(--border);display:inline-block;padding:.5vh .6vw;border-radius:8px;margin-bottom:1.2vh}
+  .box h3{font-size:clamp(.95rem,1.7vw,1.3rem);margin-bottom:.8vh}
+  .box p{color:var(--muted);font-size:clamp(.75rem,1.3vw,1rem);line-height:1.5}
+  .num{font-family:var(--mono);color:var(--accent);font-size:clamp(.8rem,1.4vw,1.05rem);display:block;margin-bottom:1vh}
+
+  .avatar{width:clamp(64px,8vw,110px);height:clamp(64px,8vw,110px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:clamp(1.2rem,2.2vw,1.8rem);font-weight:700;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2));margin:0 auto 1.6vh}
+  .member{text-align:center}
+  .member .role{font-family:var(--mono);font-size:clamp(.7rem,1.2vw,.9rem);color:var(--accent-2);margin:.5vh 0 1vh}
+
+  .stat .v{font-size:clamp(1.8rem,4vw,3.2rem);font-weight:800;letter-spacing:-1px;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat .l{color:var(--muted);font-size:clamp(.75rem,1.3vw,1rem);margin-top:.6vh}
+
+  .term{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:3vh;max-width:640px}
+  .term .bar{display:flex;gap:7px;padding:10px 14px;background:#101018;border-bottom:1px solid var(--border)}
+  .term .bar span{width:10px;height:10px;border-radius:50%}
+  .term .body{padding:2vh 1.6vw;font-family:var(--mono);font-size:clamp(.72rem,1.3vw,.95rem);line-height:2}
+  .ok{color:var(--green)}.cy{color:var(--accent-2)}.dm{color:var(--dim)}
+
+  .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:clamp(.65rem,1.1vw,.85rem);color:var(--accent-2);border:1px solid var(--border);background:var(--panel);padding:.8vh 1.2vw;border-radius:99px;margin-bottom:3vh;width:fit-content}
+  .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+  .hud{position:fixed;bottom:18px;right:24px;font-family:var(--mono);font-size:.75rem;color:var(--dim);z-index:10}
+  .hint{position:fixed;bottom:18px;left:24px;font-family:var(--mono);font-size:.7rem;color:var(--dim);z-index:10}
+  .bar-prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent-2));z-index:10;transition:width .3s}
+
+  .foot{position:absolute;bottom:3.5vh;left:8vw;font-family:var(--mono);font-size:clamp(.6rem,1vw,.78rem);color:var(--dim)}
+  ul.clean{list-style:none;margin-top:1vh}
+  ul.clean li{color:var(--muted);font-size:clamp(.85rem,1.6vw,1.2rem);padding:.9vh 0;padding-left:1.6em;position:relative}
+  ul.clean li::before{content:'✓';color:var(--green);position:absolute;left:0;font-family:var(--mono)}
+
+  @media print{
+    body{overflow:visible;background:var(--bg)}
+    .slide{display:flex!important;position:relative;inset:auto;height:100vh;page-break-after:always;animation:none}
+    .hud,.hint,.bar-prog{display:none}
+  }
+  @page{size:landscape;margin:0}
+</style>
+</head>
+<body>
+
+<!-- 1 CAPA -->
+<section class="slide active">
+  <div class="badge"><span class="dot"></span>apresentação comercial — 2026</div>
+  <h1><span class="grad mono">zync_</span></h1>
+  <h1 style="font-size:clamp(1.6rem,4vw,3rem);margin-top:1.5vh">Crescimento digital de ponta a ponta.</h1>
+  <p class="sub">Tráfego pago · Sites · Agentes de IA · Conteúdo automatizado · Sistemas · Consultoria</p>
+  <div class="foot">zynhub.com.br</div>
+</section>
+
+<!-- 2 QUEM SOMOS -->
+<section class="slide">
+  <div class="tag">quem-somos</div>
+  <h2>Uma agência que opera como <span class="grad">um sistema.</span></h2>
+  <p class="sub">A Zync nasceu para resolver um problema comum: empresas contratam um freelancer para o site, outro para o tráfego, outro para as redes — e nada conversa entre si.</p>
+  <p class="sub">Nós integramos tudo em um único motor de crescimento: estratégia, tecnologia e execução no mesmo lugar, com um único parceiro responsável pelo resultado.</p>
+  <div class="foot">zync_ — apresentação institucional</div>
+</section>
+
+<!-- 3 O PROBLEMA -->
+<section class="slide">
+  <div class="tag">o-problema</div>
+  <h2>Por que o marketing da maioria das empresas <span class="grad">não escala.</span></h2>
+  <div class="grid g2" style="margin-top:1vh">
+    <div class="box"><h3>Fornecedores fragmentados</h3><p>Site de um, anúncio de outro, social de um terceiro. Ninguém enxerga o funil inteiro — e o resultado se perde entre as pontas.</p></div>
+    <div class="box"><h3>Verba sem rastreamento</h3><p>Investe-se em anúncio sem saber quanto voltou. Sem dados conectados, otimizar vira chute.</p></div>
+    <div class="box"><h3>Atendimento que dorme</h3><p>Lead chega às 23h e é respondido no dia seguinte — quando já comprou do concorrente.</p></div>
+    <div class="box"><h3>Conteúdo inconstante</h3><p>Presença digital depende de alguém "ter tempo de postar". A constância morre em duas semanas.</p></div>
+  </div>
+</section>
+
+<!-- 4 A SOLUÇÃO -->
+<section class="slide">
+  <div class="tag">a-solucao</div>
+  <h2>O motor de crescimento <span class="grad mono">zync_</span></h2>
+  <p class="sub" style="margin-top:0">Módulos integrados que trabalham juntos — contratados sob medida para o momento da sua empresa.</p>
+  <div class="term">
+    <div class="bar"><span style="background:#f87171"></span><span style="background:#facc15"></span><span style="background:#4ade80"></span></div>
+    <div class="body">
+      <div><span class="cy">$</span> zync init <span style="color:var(--accent)">--cliente "sua-empresa"</span></div>
+      <div><span class="ok">✓</span> tráfego pago <span class="dm">→ campanhas ativas em Meta & Google</span></div>
+      <div><span class="ok">✓</span> site <span class="dm">→ landing page de alta conversão no ar</span></div>
+      <div><span class="ok">✓</span> agente de IA <span class="dm">→ atendendo leads 24/7 no WhatsApp</span></div>
+      <div><span class="ok">✓</span> conteúdo <span class="dm">→ posts orgânicos no automático</span></div>
+      <div><span class="cy">$</span> status: <span class="ok">crescendo ▲</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 SERVIÇOS DESTAQUE -->
+<section class="slide">
+  <div class="tag">servicos — destaques</div>
+  <h2>Os 4 módulos principais.</h2>
+  <div class="grid g2">
+    <div class="box feat"><span class="ic">ads/</span><h3>Tráfego Pago</h3><p>Campanhas em Meta e Google Ads orientadas a dados. Cada real investido é rastreado até a venda.</p></div>
+    <div class="box feat"><span class="ic">web/</span><h3>Sites & Landing Pages</h3><p>Páginas rápidas e feitas para converter visitante em cliente — não só para "estar na internet".</p></div>
+    <div class="box feat"><span class="ic">ai/</span><h3>Agentes de IA</h3><p>Atendimento, qualificação e follow-up automáticos, 24/7, com IA treinada no seu negócio.</p></div>
+    <div class="box feat"><span class="ic">content/</span><h3>Conteúdo Orgânico Automatizado</h3><p>Geração de conteúdo para redes no automático: presença constante sem equipe criando post todo dia.</p></div>
+  </div>
+</section>
+
+<!-- 6 SERVIÇOS COMPLEMENTARES -->
+<section class="slide">
+  <div class="tag">servicos — ecossistema</div>
+  <h2>E os módulos que completam o sistema.</h2>
+  <div class="grid g3">
+    <div class="box"><span class="ic">auto/</span><h3>Automação</h3><p>Processos repetitivos rodando sozinhos — menos trabalho manual, mais escala.</p></div>
+    <div class="box"><span class="ic">sys/</span><h3>Sistemas Web</h3><p>Painéis, CRMs, ferramentas internas e integrações sob medida.</p></div>
+    <div class="box"><span class="ic">brain/</span><h3>Segundo Cérebro de IA</h3><p>Central de conhecimento com IA que responde como alguém do time.</p></div>
+    <div class="box"><span class="ic">consult/</span><h3>Consultoria Empresarial</h3><p>Diagnóstico e direcionamento estratégico para destravar o crescimento.</p></div>
+    <div class="box"><span class="ic">launch/</span><h3>Co-produção de Lançamentos</h3><p>Sócios do seu infoproduto: estratégia, tráfego e automação de ponta a ponta.</p></div>
+    <div class="box" style="display:flex;align-items:center;justify-content:center"><p class="mono" style="color:var(--accent)">+ o que o seu<br>negócio pedir_</p></div>
+  </div>
+</section>
+
+<!-- 7 COMO FUNCIONA -->
+<section class="slide">
+  <div class="tag">como-funciona</div>
+  <h2>Do diagnóstico ao crescimento em <span class="grad">4 passos.</span></h2>
+  <div class="grid g4">
+    <div class="box"><span class="num">[01]</span><h3>Diagnóstico</h3><p>Entendemos seu negócio e onde está o dinheiro sendo deixado na mesa.</p></div>
+    <div class="box"><span class="num">[02]</span><h3>Plano</h3><p>Montamos a combinação certa de módulos para o seu momento.</p></div>
+    <div class="box"><span class="num">[03]</span><h3>Implementação</h3><p>Tudo no ar rápido: campanhas, página, agente atendendo.</p></div>
+    <div class="box"><span class="num">[04]</span><h3>Otimização</h3><p>Números acompanhados toda semana. Ajuste contínuo para escalar.</p></div>
+  </div>
+  <p class="sub" style="margin-top:3vh">Diagnóstico inicial <b style="color:var(--green)">gratuito</b> — proposta clara, sem taxa escondida, sem fidelidade abusiva.</p>
+</section>
+
+<!-- 8 SÓCIOS -->
+<section class="slide">
+  <div class="tag">socios</div>
+  <h2>Quem está por trás da Zync.</h2>
+  <div class="grid g3">
+    <div class="box member"><div class="avatar">GB</div><h3>Gabriel Briglia</h3><div class="role">CMO</div><p>Posicionamento, tráfego pago e estratégias de aquisição que transformam atenção em receita.</p></div>
+    <div class="box feat member"><div class="avatar">NG</div><h3>Natham Gil</h3><div class="role">CEO</div><p>Visão e operação. Conecta estratégia de negócio com execução para entregar crescimento real.</p></div>
+    <div class="box member"><div class="avatar">DV</div><h3>Daniel Vaz</h3><div class="role">CTO</div><p>Agentes de IA, sistemas web e automações que fazem o motor rodar 24/7.</p></div>
+  </div>
+</section>
+
+<!-- 9 POR QUE A ZYNC -->
+<section class="slide">
+  <div class="tag">por-que-a-zync</div>
+  <h2>O que você leva fechando <span class="grad">com a gente.</span></h2>
+  <div class="grid g2" style="align-items:center">
+    <ul class="clean">
+      <li>Um único parceiro responsável pelo funil inteiro</li>
+      <li>Tecnologia própria: IA e automação em tudo que fazemos</li>
+      <li>Decisões guiadas por dados, não por achismo</li>
+      <li>Velocidade: implementação em dias, não meses</li>
+      <li>Transparência total em números e investimento</li>
+    </ul>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div class="box stat"><div class="v">24/7</div><div class="l">atendimento com IA</div></div>
+      <div class="box stat"><div class="v">9</div><div class="l">módulos de crescimento</div></div>
+      <div class="box stat"><div class="v">R$ 0</div><div class="l">desperdiçado sem rastreio</div></div>
+      <div class="box stat"><div class="v">1</div><div class="l">parceiro cuidando de tudo</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 CONTATO -->
+<section class="slide" style="text-align:center;align-items:center">
+  <h1 style="font-size:clamp(1.8rem,4.5vw,3.4rem)">Pronto para ligar <span class="grad">o motor?</span></h1>
+  <p class="sub" style="margin:2.5vh auto">Agende um diagnóstico gratuito e descubra o que a Zync faria no seu negócio nos próximos 90 dias.</p>
+  <div class="box feat" style="padding:3vh 3vw;margin-top:2vh">
+    <p class="mono" style="color:var(--accent-2);font-size:clamp(.8rem,1.4vw,1rem)">WhatsApp</p>
+    <h2 style="margin:1vh 0">(61) 98250-3561</h2>
+    <p class="mono" style="color:var(--dim)">zynhub.com.br</p>
+  </div>
+</section>
+
+<div class="bar-prog" id="prog"></div>
+<div class="hud" id="hud">1 / 10</div>
+<div class="hint">← → navegar · F tela cheia · Ctrl+P exportar PDF</div>
+
+<script>
+  const S=[...document.querySelectorAll('.slide')];let i=0;
+  const go=n=>{i=Math.max(0,Math.min(S.length-1,n));S.forEach((s,k)=>s.classList.toggle('active',k===i));
+    hud.textContent=(i+1)+' / '+S.length;prog.style.width=((i+1)/S.length*100)+'%'};
+  addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key))go(i+1);
+    if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key))go(i-1);
+    if(e.key==='f'||e.key==='F')document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()});
+  addEventListener('click',e=>{if(!e.target.closest('a'))go(i+1)});
+  go(0);
+</script>
+</body>
+</html>
