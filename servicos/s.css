@@ -6,7 +6,8 @@ a{color:inherit;text-decoration:none}
 .container{max-width:780px;margin:0 auto;padding:0 24px}
 nav{position:sticky;top:0;backdrop-filter:blur(12px);background:rgba(10,10,15,.8);border-bottom:1px solid #1a1a26;z-index:10}
 .nav-inner{display:flex;justify-content:space-between;align-items:center;height:60px}
-.logo{font-family:var(--mono);font-weight:700;font-size:1.1rem}
+.logo{font-family:var(--mono);font-weight:700;font-size:1.1rem;display:inline-flex;align-items:center}
+.logo svg{width:26px;height:26px;margin-right:10px}
 .logo span{color:var(--accent)}
 .nav-cta{font-size:.85rem;font-weight:600;padding:8px 16px;border-radius:8px;background:var(--accent);color:#fff}
 header{padding:70px 0 40px}
