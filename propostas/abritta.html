@@ -1,0 +1,943 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+<title>Zync × Abritta — Proposta de Crescimento</title>
+<style>
+  :root{
+    --bg:#0a0a0f; --bg-soft:#101018; --panel:#13131d; --border:#22222f; --border-soft:#1a1a26;
+    --text:#e8e8f0; --muted:#8b8b9e; --dim:#5c5c70;
+    --accent:#7c5cff; --accent-soft:rgba(124,92,255,.12); --accent2:#4dd0e1; --accent2-soft:rgba(77,208,225,.10);
+    --green:#4ade80; --yellow:#facc15;
+    --mono:'Cascadia Code','SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Inter',sans-serif;
+  }
+  html{scroll-behavior:smooth}
+  html,body{background:var(--bg);}
+  body{
+    font-family:var(--sans); color:var(--text); line-height:1.6; font-size:17px;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--accent); color:#fff}
+
+  /* ---------- barra superior de navegação ---------- */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:20;
+    display:flex; align-items:center; gap:28px; padding:0 24px; height:54px;
+    background:rgba(10,10,15,.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .logo{
+    font-family:var(--sans); font-weight:800; font-size:15.5px; letter-spacing:-.01em;
+    background:none; border:none; color:var(--text); cursor:pointer;
+    display:flex; gap:9px; align-items:baseline; padding:0;
+  }
+  .logo .zz::after{content:"_"; color:var(--accent); animation:blink 1.1s steps(1) infinite}
+  .logo .x{color:var(--dim); font-weight:400}
+  .logo .ab{color:var(--muted); font-weight:600; font-size:12px; letter-spacing:.06em}
+  @keyframes blink{50%{opacity:0}}
+  .topnav{display:flex; gap:2px; margin-left:auto; overflow-x:auto; scrollbar-width:none}
+  .topnav::-webkit-scrollbar{display:none}
+  .topnav button{
+    font-family:var(--mono); font-size:12.5px; color:var(--dim); background:none; border:none;
+    border-bottom:2px solid transparent; padding:18px 11px 15px; cursor:pointer;
+    white-space:nowrap; transition:color .15s;
+  }
+  .topnav button:hover{color:var(--text)}
+  .topnav button.on{color:var(--text); border-bottom-color:var(--accent)}
+  .topnav button:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent2); outline-offset:2px}
+
+  .slide{
+    min-height:100svh; display:flex; align-items:center; padding:110px 28px 90px;
+    scroll-snap-align:start; scroll-margin-top:54px; position:relative;
+  }
+  .slide:nth-child(even){background:var(--bg-soft)}
+  #s-capa{background:radial-gradient(55% 48% at 22% 34%, rgba(124,92,255,.08), transparent 70%)}
+  .wrap{width:100%; max-width:1120px; margin:0 auto}
+
+  .eyebrow{
+    font-family:var(--mono); font-size:13px; letter-spacing:.08em; text-transform:lowercase;
+    color:var(--accent2); margin-bottom:22px; display:flex; align-items:center; gap:12px;
+  }
+  .eyebrow::after{content:""; height:1px; flex:0 0 52px; background:var(--border)}
+  .eyebrow .n{color:var(--dim)}
+
+  h1,h2,h3{text-wrap:balance; margin:0}
+  h1{font-size:clamp(40px,6vw,72px); line-height:1.05; font-weight:800; letter-spacing:-.024em}
+  h2{font-size:clamp(30px,4vw,46px); line-height:1.1; font-weight:800; letter-spacing:-.018em}
+  h3{font-size:19px; font-weight:650}
+  .lead{color:var(--muted); font-size:19px; line-height:1.62; max-width:60ch}
+  .lead strong{color:var(--text); font-weight:650}
+  .hl{color:var(--accent)}
+  .hl2{color:var(--accent2)}
+
+  /* cabeçalho de seção em duas colunas: título à esquerda, texto à direita */
+  .shead{display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:20px 48px; align-items:end; margin-bottom:8px}
+  .shead .eyebrow{grid-column:1 / -1; margin-bottom:2px}
+  .shead .lead{padding-bottom:5px}
+  @media (max-width:900px){
+    .shead{grid-template-columns:1fr; gap:16px; align-items:start}
+  }
+
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease,transform .6s ease}
+  .in .reveal{opacity:1; transform:none}
+  .in .reveal.d1{transition-delay:.08s}.in .reveal.d2{transition-delay:.16s}.in .reveal.d3{transition-delay:.24s}
+
+  /* ---------- capa ---------- */
+  .kicker{font-family:var(--mono); font-size:13.5px; color:var(--accent2); letter-spacing:.06em; margin-bottom:26px}
+  .kicker .sep{color:var(--dim)}
+  .capa-lead{margin-top:22px}
+  .term{
+    background:var(--panel); border:1px solid var(--border); border-radius:10px;
+    font-family:var(--mono); font-size:14px; margin:36px 0 0; max-width:680px; overflow:hidden;
+    box-shadow:0 18px 50px rgba(0,0,0,.35);
+  }
+  .term-bar{display:flex; gap:6px; padding:11px 15px; border-bottom:1px solid var(--border-soft)}
+  .term-bar i{width:10px; height:10px; border-radius:50%; background:var(--border)}
+  .term-bar i:first-child{background:#3d3d52}
+  .term-body{padding:18px 20px 22px; min-height:142px}
+  .term-body div{margin-bottom:8px; white-space:pre-wrap}
+  .t-cmd{color:var(--text)} .t-cmd::before{content:"$ "; color:var(--accent)}
+  .t-ok{color:var(--muted)} .t-ok::before{content:"✓ "; color:var(--green)}
+  .t-end{color:var(--accent2)}
+  .kbd-hint{font-family:var(--mono); font-size:12.5px; color:var(--dim); margin-top:42px}
+  .kbd-hint b{color:var(--muted); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-weight:400}
+
+  /* ---------- stats / diagnóstico ---------- */
+  .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; margin:36px 0}
+  .tile{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:26px 24px 22px}
+  .tile b{
+    display:block; font-size:46px; font-weight:800; letter-spacing:-.025em; line-height:1;
+    font-variant-numeric:tabular-nums; margin-bottom:11px;
+  }
+  .tile.acc b{color:var(--accent)} .tile.acc2 b{color:var(--accent2)}
+  .tile span{color:var(--muted); font-size:14.5px; line-height:1.5; display:block; max-width:26ch}
+
+  .chart{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:28px 30px 22px; margin-top:8px}
+  .chart h3{margin-bottom:5px}
+  .chart .src{font-family:var(--mono); font-size:12.5px; color:var(--dim); margin-bottom:20px}
+  .brow{display:grid; grid-template-columns:134px 1fr 56px; align-items:center; gap:14px; padding:6px 0}
+  .brow .lbl{font-size:14.5px; color:var(--muted); text-align:right}
+  .brow .track{height:22px; display:flex; align-items:center}
+  .brow .bar{height:16px; border-radius:0 4px 4px 0; background:var(--accent); opacity:.55; min-width:3px; transition:opacity .15s}
+  .brow.top .bar{opacity:1}
+  .brow:hover .bar{opacity:.85}
+  .brow.top:hover .bar{opacity:1}
+  .brow .val{font-family:var(--mono); font-size:13.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+  .brow.top .lbl,.brow.top .val{color:var(--text); font-weight:600}
+  .chart .note{font-size:14px; color:var(--dim); margin-top:16px}
+
+  /* ---------- dores: índice em linhas, hover revela a frente que resolve ---------- */
+  .dlist{margin-top:34px; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:var(--panel)}
+  .drow{
+    display:grid; grid-template-columns:96px minmax(200px,270px) 1fr; gap:10px 26px;
+    padding:24px 28px; border-bottom:1px solid var(--border-soft);
+    transition:background .2s ease;
+  }
+  .drow:last-child{border-bottom:0}
+  .drow .tag{font-family:var(--mono); font-size:12.5px; color:var(--yellow); letter-spacing:.06em; padding-top:3px}
+  .drow h3{font-size:18.5px; line-height:1.3}
+  .drow .dbody p{color:var(--muted); font-size:15px; line-height:1.55; margin:0}
+  .drow .fix{
+    display:block; max-height:0; overflow:hidden; opacity:0; margin-top:0;
+    font-family:var(--mono); font-size:13px; line-height:1.6; color:var(--green);
+    transition:max-height .35s ease, opacity .3s ease, margin-top .3s ease;
+  }
+  .drow:hover{background:#181826}
+  .drow:hover h3{color:#fff}
+  .drow:hover .fix, .drow:focus-within .fix{max-height:4.5em; opacity:1; margin-top:10px}
+  @media (hover:none){
+    .drow .fix{max-height:none; opacity:1; margin-top:10px}
+  }
+  @media (max-width:860px){
+    .drow{grid-template-columns:1fr; gap:6px; padding:20px 22px}
+    .drow .tag{padding-top:0}
+  }
+
+  /* ---------- tese ---------- */
+  .flow{display:grid; grid-template-columns:1fr auto 1.15fr auto 1fr; gap:18px; align-items:stretch; margin-top:40px}
+  .flow .col{display:flex; flex-direction:column; gap:14px; justify-content:center}
+  .chip{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px}
+  .chip b{display:block; font-size:16px; margin-bottom:4px}
+  .chip span{color:var(--muted); font-size:13.5px; line-height:1.5; display:block}
+  .chip.out{border-color:rgba(74,222,128,.35)}
+  .chip.out b{color:var(--green)}
+  .engine{
+    border:1px solid var(--accent); border-radius:12px; background:var(--accent-soft);
+    display:flex; flex-direction:column; justify-content:center; padding:26px; text-align:center; gap:8px;
+  }
+  .engine .mono{font-family:var(--mono); font-size:12.5px; color:var(--accent2)}
+  .engine b{font-size:22px; font-weight:800}
+  .engine span{color:var(--muted); font-size:14.5px; line-height:1.5}
+  .arr{display:flex; align-items:center; color:var(--dim); font-family:var(--mono); font-size:20px}
+  @media (max-width:860px){
+    .flow{grid-template-columns:1fr}
+    .arr{justify-content:center; transform:rotate(90deg); font-size:17px}
+  }
+
+  /* ---------- frentes / tabs ---------- */
+  .tabs{display:flex; flex-wrap:wrap; gap:9px; margin:30px 0 0}
+  .tab{
+    font-family:var(--mono); font-size:14px; color:var(--muted); background:var(--panel);
+    border:1px solid var(--border); border-radius:8px; padding:10px 16px; cursor:pointer;
+  }
+  .tab:hover{color:var(--text)}
+  .tab.on{color:#fff; background:var(--accent); border-color:var(--accent); font-weight:600}
+  .panel{
+    background:var(--panel); border:1px solid var(--border); border-radius:0 10px 10px 10px;
+    padding:30px; margin-top:10px; display:none;
+  }
+  .panel.on{display:block}
+  .panel .pri{
+    display:inline-block; font-family:var(--mono); font-size:12px; letter-spacing:.06em;
+    color:var(--bg); background:var(--accent2); border-radius:5px; padding:4px 9px; margin-bottom:14px; font-weight:700;
+  }
+  .panel h3{font-size:23px; margin-bottom:8px}
+  .panel .obj{color:var(--muted); font-size:16px; line-height:1.6; max-width:68ch; margin-bottom:22px}
+  .pgrid{display:grid; grid-template-columns:1.4fr 1fr; gap:26px}
+  .pgrid h4{font-family:var(--mono); font-size:12.5px; color:var(--accent2); letter-spacing:.07em; margin:0 0 10px; text-transform:lowercase}
+  .pgrid ul{margin:0; padding:0; list-style:none}
+  .pgrid li{padding:6px 0 6px 20px; position:relative; color:var(--text); font-size:15.5px; line-height:1.55}
+  .pgrid li::before{content:"›"; position:absolute; left:2px; color:var(--accent)}
+  .pgrid .kpi li::before{content:"▸"; color:var(--accent2)}
+  .pgrid .kpi li{color:var(--muted)}
+  @media (max-width:760px){.pgrid{grid-template-columns:1fr}}
+
+  /* ---------- agente ---------- */
+  .agrid{display:grid; grid-template-columns:440px 1fr; gap:36px; margin-top:36px; align-items:start}
+  @media (max-width:920px){.agrid{grid-template-columns:1fr}}
+  .phone{
+    background:var(--panel); border:1px solid var(--border); border-radius:20px; overflow:hidden;
+    max-width:440px; box-shadow:0 18px 50px rgba(0,0,0,.35);
+  }
+  .phone-top{padding:14px 18px; border-bottom:1px solid var(--border-soft); display:flex; align-items:center; gap:12px}
+  .phone-top .av{width:36px; height:36px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0}
+  .phone-top .av img{width:72%; height:72%; object-fit:contain; display:block}
+  .phone-top b{font-size:14.5px; display:block; line-height:1.25}
+  .phone-top span{font-size:12px; color:var(--green); font-family:var(--mono)}
+  .chat{padding:18px 16px 20px; display:flex; flex-direction:column; gap:10px; min-height:370px}
+  .msg{max-width:87%; padding:10px 14px; border-radius:12px; font-size:14.5px; line-height:1.5; opacity:0; transform:translateY(10px); transition:opacity .45s ease,transform .45s ease}
+  .msg.show{opacity:1; transform:none}
+  .msg.lead-m{align-self:flex-start; background:var(--bg-soft); border:1px solid var(--border)}
+  .msg.bot-m{align-self:flex-end; background:var(--accent-soft); border:1px solid rgba(124,92,255,.4)}
+  .msg.sys-m{
+    align-self:center; background:transparent; border:1px dashed var(--border); color:var(--accent2);
+    font-family:var(--mono); font-size:12px; text-align:center; max-width:100%;
+  }
+  .msg.typing{display:flex; gap:5px; align-items:center; min-height:20px}
+  .msg.typing i{width:7px; height:7px; border-radius:50%; background:var(--muted); animation:tp 1s infinite}
+  .msg.typing i:nth-child(2){animation-delay:.18s}
+  .msg.typing i:nth-child(3){animation-delay:.36s}
+  @keyframes tp{0%,60%,100%{opacity:.25; transform:none} 30%{opacity:1; transform:translateY(-3px)}}
+  .replay{
+    margin:0 16px 16px; align-self:flex-start; background:none; border:1px solid var(--border);
+    color:var(--muted); font-family:var(--mono); font-size:12.5px; border-radius:7px; padding:7px 13px; cursor:pointer;
+  }
+  .replay:hover{color:var(--text); border-color:var(--dim)}
+  .alist{margin:20px 0 0; padding:0; list-style:none}
+  .alist li{padding:8px 0 8px 26px; position:relative; color:var(--muted); font-size:16px; line-height:1.55}
+  .alist li b{color:var(--text); font-weight:650}
+  .alist li::before{content:"»"; position:absolute; left:2px; color:var(--accent2); font-family:var(--mono)}
+  .fases{display:flex; flex-direction:column; gap:11px; margin-top:26px}
+  .fase{display:grid; grid-template-columns:92px 1fr; gap:16px; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:15px 18px}
+  .fase .fn{font-family:var(--mono); font-size:12.5px; color:var(--accent2); padding-top:2px; line-height:1.5}
+  .fase b{display:block; font-size:15.5px; margin-bottom:3px}
+  .fase span{color:var(--muted); font-size:14px; line-height:1.5}
+
+  /* ---------- roadmap ---------- */
+  .road{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:36px}
+  @media (max-width:820px){.road{grid-template-columns:1fr}}
+  .rcol{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:24px}
+  .rcol .rw{font-family:var(--mono); font-size:12px; color:var(--accent2); letter-spacing:.06em; display:block; margin-bottom:9px}
+  .rcol h3{margin-bottom:14px}
+  .rcol ul{margin:0; padding:0; list-style:none}
+  .rcol li{padding:5px 0 5px 20px; position:relative; color:var(--muted); font-size:14.5px; line-height:1.55}
+  .rcol li::before{content:"›"; position:absolute; left:2px; color:var(--accent)}
+
+  /* ---------- roi ---------- */
+  .roi{display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-top:36px; align-items:start}
+  @media (max-width:860px){.roi{grid-template-columns:1fr}}
+  .ctrl{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:26px 28px}
+  .ctrl .row{margin-bottom:24px}
+  .ctrl label{display:flex; justify-content:space-between; align-items:baseline; font-size:14.5px; color:var(--muted); margin-bottom:10px; gap:12px}
+  .ctrl label output{font-family:var(--mono); font-size:15px; color:var(--text); font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap}
+  input[type=range]{width:100%; accent-color:var(--accent); cursor:pointer}
+  .ctrl .fine{font-size:13px; color:var(--dim); line-height:1.5}
+  .rout{display:flex; flex-direction:column; gap:14px}
+  .rline{display:flex; justify-content:space-between; align-items:baseline; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 20px}
+  .rline span{color:var(--muted); font-size:14.5px}
+  .rline b{font-family:var(--mono); font-size:19px; font-variant-numeric:tabular-nums}
+  .rhero{
+    border:1px solid var(--accent); background:var(--accent-soft); border-radius:12px;
+    padding:26px; text-align:center;
+  }
+  .rhero .lab{font-family:var(--mono); font-size:12.5px; color:var(--accent2); letter-spacing:.07em}
+  .rhero b{display:block; font-size:56px; font-weight:800; letter-spacing:-.025em; font-variant-numeric:tabular-nums; line-height:1.1; margin:6px 0}
+  .rhero span{color:var(--muted); font-size:14px}
+  .bket{font-size:14px; color:var(--dim); margin-top:4px; line-height:1.55}
+  .bket b{color:var(--green); font-family:var(--mono); font-weight:600}
+
+  /* ---------- investimento ---------- */
+  .price{display:grid; grid-template-columns:1.35fr 1fr; gap:18px; margin-top:36px}
+  @media (max-width:820px){.price{grid-template-columns:1fr}}
+  .pcard{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:30px}
+  .pcard.main{border-color:var(--accent)}
+  .pcard .ptag{font-family:var(--mono); font-size:12.5px; color:var(--accent2); letter-spacing:.07em; display:block; margin-bottom:12px}
+  .pcard .amount{font-size:46px; font-weight:800; letter-spacing:-.025em; font-variant-numeric:tabular-nums; line-height:1}
+  .pcard .amount small{font-size:16px; color:var(--muted); font-weight:400; letter-spacing:0}
+  .pcard ul{margin:22px 0 0; padding:0; list-style:none}
+  .pcard li{padding:6px 0 6px 24px; position:relative; font-size:14.5px; line-height:1.55; color:var(--muted)}
+  .pcard li b{color:var(--text); font-weight:600}
+  .pcard li::before{content:"✓"; position:absolute; left:0; color:var(--green); font-family:var(--mono)}
+  .pcard .sub{color:var(--muted); font-size:14px; line-height:1.55; margin-top:8px}
+  .pstack{display:flex; flex-direction:column; gap:18px}
+  .pnote{margin-top:26px; font-size:15.5px; color:var(--muted); max-width:70ch; line-height:1.6}
+  .pnote b{color:var(--text)}
+  .pnote .pfx{font-family:var(--mono); color:var(--accent2); margin-right:8px}
+
+  /* ---------- próximos ---------- */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:36px}
+  @media (max-width:820px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:24px}
+  .step .sn{font-family:var(--mono); font-size:12.5px; color:var(--accent2); display:block; margin-bottom:9px}
+  .step b{display:block; margin-bottom:6px; font-size:16.5px}
+  .step span{color:var(--muted); font-size:14.5px; line-height:1.55}
+  .contact{margin-top:38px; font-family:var(--mono); font-size:13.5px; color:var(--dim)}
+  .contact a{color:var(--accent2); text-decoration:none}
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal,.msg{transition:none; opacity:1; transform:none}
+    .logo .zz::after{animation:none}
+    .msg.typing i{animation:none}
+  }
+</style>
+
+<header class="topbar">
+  <button class="logo" id="logoBtn" type="button" aria-label="Voltar ao início">
+    <span class="zz">zync</span><span class="x">×</span><span class="ab">ABRITTA</span>
+  </button>
+  <nav class="topnav" aria-label="Seções da apresentação">
+    <button type="button" data-t="s-diag">diagnóstico</button>
+    <button type="button" data-t="s-dores">dores</button>
+    <button type="button" data-t="s-tese">tese</button>
+    <button type="button" data-t="s-plano">plano</button>
+    <button type="button" data-t="s-agente">agente de ia</button>
+    <button type="button" data-t="s-roadmap">90 dias</button>
+    <button type="button" data-t="s-roi">roi</button>
+    <button type="button" data-t="s-preco">investimento</button>
+    <button type="button" data-t="s-next">go</button>
+  </nav>
+</header>
+
+<main id="deck">
+
+  <!-- CAPA -->
+  <section class="slide" id="s-capa" data-title="Capa">
+    <div class="wrap">
+      <div class="kicker reveal">proposta de crescimento <span class="sep">·</span> terça, 22.07.2026 <span class="sep">·</span> brasília-df</div>
+      <h1 class="reveal d1">Inteligência imobiliária.<br><span class="hl">De verdade.</span></h1>
+      <p class="lead capa-lead reveal d2">Um plano ponta a ponta para a Abritta: captação de imóveis, formação de time, presença digital — e um agente de IA que faz o nome da casa virar operação.</p>
+      <div class="term reveal d3" aria-hidden="true">
+        <div class="term-bar"><i></i><i></i><i></i></div>
+        <div class="term-body" id="termbody"></div>
+      </div>
+      <div class="kbd-hint reveal d3">navegue com <b>↓</b> <b>↑</b>, pelo menu acima, ou role a página</div>
+    </div>
+  </section>
+
+  <!-- DIAGNÓSTICO -->
+  <section class="slide" id="s-diag" data-title="Diagnóstico">
+    <div class="wrap">
+      <div class="shead">
+        <div class="eyebrow reveal"><span class="n">01</span> zync scan --abritta</div>
+        <h2 class="reveal">Antes de propor,<br>a gente estudou.</h2>
+        <p class="lead reveal d1">Mapeamos a carteira pública, o posicionamento e a presença digital da Abritta. O retrato: uma empresa <strong>jovem, estruturada e em tração</strong>, com um nome que promete mais do que o digital entrega hoje.</p>
+      </div>
+      <div class="tiles reveal d2">
+        <div class="tile acc"><b>120</b><span>imóveis ativos na carteira pública</span></div>
+        <div class="tile acc2"><b>51%</b><span>da carteira concentrada em Águas Claras</span></div>
+        <div class="tile"><b>113<span style="font-size:22px;color:var(--dim)"> vs </span>7</b><span>venda vs aluguel — o foco é claro</span></div>
+        <div class="tile"><b>2024</b><span>fundação: menos de 2 anos e ambição de sobra</span></div>
+      </div>
+      <div class="chart reveal d3">
+        <h3>Onde a Abritta já domina</h3>
+        <div class="src">carteira por região · dfimoveis · jul/2026</div>
+        <div id="bars"></div>
+        <div class="note">Águas Claras é o epicentro — e é exatamente onde a máquina de captação vai mirar primeiro.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DORES -->
+  <section class="slide" id="s-dores" data-title="O que ouvimos">
+    <div class="wrap">
+      <div class="shead">
+        <div class="eyebrow reveal"><span class="n">02</span> zync listen</div>
+        <h2 class="reveal">O que ouvimos<br>de você.</h2>
+        <p class="lead reveal d1">Nada aqui é achismo nosso. São as dores que <strong>você mesmo</strong> colocou na mesa quando conversamos — <strong>passe o mouse</strong> em cada uma para ver onde ela é atacada no plano.</p>
+      </div>
+      <div class="dlist reveal d2">
+        <div class="drow" tabindex="0">
+          <span class="tag">dor / 01</span>
+          <h3>Captação de imóveis</h3>
+          <div class="dbody">
+            <p>O estoque é o combustível do modelo de venda, e hoje não existe uma máquina previsível trazendo imóveis novos.</p>
+            <span class="fix">→ atacada na f1 · máquina de captação: tráfego segmentado + avaliação gratuita de imóvel</span>
+          </div>
+        </div>
+        <div class="drow" tabindex="0">
+          <span class="tag">dor / 02</span>
+          <h3>Aquisição de corretores</h3>
+          <div class="dbody">
+            <p>A aposta é formar do zero, na cultura da casa, com bolsas para custear o CRECI. Falta volume de candidatos certos.</p>
+            <span class="fix">→ atacada na f2 · campanha do programa bolsa creci</span>
+          </div>
+        </div>
+        <div class="drow" tabindex="0">
+          <span class="tag">dor / 03</span>
+          <h3>Tráfego sem estratégia</h3>
+          <div class="dbody">
+            <p>Interesse em mídia paga existe, mas com tantas frentes possíveis (imóveis, corretores, marca) falta clareza de onde investir.</p>
+            <span class="fix">→ atacada no desenho do plano · cada frente com verba e kpi próprios: cada real com um dono</span>
+          </div>
+        </div>
+        <div class="drow" tabindex="0">
+          <span class="tag">dor / 04</span>
+          <h3>Instagram fraco</h3>
+          <div class="dbody">
+            <p>A vitrine digital não está à altura da operação, e não há estrutura interna para produzir conteúdo com consistência.</p>
+            <span class="fix">→ atacada na f3 + f4 · conteúdo ponta a ponta com o luiz como rosto da marca</span>
+          </div>
+        </div>
+        <div class="drow" tabindex="0">
+          <span class="tag">dor / 05</span>
+          <h3>Lead cai cru no corretor</h3>
+          <div class="dbody">
+            <p>Sem SDR ou qualificação: todo lead, quente ou curioso, chega direto ao corretor, sem prioridade nem resposta imediata.</p>
+            <span class="fix">→ atacada na f5 · agente de ia que qualifica, pontua e roteia + crm próprio</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESE -->
+  <section class="slide" id="s-tese" data-title="A tese">
+    <div class="wrap">
+      <div class="shead">
+        <div class="eyebrow reveal"><span class="n">03</span> zync compile --tese</div>
+        <h2 class="reveal">Não são cinco problemas.<br>É <span class="hl">um sistema</span>.</h2>
+        <p class="lead reveal d1">Crescimento de imobiliária de venda depende de três entradas: <strong>estoque, time e demanda qualificada</strong>. As cinco dores são sintomas de um funil que ainda não existe. Por isso a proposta não é "fazer posts e anúncios" — é montar a máquina inteira.</p>
+      </div>
+      <div class="flow reveal d2">
+        <div class="col">
+          <div class="chip"><b>Estoque</b><span>imóveis captados de forma previsível</span></div>
+          <div class="chip"><b>Time</b><span>corretores novos, formados na cultura</span></div>
+          <div class="chip"><b>Demanda</b><span>leads atendidos na hora, com prioridade</span></div>
+        </div>
+        <div class="arr">→</div>
+        <div class="engine">
+          <span class="mono">[ máquina zync ]</span>
+          <b>Tráfego + Conteúdo + Agente de IA</b>
+          <span>cada frente abastece uma entrada — e o CRM devolve dados para otimizar tudo</span>
+        </div>
+        <div class="arr">→</div>
+        <div class="col">
+          <div class="chip out"><b>Mais vendas</b><span>com a comissão de venda pagando o sistema</span></div>
+          <div class="chip out"><b>Marca líder</b><span>a referência imobiliária de Águas Claras</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANO -->
+  <section class="slide" id="s-plano" data-title="As 5 frentes">
+    <div class="wrap">
+      <div class="shead">
+        <div class="eyebrow reveal"><span class="n">04</span> zync run --frentes</div>
+        <h2 class="reveal">Cinco frentes,<br>cada real com um dono.</h2>
+        <p class="lead reveal d1">Nada de pulverizar verba. Tráfego pago ataca <strong>aquisição</strong> (imóveis e corretores); orgânico constrói <strong>confiança</strong>; o agente de IA garante que <strong>nenhum lead se perde</strong>.</p>
+      </div>
+      <div class="reveal d2">
+        <div class="tabs" role="tablist" aria-label="Frentes do plano">
+          <button class="tab on" role="tab" aria-selected="true" data-p="p1">f1 · captação de imóveis</button>
+          <button class="tab" role="tab" aria-selected="false" data-p="p2">f2 · corretores</button>
+          <button class="tab" role="tab" aria-selected="false" data-p="p3">f3 · instagram</button>
+          <button class="tab" role="tab" aria-selected="false" data-p="p4">f4 · luiz guilherme</button>
+          <button class="tab" role="tab" aria-selected="false" data-p="p5">f5 · agente de ia</button>
+        </div>
+
+        <div class="panel on" id="p1" role="tabpanel">
+          <span class="pri">PRIORIDADE Nº 1</span>
+          <h3>Tráfego para captação de imóveis</h3>
+          <p class="obj">A campanha que ataca a sua dor número um, com ROI direto: cada imóvel captado é uma comissão em potencial.</p>
+          <div class="pgrid">
+            <div><h4>como</h4><ul>
+              <li>Isca: <b>avaliação gratuita e inteligente</b> — "quanto vale seu imóvel em Águas Claras hoje?"</li>
+              <li>Meta Ads + Google Search em Águas Claras, Guará, Taguatinga e Vicente Pires</li>
+              <li>Landing page de avaliação → agente de IA qualifica → corretor de captação agenda</li>
+              <li>Argumento: carteira ativa de 120+ imóveis e domínio da região</li>
+            </ul></div>
+            <div class="kpi"><h4>medimos por</h4><ul>
+              <li>custo por lead de proprietário</li>
+              <li>leads → visitas de captação</li>
+              <li>imóveis captados / mês</li>
+              <li>custo por imóvel captado</li>
+            </ul></div>
+          </div>
+        </div>
+
+        <div class="panel" id="p2" role="tabpanel">
+          <h3>Recrutamento — programa Bolsa CRECI</h3>
+          <p class="obj">Seu programa de bolsa é um ativo de comunicação que nenhum concorrente tem. A gente transforma ele em campanha.</p>
+          <div class="pgrid">
+            <div><h4>como</h4><ul>
+              <li>Campanha "comece do zero — <b>a Abritta paga seu CRECI</b>"</li>
+              <li>Segmentação: início de carreira e transição profissional no DF</li>
+              <li>Página do programa → formulário → triagem pelo agente de IA → entrevista</li>
+              <li>Verba pequena: recrutamento custa fração do lead imobiliário, e ainda constrói marca empregadora</li>
+            </ul></div>
+            <div class="kpi"><h4>medimos por</h4><ul>
+              <li>custo por candidato</li>
+              <li>candidatos qualificados / mês</li>
+              <li>contratações efetivadas</li>
+            </ul></div>
+          </div>
+        </div>
+
+        <div class="panel" id="p3" role="tabpanel">
+          <h3>Instagram — a vitrine à altura da operação</h3>
+          <p class="obj">Objetivo declarado: virar o perfil imobiliário de referência de Águas Claras. A Zync assume a frente de conteúdo ponta a ponta — estratégia, roteiro, captação, edição, publicação e performance.</p>
+          <div class="pgrid">
+            <div><h4>pilares</h4><ul>
+              <li><b>Imóveis com narrativa</b> — "o que R$ 700 mil compram em Águas Claras"</li>
+              <li><b>Inteligência de mercado</b> — preço do m², comparativos de bairro, dados que sustentam o nome da casa</li>
+              <li><b>Cultura e bastidores</b> — a formação de corretores e o dia a dia da loja</li>
+              <li><b>Luiz Guilherme</b> — a frente 4 alimentando o perfil da marca</li>
+            </ul></div>
+            <div class="kpi"><h4>cadência e medidas</h4><ul>
+              <li>3–4 reels/semana + stories diários</li>
+              <li>1 carrossel de dados / semana</li>
+              <li>alcance e seguidores qualificados</li>
+              <li>leads via direct e link da bio</li>
+            </ul></div>
+          </div>
+        </div>
+
+        <div class="panel" id="p4" role="tabpanel">
+          <h3>Luiz Guilherme — a Abritta tem nome e sobrenome</h3>
+          <p class="obj">A marca carrega o seu sobrenome e você está à frente de tudo. Isso é raro, é crível, e multiplica as outras frentes: proprietário confia o imóvel a um rosto; corretor novo quer ser formado por alguém que admira.</p>
+          <div class="pgrid">
+            <div><h4>como (sem virar refém da agenda)</h4><ul>
+              <li>1 gravação quinzenal em batch (2–3h) → <b>4 a 6 conteúdos</b></li>
+              <li>Opinião de mercado, teses de investimento, bastidor da gestão</li>
+              <li>Distribuição em colab: perfil pessoal + perfil da Abritta</li>
+              <li>Roteiro, direção e edição por conta da Zync</li>
+            </ul></div>
+            <div class="kpi"><h4>meta em 6 meses</h4><ul>
+              <li>ser a voz do mercado imobiliário de Águas Claras</li>
+              <li>conversão maior nas frentes 1 e 2</li>
+            </ul></div>
+          </div>
+        </div>
+
+        <div class="panel" id="p5" role="tabpanel">
+          <h3>Agente de IA + CRM — o motor no meio de tudo</h3>
+          <p class="obj">A dor silenciosa da operação: lead quente e curioso caem na mesma fila, direto no corretor. O agente resolve isso — e é o assunto da próxima seção.</p>
+          <div class="pgrid">
+            <div><h4>em uma linha</h4><ul>
+              <li>Resposta <b>imediata, 24/7</b>, quase humana no WhatsApp</li>
+              <li>Qualifica, pontua e roteia cada lead para o corretor certo</li>
+              <li>CRM próprio: o funil inteiro visível para a gestão</li>
+            </ul></div>
+            <div class="kpi"><h4>por que importa</h4><ul>
+              <li>velocidade de resposta é o maior preditor de conversão de lead imobiliário</li>
+              <li>faz o nome "inteligência imobiliária" virar operação</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENTE -->
+  <section class="slide" id="s-agente" data-title="Agente de IA">
+    <div class="wrap">
+      <div class="shead">
+        <div class="eyebrow reveal"><span class="n">05</span> zync deploy --agente-ia</div>
+        <h2 class="reveal">Nenhum lead espera.<br><span class="hl2">Nenhum lead se perde.</span></h2>
+        <p class="lead reveal d1">Enquanto o mercado deixa o lead esperando o corretor desocupar, o seu atende <strong>na hora</strong>: qualifica, pontua e entrega para a pessoa certa. Lead quente vai para o sênior; lead em descoberta vira treino para o corretor em formação. <strong>Encaixa exato no seu modelo de formar gente.</strong></p>
+      </div>
+      <div class="agrid">
+        <div class="reveal d2">
+          <div class="phone" aria-label="Demonstração de conversa do agente">
+            <div class="phone-top">
+              <div class="av"><img src="data:image/png;base64,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" alt="Abritta"></div>
+              <div><b>Abritta · Atendimento</b><span>online agora</span></div>
+            </div>
+            <div class="chat" id="chat"></div>
+            <button class="replay" id="replay" type="button">▶ ver de novo</button>
+          </div>
+        </div>
+        <div class="reveal d3">
+          <h3>O que o agente faz</h3>
+          <ul class="alist">
+            <li><b>Atende em segundos,</b> a qualquer hora, com conversa natural no tom da Abritta</li>
+            <li><b>Pontua cada lead</b> por origem da campanha, intenção, faixa de preço e momento de compra</li>
+            <li><b>Roteia com inteligência:</b> quente → sênior · em descoberta → júnior em formação</li>
+            <li><b>Detecta oportunidade de captação</b> no meio da conversa (quem compra, muitas vezes vende)</li>
+            <li><b>CRM próprio:</b> funil, origem e performance por corretor e por campanha, na sua tela</li>
+          </ul>
+          <div class="fases">
+            <div class="fase"><span class="fn">fase 1<br>30 dias</span><div><b>Agente pronto e no ar</b><span>qualificando e roteando os leads das campanhas + painel de gestão</span></div></div>
+            <div class="fase"><span class="fn">fase 2<br>45 dias</span><div><b>CRM completo</b><span>scoring refinado com histórico e integração total com as campanhas</span></div></div>
+            <div class="fase"><span class="fn">fase 3</span><div><b>Follow-up automático</b><span>reativação de leads dormentes e insights de carteira</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="slide" id="s-roadmap" data-title="Roadmap 90 dias">
+    <div class="wrap">
+      <div class="shead">
+        <div class="eyebrow reveal"><span class="n">06</span> zync plan --90d</div>
+        <h2 class="reveal">Primeiros 90 dias.</h2>
+        <p class="lead reveal d1">Execução em três fases, com entregas visíveis desde a semana 1 — nada de "aguarde o planejamento".</p>
+      </div>
+      <div class="road reveal d2">
+        <div class="rcol">
+          <span class="rw">fase 1 · semanas 1–3</span>
+          <h3>Fundação</h3>
+          <ul>
+            <li>Pixel, eventos e rastreamento completos</li>
+            <li>Landing pages: avaliação de imóvel + Bolsa CRECI</li>
+            <li>Identidade de conteúdo e calendário editorial</li>
+            <li>Primeira sessão de gravação (marca + Luiz)</li>
+            <li>Arquitetura do agente de IA</li>
+          </ul>
+        </div>
+        <div class="rcol">
+          <span class="rw">fase 2 · semanas 4–8</span>
+          <h3>Ignição</h3>
+          <ul>
+            <li>Campanhas de captação e recrutamento no ar</li>
+            <li>Cadência plena no Instagram</li>
+            <li>Agente de IA pronto e atendendo (dia 30)</li>
+            <li>CRM completo entregue (dia 45)</li>
+            <li>Primeiros relatórios de performance</li>
+          </ul>
+        </div>
+        <div class="rcol">
+          <span class="rw">fase 3 · semanas 9–13</span>
+          <h3>Tração</h3>
+          <ul>
+            <li>Otimização guiada pelos dados do CRM</li>
+            <li>Escala de verba nas campanhas vencedoras</li>
+            <li>Colab Luiz × Abritta rodando</li>
+            <li>Relatório executivo mensal + rota de escala</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROI -->
+  <section class="slide" id="s-roi" data-title="A conta">
+    <div class="wrap">
+      <div class="shead">
+        <div class="eyebrow reveal"><span class="n">07</span> zync calc --roi</div>
+        <h2 class="reveal">A conta que importa.</h2>
+        <p class="lead reveal d1">Mexa nos números. A simulação usa a comissão padrão de 5% e o investimento total (fee + mídia) de um trimestre.</p>
+      </div>
+      <div class="roi reveal d2">
+        <div class="ctrl">
+          <div class="row">
+            <label>vendas geradas pela máquina, por trimestre <output id="oV">2</output></label>
+            <input type="range" id="rV" min="1" max="6" step="1" value="2" aria-label="Vendas por trimestre">
+          </div>
+          <div class="row">
+            <label>ticket médio do imóvel <output id="oT">R$ 700 mil</output></label>
+            <input type="range" id="rT" min="400000" max="1500000" step="50000" value="700000" aria-label="Ticket médio">
+          </div>
+          <div class="row">
+            <label>verba de mídia mensal <output id="oM">R$ 4 mil</output></label>
+            <input type="range" id="rM" min="3000" max="5000" step="500" value="4000" aria-label="Verba de mídia mensal">
+          </div>
+          <div class="fine">referência: miolo da carteira Abritta hoje = R$ 300 mil a R$ 1,5 mi · comissão de 5%</div>
+        </div>
+        <div class="rout">
+          <div class="rline"><span>comissão gerada no trimestre</span><b id="vCom" style="color:var(--green)">R$ 70.000</b></div>
+          <div class="rline"><span>investimento no trimestre <small style="color:var(--dim)">(fee + mídia)</small></span><b id="vInv">R$ 38.700</b></div>
+          <div class="rhero">
+            <span class="lab">retorno sobre o investimento</span>
+            <b id="vX">1,8×</b>
+            <span id="vLine">R$ 1,80 de comissão para cada R$ 1,00 investido</span>
+          </div>
+          <div class="bket">ponto de equilíbrio: <b id="vBe">1,1 venda</b> por trimestre paga fee e mídia inteiros. Todo o resto é a máquina trabalhando a favor.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVESTIMENTO -->
+  <section class="slide" id="s-preco" data-title="Investimento">
+    <div class="wrap">
+      <div class="shead">
+        <div class="eyebrow reveal"><span class="n">08</span> zync pricing</div>
+        <h2 class="reveal">Investimento.</h2>
+        <p class="lead reveal d1">Um plano único, ponta a ponta. Um só responsável por toda a máquina.</p>
+      </div>
+      <div class="price reveal d2">
+        <div class="pcard main">
+          <span class="ptag">plano full growth · mensal</span>
+          <div class="amount">R$ 8.900<small> /mês</small></div>
+          <ul>
+            <li><b>Tráfego pago</b> — gestão das campanhas de captação de imóveis e de corretores</li>
+            <li><b>Instagram completo</b> — estratégia, roteiro, captação audiovisual, edição, publicação e comunidade</li>
+            <li><b>Personal branding do Luiz</b> — gravação quinzenal em batch, direção e distribuição</li>
+            <li><b>Agente de IA em operação</b> — evolução contínua + custos de IA inclusos</li>
+            <li><b>CRM e relatório executivo mensal</b> — com reunião quinzenal de rota</li>
+          </ul>
+        </div>
+        <div class="pstack">
+          <div class="pcard">
+            <span class="ptag">setup do agente de ia · único</span>
+            <div class="amount">R$ 9.500</div>
+            <p class="sub">parcelável em 3× de R$ 3.167 · desenvolvimento, treinamento no tom da Abritta e integração com as campanhas · agente no ar em 30 dias, CRM completo em 45</p>
+          </div>
+          <div class="pcard">
+            <span class="ptag">verba de mídia · recomendada</span>
+            <div class="amount">R$ 3–5 mil<small> /mês</small></div>
+            <p class="sub">paga direto às plataformas (Meta e Google) — 100% verba, sem intermediação</p>
+          </div>
+        </div>
+      </div>
+      <p class="pnote reveal d3"><span class="pfx">$</span><b>Para calibrar:</b> o fee mensal custa cerca de <b>¼ de uma comissão</b> no ticket médio da sua carteira. Ciclo inicial de 90 dias, o roadmap que você acabou de ver.</p>
+    </div>
+  </section>
+
+  <!-- PRÓXIMOS -->
+  <section class="slide" id="s-next" data-title="Próximos passos">
+    <div class="wrap">
+      <div class="eyebrow reveal"><span class="n">09</span> zync deploy</div>
+      <h2 class="reveal">Do aperto de mão<br>à máquina no ar.</h2>
+      <div class="steps reveal d1">
+        <div class="step"><span class="sn">passo 1 · hoje</span><b>Alinhamento e aprovação</b><span>fechamos escopo e condições nesta conversa</span></div>
+        <div class="step"><span class="sn">passo 2 · semana 1</span><b>Kickoff</b><span>acessos, rastreamento, calendário e primeira gravação agendada</span></div>
+        <div class="step"><span class="sn">passo 3 · 30 dias</span><b>Máquina rodando</b><span>campanhas no ar e agente de IA atendendo os primeiros leads · CRM completo no dia 45</span></div>
+      </div>
+      <div class="term reveal d2" aria-hidden="true" style="max-width:540px">
+        <div class="term-bar"><i></i><i></i><i></i></div>
+        <div class="term-body" style="min-height:auto">
+          <div class="t-cmd">zync deploy --cliente abritta</div>
+          <div class="t-ok">máquina de crescimento: pronta para subir</div>
+          <div class="t-end">aguardando seu go. _</div>
+        </div>
+      </div>
+      <div class="contact reveal d3">zync · crescimento digital de ponta a ponta · <a href="https://zynchub.com.br">zynchub.com.br</a></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- terminal da capa ---- */
+  var termLines = [
+    ['t-cmd','zync init --cliente "abritta inteligência imobiliária"'],
+    ['t-ok','diagnóstico completo — 120 imóveis mapeados'],
+    ['t-ok','5 dores identificadas na escuta'],
+    ['t-ok','plano de crescimento compilado'],
+    ['t-end','pronto. use as setas ou o menu acima. ↓']
+  ];
+  var tb = document.getElementById('termbody'), ti = 0;
+  function typeLine(){
+    if(ti >= termLines.length) return;
+    var l = termLines[ti++], d = document.createElement('div');
+    d.className = l[0];
+    tb.appendChild(d);
+    if(reduced){ d.textContent = l[1]; typeLine(); return; }
+    var txt = l[1], ci = 0;
+    var iv = setInterval(function(){
+      d.textContent = txt.slice(0, ++ci);
+      if(ci >= txt.length){ clearInterval(iv); setTimeout(typeLine, 180); }
+    }, l[0] === 't-cmd' ? 26 : 8);
+  }
+  setTimeout(typeLine, 500);
+
+  /* ---- gráfico de barras (carteira) ---- */
+  var data = [
+    ['Águas Claras',61,true],['Plano Piloto',19,false],['Guará',8,false],
+    ['Samambaia',7,false],['Taguatinga',7,false],['Vicente Pires',5,false],
+    ['Ceilândia',4,false],['Outras',9,false]
+  ];
+  var bars = document.getElementById('bars');
+  data.forEach(function(r){
+    var row = document.createElement('div');
+    row.className = 'brow' + (r[2] ? ' top' : '');
+    row.title = r[0] + ': ' + r[1] + ' imóveis (' + Math.round(r[1]/120*100) + '% da carteira)';
+    row.innerHTML =
+      '<div class="lbl">' + r[0] + '</div>' +
+      '<div class="track"><div class="bar" style="width:' + (r[1]/61*100) + '%"></div></div>' +
+      '<div class="val">' + r[1] + '</div>';
+    bars.appendChild(row);
+  });
+
+  /* ---- tabs das frentes ---- */
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(o){ o.classList.remove('on'); o.setAttribute('aria-selected','false'); });
+      document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+      t.classList.add('on'); t.setAttribute('aria-selected','true');
+      document.getElementById(t.dataset.p).classList.add('on');
+    });
+  });
+
+  /* ---- cena do agente: conversa com motion ----
+     entra na tela → conversa acontece; sai da tela → reseta;
+     voltou → acontece de novo. */
+  var script = [
+    ['lead-m','Boa tarde! Vi o anúncio do apartamento de 3 quartos em Águas Claras. Ainda está disponível?'],
+    ['bot-m','Boa tarde! Está disponível sim. É o de 109m² na Quadra 203 Sul, por R$ 990 mil. Você procura para morar ou para investir?'],
+    ['lead-m','Para morar. Preciso vender meu apartamento no Guará antes.'],
+    ['bot-m','Perfeito! Então posso aproveitar e agendar uma avaliação gratuita do seu imóvel no Guará, assim a troca anda mais rápido. Prefere visitar o da 203 ainda esta semana?'],
+    ['lead-m','Pode ser sábado de manhã.'],
+    ['sys-m','score 92/100 · lead quente · origem: campanha fundo de funil\nroteado → corretor sênior · captação no Guará acionada']
+  ];
+  var chat = document.getElementById('chat'), chatTimers = [], chatRunning = false;
+
+  function clearChatTimers(){
+    chatTimers.forEach(clearTimeout);
+    chatTimers = [];
+  }
+  function schedule(fn, ms){ chatTimers.push(setTimeout(fn, reduced ? 0 : ms)); }
+  function resetChat(){
+    clearChatTimers();
+    chat.innerHTML = '';
+    chatRunning = false;
+  }
+  function playChat(){
+    resetChat();
+    chatRunning = true;
+    var i = 0;
+    (function next(){
+      if(i >= script.length){ chatRunning = false; return; }
+      var m = script[i++];
+      if(m[0] === 'bot-m' && !reduced){
+        var t = document.createElement('div');
+        t.className = 'msg bot-m typing show';
+        t.innerHTML = '<i></i><i></i><i></i>';
+        chat.appendChild(t);
+        schedule(function(){
+          t.classList.remove('typing');
+          t.textContent = m[1];
+          schedule(next, 1450);
+        }, 900);
+      } else {
+        var d = document.createElement('div');
+        d.className = 'msg ' + m[0];
+        d.textContent = m[1];
+        chat.appendChild(d);
+        requestAnimationFrame(function(){ requestAnimationFrame(function(){ d.classList.add('show'); }); });
+        schedule(next, m[0] === 'sys-m' ? 900 : 1300);
+      }
+    })();
+  }
+  document.getElementById('replay').addEventListener('click', playChat);
+
+  /* ---- calculadora de ROI ---- */
+  var FEE = 8900;
+  var rV = document.getElementById('rV'), rT = document.getElementById('rT'), rM = document.getElementById('rM');
+  var brl = new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL', maximumFractionDigits:0});
+  function fmtK(v){ return v >= 1000000 ? 'R$ ' + (v/1000000).toLocaleString('pt-BR',{maximumFractionDigits:2}) + ' mi' : 'R$ ' + Math.round(v/1000) + ' mil'; }
+  function calc(){
+    var vendas = +rV.value, ticket = +rT.value, midia = +rM.value;
+    var com = vendas * ticket * 0.05;
+    var inv = (FEE + midia) * 3;
+    var x = com / inv;
+    var be = inv / (ticket * 0.05);
+    document.getElementById('oV').textContent = vendas;
+    document.getElementById('oT').textContent = fmtK(ticket);
+    document.getElementById('oM').textContent = fmtK(midia);
+    document.getElementById('vCom').textContent = brl.format(com);
+    document.getElementById('vInv').textContent = brl.format(inv);
+    document.getElementById('vX').textContent = x.toLocaleString('pt-BR',{maximumFractionDigits:1}) + '×';
+    document.getElementById('vLine').textContent = brl.format(x).replace('R$','R$ ') + ' de comissão para cada R$ 1,00 investido';
+    document.getElementById('vBe').textContent = be.toLocaleString('pt-BR',{maximumFractionDigits:1}) + (be > 1.05 ? ' vendas' : ' venda');
+  }
+  [rV,rT,rM].forEach(function(r){ r.addEventListener('input', calc); });
+  calc();
+
+  /* ---- navegação: topbar + reveal + teclado ---- */
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var navBtns = Array.prototype.slice.call(document.querySelectorAll('.topnav button'));
+  var btnById = {};
+  navBtns.forEach(function(b){
+    btnById[b.dataset.t] = b;
+    b.addEventListener('click', function(){
+      var el = document.getElementById(b.dataset.t);
+      if(el) el.scrollIntoView({behavior: reduced ? 'auto' : 'smooth'});
+    });
+  });
+  document.getElementById('logoBtn').addEventListener('click', function(){
+    slides[0].scrollIntoView({behavior: reduced ? 'auto' : 'smooth'});
+  });
+
+  var current = 0, ioFired = false;
+  var io = new IntersectionObserver(function(es){
+    ioFired = true;
+    es.forEach(function(e){
+      if(e.target.id === 's-agente'){
+        if(e.isIntersecting){
+          if(!chatRunning && chat.children.length === 0){ schedule(playChat, 450); }
+        } else if(chat.children.length){
+          resetChat();
+        }
+      }
+      if(e.isIntersecting) e.target.classList.add('in');
+    });
+  }, {threshold: 0.12});
+  slides.forEach(function(s){ io.observe(s); });
+
+  /* rede de segurança: se o observer não inicializar (embeds, browsers antigos),
+     tudo fica visível mesmo assim — a apresentação nunca pode abrir em branco */
+  setTimeout(function(){
+    if(!ioFired){
+      slides.forEach(function(s){ s.classList.add('in'); });
+      if(chat.children.length === 0) playChat();
+    }
+  }, 1500);
+
+  function setCurrent(){
+    var mid = window.scrollY + window.innerHeight / 2, best = 0;
+    slides.forEach(function(s, i){ if(s.offsetTop <= mid) best = i; });
+    current = best;
+    navBtns.forEach(function(b){ b.classList.remove('on'); });
+    var active = btnById[slides[best].id];
+    if(active) active.classList.add('on');
+  }
+  window.addEventListener('scroll', setCurrent, {passive: true});
+  setCurrent();
+
+  document.addEventListener('keydown', function(e){
+    if(e.target.tagName === 'INPUT') return;
+    var go = null;
+    if(e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') go = Math.min(current + 1, slides.length - 1);
+    if(e.key === 'ArrowUp' || e.key === 'PageUp') go = Math.max(current - 1, 0);
+    if(go !== null){ e.preventDefault(); slides[go].scrollIntoView({behavior: reduced ? 'auto' : 'smooth'}); }
+  });
+})();
+</script>
+
+</body>
+</html>
