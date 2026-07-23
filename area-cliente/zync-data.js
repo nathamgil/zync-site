@@ -346,10 +346,10 @@
         sb.from('trafego_campanhas').select('*').order('invest', { ascending: false }),
         sb.from('trafego_serie').select('*').order('dia'),
         sb.from('funil').select('*').order('ordem'),
-        sb.from('leads').select('*').order('data', { ascending: false }).limit(50),
+        sb.from('leads_publicos').select('*').order('data', { ascending: false }).limit(50),
         sb.from('site_resumo').select('*').single(),
         sb.from('conteudo_itens').select('*').order('data', { ascending: false }).limit(20),
-        sb.from('agente_ia').select('*').single(),
+        sb.from('agente_ia_publico').select('*').single(),
         sb.from('entregas').select('*').order('prazo'),
         sb.from('proximos_passos').select('*').order('ordem'),
         sb.from('arquivos').select('*').order('data', { ascending: false }),
@@ -411,7 +411,10 @@
     revelarTelefone: function (leadId) {
       if (ZyncAuth.ehDemo()) {
         return new Promise(function (res) {
-          setTimeout(function () { res({ ok: true, fone: '(61) 98' + String(1000 + (leadId * 37) % 8999) + '-' + String(1000 + (leadId * 91) % 8999) }); }, 260);
+          var n = parseInt(leadId, 10) || 0;
+          setTimeout(function () {
+            res({ ok: true, fone: '(61) 9' + (1000 + (n * 1373) % 8999) + '-' + (1000 + (n * 4517) % 8999) });
+          }, 260);
         });
       }
       return ZyncAuth._supabase()

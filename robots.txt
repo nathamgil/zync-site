@@ -2,4 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /apresentacao.html
 Disallow: /marca/
+Disallow: /area-cliente/
+Disallow: /propostas/
 Sitemap: https://zynchub.com.br/sitemap.xml

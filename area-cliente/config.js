@@ -2,7 +2,10 @@
    Zync — Área do Cliente · CONFIGURAÇÃO
    ------------------------------------------------------------
    Este é o ÚNICO arquivo que você precisa editar para ligar o
-   portal ao backend real. Veja SETUP.md para o passo a passo.
+   portal ao backend real.
+
+   Passo a passo e schema SQL: nathamlife\zync-docs\SETUP.md
+   (fica FORA do repositório do site — é documento interno).
    ============================================================ */
 
 window.ZYNC_CONFIG = {

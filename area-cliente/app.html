@@ -259,8 +259,10 @@ function tag(texto, cor) {
    campanha ou o atendimento. Sem julgamento no texto, só na cor. */
 function tempoContato(t1) {
   if (!t1) return '<span class="badge b-gray">aguardando</span>';
-  var m = /(\d+)\s*h/.exec(t1), min = /(\d+)\s*min/.exec(t1);
-  var mins = (m ? parseInt(m[1], 10) * 60 : 0) + (min ? parseInt(min[1], 10) : 0);
+  var h = /(\d+)\s*h\s*(\d*)/.exec(t1);           // '4h20', '1h10'
+  var m = /(\d+)\s*min/.exec(t1);                 // '35 min'
+  var mins = h ? parseInt(h[1], 10) * 60 + (parseInt(h[2], 10) || 0)
+               : (m ? parseInt(m[1], 10) : 0);
   var cor = mins <= 15 ? 'b-green' : (mins <= 60 ? 'b-yellow' : 'b-red');
   return '<span class="badge ' + cor + '">' + esc(t1) + '</span>';
 }
@@ -451,10 +453,12 @@ var PAGINAS = [
           '<th>Data</th><th>Lead</th><th>Telefone</th><th>Origem</th><th>Campanha</th>' +
           '<th>Responsável</th><th>1º contato</th><th>Status</th></tr></thead><tbody>' +
           D.leads.lista.map(function (l, i) {
+            // no banco o identificador é o uuid do lead; no modo demo, o índice
+            var lid = esc(l.id != null ? l.id : i);
             return '<tr><td class="mono">' + F.dataCurta(l.data) + '</td>' +
               '<td class="strong">' + esc(l.nome) + '</td>' +
-              '<td class="mono" data-fone="' + i + '">' + esc(l.fone || '—') +
-                (l.fone ? ' <button class="lnk" data-revelar="' + i + '">revelar</button>' : '') + '</td>' +
+              '<td class="mono" data-fone="' + lid + '">' + esc(l.fone || '—') +
+                (l.fone ? ' <button class="lnk" data-revelar="' + lid + '">revelar</button>' : '') + '</td>' +
               '<td>' + esc(l.origem) + '</td>' +
               '<td>' + esc(l.campanha) + '</td>' +
               '<td>' + esc(l.responsavel || '—') + '</td>' +
@@ -862,7 +866,8 @@ document.addEventListener('click', function (e) {
   var rev = e.target.closest('[data-revelar]');
   if (rev) {
     e.preventDefault();
-    var i = parseInt(rev.getAttribute('data-revelar'), 10);
+    // pode ser um uuid (banco) ou um índice (demo) — não converter para número
+    var i = rev.getAttribute('data-revelar');
     rev.disabled = true;
     rev.textContent = '…';
     ZyncData.revelarTelefone(i).then(function (r) {
