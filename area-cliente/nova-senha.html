@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova senha — Área do Cliente Zync</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="256x256" href="/favicon.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="portal.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<div class="auth-wrap">
+
+  <aside class="auth-brand">
+    <a href="/" class="logo">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="nz" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#9d7bff"/></linearGradient></defs><path d="M22 20 H78 V33 L45 67 H78 V80 H22 V67 L55 33 H22 Z" fill="url(#nz)"/><circle cx="50" cy="50" r="13" fill="none" stroke="#4dd0e1" stroke-width="2.5"/><circle cx="50" cy="50" r="6" fill="none" stroke="#4dd0e1" stroke-width="2.5"/><circle cx="50" cy="50" r="2" fill="#4dd0e1"/></svg>
+      <span class="z">zync</span>_<span class="cursor"></span>
+    </a>
+
+    <div class="auth-brand-mid">
+      <div class="sec-tag">segurança da conta</div>
+      <h1>Escolha uma senha <span class="grad">que só você saiba.</span></h1>
+      <p>Este link é de uso único e expira em pouco tempo. Depois de definir a nova senha, você entra direto no painel.</p>
+      <ul class="auth-feats">
+        <li>Mínimo de 8 caracteres</li>
+        <li>Evite repetir senha usada em outros sites</li>
+        <li>Ninguém da Zync tem acesso à sua senha</li>
+      </ul>
+    </div>
+
+    <div class="auth-foot">zynchub.com.br · Brasília-DF</div>
+  </aside>
+
+  <main class="auth-panel">
+    <div class="auth-card">
+      <h2>Definir nova senha</h2>
+      <p class="sub">Você chegou aqui pelo link enviado no seu e-mail.</p>
+
+      <div id="msg" class="alert hidden" role="alert"></div>
+
+      <form id="formSenha" novalidate>
+        <div class="field">
+          <label for="senha">NOVA SENHA</label>
+          <input type="password" id="senha" autocomplete="new-password" placeholder="mínimo 8 caracteres" required>
+        </div>
+        <div class="field">
+          <label for="senha2">REPITA A NOVA SENHA</label>
+          <input type="password" id="senha2" autocomplete="new-password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" id="btnSalvar" class="btn btn-primary btn-block">
+          <span id="btnTxt">Salvar e entrar</span>
+        </button>
+      </form>
+
+      <div class="auth-note">
+        O link expirou ou não funcionou?
+        <a href="index.html">Pedir um novo link</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script src="zync-auth.js"></script>
+<script>
+(function () {
+  var form   = document.getElementById('formSenha');
+  var senha  = document.getElementById('senha');
+  var senha2 = document.getElementById('senha2');
+  var btn    = document.getElementById('btnSalvar');
+  var btnTxt = document.getElementById('btnTxt');
+  var msg    = document.getElementById('msg');
+  var ocupado = false;
+
+  function mostra(texto, tipo) {
+    msg.className = 'alert alert-' + tipo;
+    msg.textContent = texto;
+  }
+  function limpa() { msg.className = 'alert hidden'; msg.textContent = ''; }
+
+  if (ZyncAuth.ehDemo()) {
+    mostra('O portal está em modo demonstração. A redefinição de senha só funciona com o backend ligado.', 'info');
+    btn.disabled = true;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (ocupado) return;
+    limpa();
+
+    if (senha.value !== senha2.value) {
+      mostra('As duas senhas precisam ser iguais.', 'err');
+      senha2.focus();
+      return;
+    }
+
+    ocupado = true;
+    btn.disabled = true;
+    btnTxt.innerHTML = '<span class="spinner"></span> Salvando…';
+
+    ZyncAuth.definirNovaSenha(senha.value).then(function (r) {
+      if (r.ok) {
+        mostra('Senha atualizada. Entrando no painel…', 'ok');
+        setTimeout(function () { location.replace(ZyncAuth.URL_APP); }, 900);
+        return;
+      }
+      ocupado = false;
+      btn.disabled = false;
+      btnTxt.textContent = 'Salvar e entrar';
+      mostra(r.erro, 'err');
+    });
+  });
+})();
+</script>
+</body>
+</html>

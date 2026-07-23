@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel — Área do Cliente Zync</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="256x256" href="/favicon.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="portal.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<!-- ícones -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-grid" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 13V9M6 13V4M10 13V7M14 13V2"/></symbol>
+  <symbol id="i-funnel" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M2 3h12l-4.5 5.5V14L6.5 12V8.5L2 3z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c1.8 2 1.8 10 0 12M8 2C6.2 4 6.2 12 8 14"/></symbol>
+  <symbol id="i-image" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><circle cx="6" cy="6.5" r="1.2"/><path d="M3 12l3.5-3.5L9 11l2-2 2 2"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="10" height="8" rx="2"/><path d="M8 2v3M5.5 9h.01M10.5 9h.01" stroke-linecap="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3.5 14V2.5M3.5 3h9l-2 3 2 3h-9"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 2.5l6 11H2l6-11zM8 7v3M8 12h.01"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 4.5A1.5 1.5 0 013.5 3h2.6l1.4 1.8h5A1.5 1.5 0 0114 6.3V12a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 12V4.5z"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1.8"/><path d="M2 7h12M11 10h1.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.5 4.2A1.7 1.7 0 014.2 2.5h7.6a1.7 1.7 0 011.7 1.7v5a1.7 1.7 0 01-1.7 1.7H6.5L3 14v-2.9a1.7 1.7 0 01-.5-1.2v-5z"/></symbol>
+  <symbol id="i-out" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14H3.5A1.5 1.5 0 012 12.5v-9A1.5 1.5 0 013.5 2H6M10.5 11L14 8l-3.5-3M14 8H6.5"/></symbol>
+</svg>
+
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <a href="/" class="logo">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="nz" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#9d7bff"/></linearGradient></defs><path d="M22 20 H78 V33 L45 67 H78 V80 H22 V67 L55 33 H22 Z" fill="url(#nz)"/><circle cx="50" cy="50" r="13" fill="none" stroke="#4dd0e1" stroke-width="2.5"/><circle cx="50" cy="50" r="6" fill="none" stroke="#4dd0e1" stroke-width="2.5"/><circle cx="50" cy="50" r="2" fill="#4dd0e1"/></svg>
+        <span class="z">zync</span>_<span class="cursor"></span>
+      </a>
+      <div class="sb-client">
+        <div class="sb-avatar" id="sbAvatar">··</div>
+        <div style="min-width:0">
+          <div class="sb-client-name" id="sbEmpresa">carregando…</div>
+          <div class="sb-client-plan" id="sbPlano">—</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sb-nav" id="sbNav"></nav>
+
+    <div class="sb-foot">
+      <button class="sb-link" id="btnSair">
+        <svg class="ico"><use href="#i-out"/></svg> Sair
+      </button>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <div class="main">
+    <header class="topbar">
+      <button class="burger" id="burger" aria-label="Abrir menu">☰</button>
+      <div class="tb-title" id="tbTitle">Visão geral</div>
+      <div class="tb-spacer"></div>
+      <div class="tb-sync" id="tbSync"><span class="dot"></span> carregando</div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="card"><div class="skel" style="height:18px;width:200px;margin-bottom:14px"></div><div class="skel" style="height:120px"></div></div>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="zync-auth.js"></script>
+<script src="zync-data.js"></script>
+<script>
+(function () {
+'use strict';
+
+var F = ZyncData.Fmt;
+var CFG = window.ZYNC_CONFIG;
+var D = null;                       // dataset carregado
+var el = function (id) { return document.getElementById(id); };
+
+/* ---------- escape obrigatório em tudo que vem do banco ---------- */
+function esc(v) {
+  if (v == null) return '';
+  return String(v).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+/* ============================================================
+   GRÁFICOS EM SVG (sem biblioteca externa)
+   ============================================================ */
+
+function sparkline(vals, w, h) {
+  if (!vals || vals.length < 2) return '';
+  var max = Math.max.apply(null, vals), min = Math.min.apply(null, vals);
+  var span = (max - min) || 1;
+  var pts = vals.map(function (v, i) {
+    return [(i / (vals.length - 1)) * w, h - ((v - min) / span) * (h - 4) - 2];
+  });
+  var d = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join(' ');
+  var area = d + ' L' + w + ' ' + h + ' L0 ' + h + ' Z';
+  var uid = 'sp' + Math.round(vals[0] * 1000) + vals.length + w;
+  return '<svg class="spark" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
+    '<defs><linearGradient id="' + uid + '" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0" stop-color="#7c5cff" stop-opacity=".38"/>' +
+    '<stop offset="1" stop-color="#7c5cff" stop-opacity="0"/></linearGradient></defs>' +
+    '<path d="' + area + '" fill="url(#' + uid + ')"/>' +
+    '<path d="' + d + '" fill="none" stroke="#7c5cff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+}
+
+/* barras (investimento) + linha (leads) sobre o mesmo eixo x */
+function chartBarLine(serie) {
+  if (!serie || !serie.length) return '';
+  var W = 720, H = 220, pad = { t: 14, r: 42, b: 26, l: 42 };
+  var iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
+  var maxB = Math.max.apply(null, serie.map(function (s) { return s.invest; })) * 1.15;
+  var maxL = Math.max.apply(null, serie.map(function (s) { return s.leads; })) * 1.25;
+  var step = iw / serie.length;
+  var bw = Math.min(step * 0.52, 26);
+
+  var bars = serie.map(function (s, i) {
+    var bh = (s.invest / maxB) * ih;
+    var x = pad.l + step * i + (step - bw) / 2;
+    return '<rect class="bar" x="' + x.toFixed(1) + '" y="' + (pad.t + ih - bh).toFixed(1) +
+           '" width="' + bw.toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="3">' +
+           '<title>' + esc(s.dia) + ' · ' + F.brl0(s.invest) + '</title></rect>';
+  }).join('');
+
+  var pts = serie.map(function (s, i) {
+    return [pad.l + step * i + step / 2, pad.t + ih - (s.leads / maxL) * ih];
+  });
+  var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join(' ');
+  var dots = pts.map(function (p, i) {
+    return '<circle class="pt" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3.2">' +
+           '<title>' + esc(serie[i].dia) + ' · ' + serie[i].leads + ' leads</title></circle>';
+  }).join('');
+
+  var gy = [0, .25, .5, .75, 1].map(function (f) {
+    var y = pad.t + ih - f * ih;
+    return '<line class="axis" x1="' + pad.l + '" y1="' + y.toFixed(1) + '" x2="' + (W - pad.r) + '" y2="' + y.toFixed(1) + '"/>' +
+           '<text class="axis-lbl" x="' + (pad.l - 7) + '" y="' + (y + 3).toFixed(1) + '" text-anchor="end">' + Math.round(maxB * f / 50) * 50 + '</text>' +
+           '<text class="axis-lbl" x="' + (W - pad.r + 7) + '" y="' + (y + 3).toFixed(1) + '">' + Math.round(maxL * f) + '</text>';
+  }).join('');
+
+  var gx = serie.map(function (s, i) {
+    if (serie.length > 8 && i % 2) return '';
+    return '<text class="axis-lbl" x="' + (pad.l + step * i + step / 2).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle">' + esc(s.dia) + '</text>';
+  }).join('');
+
+  return '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '">' +
+    '<defs><linearGradient id="gradBar" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0" stop-color="#7c5cff" stop-opacity=".55"/>' +
+    '<stop offset="1" stop-color="#7c5cff" stop-opacity=".14"/></linearGradient></defs>' +
+    gy + bars + '<path class="line" d="' + line + '"/>' + dots + gx + '</svg>' +
+    '<div class="legend"><span><i style="background:rgba(124,92,255,.55)"></i>Investimento (R$)</span>' +
+    '<span><i style="background:#7c5cff"></i>Leads gerados</span></div>';
+}
+
+/* barras horizontais simples */
+function barsH(itens, campoLabel, campoValor, formatador) {
+  if (!itens || !itens.length) return vazio('Sem dados no período.');
+  var max = Math.max.apply(null, itens.map(function (i) { return i[campoValor]; })) || 1;
+  return '<div class="funnel">' + itens.map(function (it) {
+    var pct = (it[campoValor] / max) * 100;
+    return '<div class="fn-step">' +
+      '<div style="flex:0 0 148px;font-size:.84rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(it[campoLabel]) + '</div>' +
+      '<div style="flex:1"><div class="prog"><i style="width:' + pct.toFixed(1) + '%"></i></div></div>' +
+      '<div class="fn-meta" style="flex:0 0 auto"><b>' + formatador(it[campoValor]) + '</b></div>' +
+    '</div>';
+  }).join('') + '</div>';
+}
+
+function vazio(txt, cta) {
+  return '<div class="empty"><div class="big">◌</div><p>' + esc(txt) + '</p>' +
+    (cta ? '<div style="margin-top:16px">' + cta + '</div>' : '') + '</div>';
+}
+
+/* ============================================================
+   COMPONENTES
+   ============================================================ */
+
+function deltaHTML(k) {
+  if (k.delta == null) return '';
+  var bom = k.inverso ? k.delta < 0 : k.delta > 0;
+  var cls = k.neutro ? 'flat' : (Math.abs(k.delta) < 0.5 ? 'flat' : (bom ? 'up' : 'down'));
+  var seta = k.delta > 0 ? '▲' : (k.delta < 0 ? '▼' : '■');
+  return '<span class="delta ' + cls + '">' + seta + ' ' +
+         Math.abs(k.delta).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%</span>';
+}
+
+function kpiHTML(k) {
+  var valor = F[k.fmt] ? F[k.fmt](k.valor) : k.valor;
+  /* a anotação fica ancorada no número que ela explica — interpretação
+     com lastro, em vez de um bloco de prosa solto na tela */
+  var nota = k.nota ? '<div class="k-nota">' + esc(String(k.nota).slice(0, 200)) + '</div>' : '';
+  return '<div class="kpi">' +
+    '<div class="k-label">' + esc(k.label) + '</div>' +
+    '<div class="k-val grad">' + valor + '</div>' +
+    '<div class="k-foot">' + deltaHTML(k) + '<span>' + esc(k.hint || '') + '</span></div>' +
+    nota + sparkline(k.spark, 120, 44) +
+  '</div>';
+}
+
+/* selo de atualização — automático mostra hora, manual mostra o ciclo */
+function selo(tipo) {
+  if (tipo === 'manual') {
+    return '<span class="tb-sync" style="font-size:.68rem"><span class="dot" style="background:var(--accent-2);animation:none"></span> atualizado no fechamento mensal</span>';
+  }
+  var t = D.periodo && D.periodo.atualizado_em ? D.periodo.atualizado_em : null;
+  if (!t) return '';
+  var d = String(t).slice(0, 10).split('-'), h = String(t).slice(11, 16);
+  return '<span class="tb-sync" style="font-size:.68rem"><span class="dot"></span> atualizado ' +
+         d[2] + '/' + d[1] + ' às ' + h + '</span>';
+}
+
+function cardHead(titulo, sub, extra) {
+  return '<div class="card-head"><h3>' + esc(titulo) + '</h3>' +
+    (sub ? '<span class="sub">' + esc(sub) + '</span>' : '') +
+    '<span class="spacer"></span>' + (extra || '') + '</div>';
+}
+
+var STATUS = {
+  concluido:   { cls: 'b-green',  txt: 'concluído' },
+  andamento:   { cls: 'b-purple', txt: 'em andamento' },
+  pendente:    { cls: 'b-gray',   txt: 'previsto' },
+  ativa:       { cls: 'b-green',  txt: 'ativa' },
+  pausada:     { cls: 'b-gray',   txt: 'pausada' },
+  teste:       { cls: 'b-yellow', txt: 'em teste' },
+  novo:        { cls: 'b-blue',   txt: 'novo' },
+  qualificado: { cls: 'b-purple', txt: 'qualificado' },
+  reuniao:     { cls: 'b-yellow', txt: 'reunião' },
+  ganho:       { cls: 'b-green',  txt: 'ganho' },
+  perdido:     { cls: 'b-red',    txt: 'perdido' },
+  /* pendência do cliente nunca vem em vermelho: o portal destrava a
+     operação, não cobra. Item de aprovação não é acusação. */
+  alta:        { cls: 'b-yellow', txt: 'prioridade' },
+  media:       { cls: 'b-gray',   txt: 'quando puder' },
+  baixa:       { cls: 'b-gray',   txt: 'sem pressa' },
+};
+function badge(k) {
+  var s = STATUS[k] || { cls: 'b-gray', txt: k || '—' };
+  return '<span class="badge ' + s.cls + '">' + esc(s.txt) + '</span>';
+}
+/* rótulo livre, para valores que não têm status fixo (canal, plataforma) */
+function tag(texto, cor) {
+  return '<span class="badge ' + (cor || 'b-blue') + '">' + esc(texto) + '</span>';
+}
+
+/* tempo até o primeiro contato — é aqui que se vê se o gargalo é a
+   campanha ou o atendimento. Sem julgamento no texto, só na cor. */
+function tempoContato(t1) {
+  if (!t1) return '<span class="badge b-gray">aguardando</span>';
+  var m = /(\d+)\s*h/.exec(t1), min = /(\d+)\s*min/.exec(t1);
+  var mins = (m ? parseInt(m[1], 10) * 60 : 0) + (min ? parseInt(min[1], 10) : 0);
+  var cor = mins <= 15 ? 'b-green' : (mins <= 60 ? 'b-yellow' : 'b-red');
+  return '<span class="badge ' + cor + '">' + esc(t1) + '</span>';
+}
+
+function ctaWhats(texto, label) {
+  var url = 'https://wa.me/' + CFG.suporte.whatsapp + '?text=' + encodeURIComponent(texto);
+  return '<a class="btn btn-primary btn-sm" target="_blank" rel="noopener" href="' + esc(url) + '">' + esc(label) + '</a>';
+}
+
+/* Rodapé fixo do portal.
+   Declara a propriedade das contas (o medo silencioso de quem contrata
+   agência) e a política de dados. A oferta de serviços não contratados
+   vive aqui — nunca como aba vazia fingindo ser produto entregue. */
+function rodape() {
+  var h = '<div class="portal-foot">';
+
+  h += '<p>Todas as contas de anúncio, domínio, hospedagem e analytics citadas neste portal são de ' +
+       '<b>propriedade da ' + esc(D.cliente.empresa) + '</b>. A Zync atua exclusivamente como administradora.</p>';
+
+  h += '<p style="margin-top:8px">Os dados exibidos pertencem à sua empresa e são tratados apenas para operar os serviços contratados. ' +
+       'Acesso a dados de contato é registrado. Retenção padrão de 90 dias na tela.</p>';
+
+  if (naoContratados.length) {
+    h += '<div class="servicos"><span>A Zync também opera:</span>' +
+      naoContratados.map(function (s) { return '<span class="chip">' + esc(s) + '</span>'; }).join('') +
+      ctaWhats('Olá! Quero saber sobre os outros serviços da Zync para a minha conta.', 'Saber mais') + '</div>';
+  }
+
+  return h + '</div>';
+}
+
+/* ============================================================
+   PÁGINAS
+   ============================================================ */
+
+var PAGINAS = [
+
+/* ---------------- VISÃO GERAL ---------------- */
+{
+  id: 'visao', titulo: 'Visão geral', grupo: 'Operação', icone: 'i-grid',
+  sempre: true,
+  render: function () {
+    var h = '';
+
+    h += '<div class="page-head"><div class="sec-tag">' + esc(D.periodo.label || '') + '</div>' +
+         '<h2>Olá, ' + esc((D.cliente.nome || '').split(' ')[0]) + '. Aqui está o mês da ' +
+         esc(String(D.cliente.empresa || '').replace(/\.$/, '')) + '.</h2>' +
+         '<p>Comparativos contra ' + esc(D.periodo.comparado_com || 'o mês anterior') + '. Os blocos de números são automáticos; os de análise e entrega são publicados pela Zync no fechamento.</p></div>';
+
+    /* KPIs */
+    if (D.kpis && D.kpis.length) {
+      h += '<div class="grid g-4 mb-24">' + D.kpis.map(kpiHTML).join('') + '</div>';
+    }
+
+    /* Leitura do estrategista */
+    if (D.leitura) {
+      h += '<div class="card mb-24" style="border-color:rgba(124,92,255,.4);background:linear-gradient(160deg,rgba(124,92,255,.07),var(--panel) 55%)">' +
+        '<div class="card-head">' +
+          '<div class="sb-avatar" style="width:40px;height:40px;border-radius:11px;font-size:.9rem">' + esc(D.leitura.iniciais) + '</div>' +
+          '<div><h3 style="font-size:.92rem">' + esc(D.leitura.autor) + '</h3>' +
+          '<span class="sub">' + esc(D.leitura.cargo) + ' · leitura de ' + F.data(D.leitura.data) + '</span></div>' +
+          '<span class="spacer"></span>' + selo('manual') +
+        '</div>' +
+        '<h4 style="font-size:1.06rem;margin-bottom:12px;letter-spacing:-.4px">' + esc(D.leitura.titulo) + '</h4>' +
+        D.leitura.paragrafos.map(function (p) {
+          return '<p style="color:var(--muted);font-size:.9rem;margin-bottom:11px">' + esc(p) + '</p>';
+        }).join('') +
+      '</div>';
+    }
+
+    /* destaques */
+    if (D.insights && D.insights.length) {
+      h += '<div class="grid g-2 mb-24">' + D.insights.map(function (i) {
+        return '<div class="insight"><div class="ico">' + (i.tipo === 'atencao' ? '▲' : '◆') + '</div>' +
+          '<div><h4>' + esc(i.titulo) + '</h4><p>' + esc(i.texto) + '</p></div></div>';
+      }).join('') + '</div>';
+    }
+
+    /* funil + pendências lado a lado */
+    h += '<div class="grid g-2 mb-24">';
+
+    if (D.funil && D.funil.length) {
+      h += '<div class="card">' + cardHead('Funil do mês', null, selo()) + funilHTML(D.funil) + '</div>';
+    }
+
+    if (D.pendencias && D.pendencias.length) {
+      h += '<div class="card">' + cardHead('Para você aprovar', 'destrava a próxima entrega', selo('manual')) +
+        '<div class="list">' + D.pendencias.slice(0, 3).map(function (p) {
+          return '<div class="list-item"><div class="li-ico" style="color:var(--accent-2)">→</div>' +
+            '<div class="li-body"><h4>' + esc(p.titulo) + '</h4><p>' + esc(p.desc) + '</p></div>' +
+            badge(p.urgencia) + '</div>';
+        }).join('') + '</div>' +
+        '<button class="btn btn-ghost btn-sm" style="margin-top:14px" data-goto="pendencias">Ver e resolver</button></div>';
+    }
+    h += '</div>';
+
+    /* entregas + próximos passos */
+    h += '<div class="grid g-2">';
+    if (D.entregas && D.entregas.length) {
+      var andamento = D.entregas.filter(function (e) { return e.status !== 'concluido'; }).slice(0, 4);
+      var feitas = D.entregas.filter(function (e) { return e.status === 'concluido'; }).length;
+      h += '<div class="card">' + cardHead('Entregas do mês', feitas + ' de ' + D.entregas.length + ' concluídas', selo('manual')) +
+        '<div class="prog mb-16"><i style="width:' + ((feitas / D.entregas.length) * 100).toFixed(0) + '%"></i></div>' +
+        '<div class="timeline">' + (andamento.length ? andamento : D.entregas.slice(-3)).map(itemTimeline).join('') + '</div>' +
+        '<button class="btn btn-ghost btn-sm" style="margin-top:16px" data-goto="entregas">Ver todas as entregas</button></div>';
+    }
+    if (D.proximos_passos && D.proximos_passos.length) {
+      h += '<div class="card">' + cardHead('O que vem a seguir', null, selo('manual')) +
+        '<div class="list">' + D.proximos_passos.map(function (p) {
+          return '<div class="list-item"><div class="li-ico" style="color:var(--accent-2)">→</div>' +
+            '<div class="li-body"><h4>' + esc(p.titulo) + '</h4><p>' + esc(p.desc) + '</p></div>' +
+            '<div class="li-side">' + esc(p.prazo) + '</div></div>';
+        }).join('') + '</div></div>';
+    }
+    h += '</div>';
+
+    return h;
+  }
+},
+
+/* ---------------- TRÁFEGO PAGO ---------------- */
+{
+  id: 'trafego', titulo: 'Tráfego pago', grupo: 'Operação', icone: 'i-chart',
+  tem: function () { return !!D.trafego; },
+  oferta: 'tráfego pago',
+  render: function () {
+    var t = D.trafego;
+    var h = '<div class="page-head"><div class="sec-tag">' + esc(D.periodo.label) + '</div>' +
+      '<h2>Para onde foi o investimento</h2>' +
+      '<p>Investimento, alcance e resultado das campanhas em operação no período.</p></div>';
+
+    h += '<div class="grid g-4 mb-24">' +
+      [['INVESTIDO', F.brl0(t.investimento)], ['IMPRESSÕES', F.num(t.impressoes)],
+       ['CLIQUES', F.num(t.cliques)], ['CTR', F.pct(t.ctr)],
+       ['CPC MÉDIO', F.brl(t.cpc)], ['LEADS', F.num(t.leads)],
+       ['CUSTO POR LEAD', F.brl(t.cpl)], ['CUSTO POR QUALIFICADO', F.brl(t.custo_qualificado)]]
+      .map(function (p) {
+        return '<div class="kpi"><div class="k-label">' + p[0] + '</div><div class="k-val" style="font-size:1.5rem">' + p[1] + '</div></div>';
+      }).join('') + '</div>';
+
+    h += '<div class="card mb-24">' + cardHead('Investimento e leads por dia', null, selo()) +
+         chartBarLine(t.serie) + '</div>';
+
+    h += '<div class="card mb-24">' + cardHead('Campanhas em operação', t.campanhas.length + ' campanhas', selo()) +
+      '<div class="table-wrap"><table><thead><tr>' +
+      '<th>Campanha</th><th>Canal</th><th>Status</th><th class="num">Investido</th>' +
+      '<th class="num">Leads</th><th class="num">CPL</th><th class="num">CTR</th></tr></thead><tbody>' +
+      t.campanhas.map(function (c) {
+        return '<tr><td class="strong">' + esc(c.nome) + '</td><td>' + esc(c.canal) + '</td>' +
+          '<td>' + badge(c.status) + '</td><td class="num">' + F.brl0(c.invest) + '</td>' +
+          '<td class="num">' + F.num(c.leads) + '</td><td class="num">' + F.brl(c.cpl) + '</td>' +
+          '<td class="num">' + F.pct(c.ctr) + '</td></tr>';
+      }).join('') + '</tbody></table></div></div>';
+
+    h += '<div class="insight"><div class="ico">≡</div><div><h4>Como lemos esses números</h4>' +
+      '<p>Consideramos a conversão atribuída em até 7 dias após o clique e 1 dia após a visualização. ' +
+      'Por isso os totais podem divergir levemente do que aparece no Gerenciador de Anúncios, que usa outra janela padrão. ' +
+      'Não publicamos receita atribuída nem projeção de faturamento: são os números mais fáceis de contestar e os que menos ajudam a decidir.</p></div></div>';
+
+    return h;
+  }
+},
+
+/* ---------------- FUNIL E LEADS ---------------- */
+{
+  id: 'funil', titulo: 'Funil e leads', grupo: 'Operação', icone: 'i-funnel',
+  tem: function () { return !!(D.funil && D.funil.length); },
+  render: function () {
+    var h = '<div class="page-head"><div class="sec-tag">' + esc(D.periodo.label) + '</div>' +
+      '<h2>Do anúncio até a venda</h2>' +
+      '<p>Onde cada etapa perde volume. É aqui que se descobre se o problema está na campanha ou no atendimento.</p></div>';
+
+    h += '<div class="card mb-24">' + cardHead('Funil completo', null, selo()) + funilHTML(D.funil) + '</div>';
+
+    if (D.leads) {
+      h += '<div class="grid g-4 mb-24">' +
+        [['LEADS NO PERÍODO', F.num(D.leads.total)],
+         ['QUALIFICADOS', F.num(D.leads.qualificados)],
+         ['TAXA DE QUALIFICAÇÃO', F.pct(D.leads.taxa_qualificacao, 1)],
+         ['TEMPO MÉDIO DE RESPOSTA', D.leads.tempo_medio_resposta || '—']]
+        .map(function (p) {
+          return '<div class="kpi"><div class="k-label">' + p[0] + '</div><div class="k-val" style="font-size:1.5rem">' + p[1] + '</div></div>';
+        }).join('') + '</div>';
+
+      if (D.leads.lista && D.leads.lista.length) {
+        h += '<div class="card">' + cardHead('Leads do período', 'últimos ' + D.leads.lista.length, selo()) +
+          '<div class="table-wrap"><table><thead><tr>' +
+          '<th>Data</th><th>Lead</th><th>Telefone</th><th>Origem</th><th>Campanha</th>' +
+          '<th>Responsável</th><th>1º contato</th><th>Status</th></tr></thead><tbody>' +
+          D.leads.lista.map(function (l, i) {
+            return '<tr><td class="mono">' + F.dataCurta(l.data) + '</td>' +
+              '<td class="strong">' + esc(l.nome) + '</td>' +
+              '<td class="mono" data-fone="' + i + '">' + esc(l.fone || '—') +
+                (l.fone ? ' <button class="lnk" data-revelar="' + i + '">revelar</button>' : '') + '</td>' +
+              '<td>' + esc(l.origem) + '</td>' +
+              '<td>' + esc(l.campanha) + '</td>' +
+              '<td>' + esc(l.responsavel || '—') + '</td>' +
+              '<td>' + tempoContato(l.t1) + '</td>' +
+              '<td>' + badge(l.status) + '</td></tr>';
+          }).join('') + '</tbody></table></div>' +
+          '<p style="font-size:.78rem;color:var(--dim);margin-top:12px">' +
+          'O telefone aparece mascarado por padrão. Cada revelação fica registrada com usuário, data e hora. ' +
+          'Exibimos os últimos 90 dias e não disponibilizamos exportação em massa — os dados completos ficam no seu CRM.</p></div>';
+      }
+    }
+    return h;
+  }
+},
+
+/* ---------------- SITE E ANALYTICS ---------------- */
+{
+  id: 'site', titulo: 'Site e visitantes', grupo: 'Operação', icone: 'i-globe',
+  tem: function () { return !!D.site; },
+  oferta: 'sites de alta conversão',
+  render: function () {
+    var s = D.site;
+    var h = '<div class="page-head"><div class="sec-tag">' + esc(s.url || 'seu site') + '</div>' +
+      '<h2>O que acontece no seu site</h2>' +
+      '<p>Volume de visitas, origem do tráfego e as páginas que realmente convertem.</p></div>';
+
+    h += '<div class="grid g-4 mb-24">' +
+      [['VISITAS', F.num(s.visitas)], ['USUÁRIOS NOVOS', F.num(s.usuarios_novos)],
+       ['TEMPO MÉDIO', s.tempo_medio || '—'], ['TAXA DE CONVERSÃO', F.pct(s.taxa_conversao)],
+       ['NOTA DE PERFORMANCE', s.performance != null ? s.performance + '/100' : '—'],
+       ['DISPONIBILIDADE', F.pct(s.uptime)]]
+      .map(function (p) {
+        return '<div class="kpi"><div class="k-label">' + p[0] + '</div><div class="k-val" style="font-size:1.5rem">' + p[1] + '</div></div>';
+      }).join('') + '</div>';
+
+    h += '<div class="grid g-2 mb-24">' +
+      '<div class="card">' + cardHead('De onde vêm as visitas', null, selo()) +
+        barsH(s.origens, 'origem', 'visitas', F.num) + '</div>' +
+      '<div class="card">' + cardHead('Páginas mais vistas', null, selo()) +
+        '<div class="table-wrap" style="border:none"><table style="min-width:0"><thead><tr><th>Página</th><th class="num">Visitas</th><th class="num">Conv.</th></tr></thead><tbody>' +
+        s.top_paginas.map(function (p) {
+          return '<tr><td class="strong mono" style="font-size:.82rem">' + esc(p.pagina) + '</td>' +
+            '<td class="num">' + F.num(p.visitas) + '</td><td class="num">' + F.pct(p.conv, 1) + '</td></tr>';
+        }).join('') + '</tbody></table></div></div>' +
+    '</div>';
+    return h;
+  }
+},
+
+/* ---------------- CONTEÚDO ---------------- */
+{
+  id: 'conteudo', titulo: 'Conteúdo publicado', grupo: 'Operação', icone: 'i-image',
+  tem: function () { return !!(D.conteudo && D.conteudo.itens && D.conteudo.itens.length); },
+  oferta: 'conteúdo orgânico automatizado',
+  render: function () {
+    var c = D.conteudo;
+    var h = '<div class="page-head"><div class="sec-tag">' + esc(D.periodo.label) + '</div>' +
+      '<h2>O que foi publicado</h2><p>Volume produzido e desempenho de cada peça no período.</p></div>';
+
+    h += '<div class="grid g-4 mb-24">' +
+      [['PEÇAS PUBLICADAS', F.num(c.publicados)], ['ALCANCE TOTAL', F.num(c.alcance)],
+       ['NOVOS SEGUIDORES', F.num(c.seguidores_novos)], ['ENGAJAMENTO MÉDIO', F.pct(c.engajamento, 1)]]
+      .map(function (p) {
+        return '<div class="kpi"><div class="k-label">' + p[0] + '</div><div class="k-val" style="font-size:1.5rem">' + p[1] + '</div></div>';
+      }).join('') + '</div>';
+
+    h += '<div class="card">' + cardHead('Peças do período', null, selo()) +
+      '<div class="table-wrap"><table><thead><tr><th>Data</th><th>Canal</th><th>Peça</th><th class="num">Alcance</th><th class="num">Engaj.</th></tr></thead><tbody>' +
+      c.itens.map(function (i) {
+        return '<tr><td class="mono">' + F.dataCurta(i.data) + '</td><td>' + tag(i.canal) + '</td>' +
+          '<td class="strong">' + esc(i.titulo) + '</td><td class="num">' + F.num(i.alcance) + '</td>' +
+          '<td class="num">' + F.pct(i.eng, 1) + '</td></tr>';
+      }).join('') + '</tbody></table></div></div>';
+    return h;
+  }
+},
+
+/* ---------------- AGENTE DE IA ---------------- */
+{
+  id: 'ia', titulo: 'Agente de IA', grupo: 'Operação', icone: 'i-bot',
+  tem: function () { return !!(D.agente_ia && D.agente_ia.ativo); },
+  oferta: 'agentes de IA no WhatsApp',
+  render: function () {
+    var a = D.agente_ia;
+    var h = '<div class="page-head"><div class="sec-tag">' + esc(D.periodo.label) + '</div>' +
+      '<h2>O que a IA atendeu por você</h2>' +
+      '<p>Conversas que aconteceram sem consumir uma hora do seu time — inclusive fora do horário comercial.</p></div>';
+
+    h += '<div class="grid g-4 mb-24">' +
+      [['CONVERSAS ATENDIDAS', F.num(a.conversas)],
+       ['RESOLVIDAS SEM HUMANO', F.num(a.resolvidas_sem_humano)],
+       ['TAXA DE RESOLUÇÃO', F.pct(a.taxa_resolucao, 1)],
+       ['LEADS GERADOS', F.num(a.leads_gerados)],
+       ['TEMPO DE RESPOSTA', a.tempo_medio_resposta || '—'],
+       ['FORA DO HORÁRIO', F.num(a.fora_horario)],
+       ['HORÁRIO DE PICO', a.horario_pico || '—']]
+      .map(function (p) {
+        return '<div class="kpi"><div class="k-label">' + p[0] + '</div><div class="k-val" style="font-size:1.5rem">' + p[1] + '</div></div>';
+      }).join('') + '</div>';
+
+    h += '<div class="insight mb-24"><div class="ico">◆</div><div>' +
+      '<h4>' + F.num(a.fora_horario) + ' dessas conversas aconteceram fora do horário comercial</h4>' +
+      '<p>São contatos que, sem o agente, teriam esperado até o dia seguinte — ou procurado um concorrente.</p></div></div>';
+
+    /* leitor de conversas — o cliente audita e corrige o próprio agente.
+       É o bloco que nenhum painel de terceiro consegue entregar. */
+    if (a.conversas_recentes && a.conversas_recentes.length) {
+      h += '<div class="card mb-24">' +
+        cardHead('Últimas conversas', 'amostra sem dados de contato', selo()) +
+        a.conversas_recentes.map(function (c, i) {
+          var desf = { lead: ['b-green', 'virou lead'], resolvido: ['b-blue', 'resolvido'], escalado: ['b-yellow', 'passou para humano'] }[c.desfecho] || ['b-gray', c.desfecho];
+          return '<div class="conv">' +
+            '<div class="conv-head"><span class="when">' + esc(c.quando) + '</span>' +
+            tag(c.canal, 'b-purple') + '<span class="badge ' + desf[0] + '">' + esc(desf[1]) + '</span>' +
+            '<span class="spacer" style="flex:1"></span>' +
+            '<button class="lnk" data-corrigir="' + i + '">corrigir esta resposta</button></div>' +
+            '<div class="bubble them"><span class="who">CLIENTE</span>' + esc(c.pergunta) + '</div>' +
+            '<div class="bubble bot"><span class="who">AGENTE</span>' + esc(c.resposta) + '</div>' +
+          '</div>';
+        }).join('') +
+        '<p style="font-size:.78rem;color:var(--dim);margin-top:6px">' +
+        'Viu uma resposta que não representa o seu negócio? Clique em "corrigir esta resposta" — ' +
+        'a Zync ajusta a base do agente e ele passa a responder do seu jeito.</p></div>';
+    }
+
+    h += '<div class="grid g-2">' +
+      '<div class="card">' + cardHead('Volume por semana', null, selo()) +
+        barsH(a.serie, 'sem', 'total', F.num) + '</div>' +
+      '<div class="card">' + cardHead('O que mais perguntam', 'amostra anonimizada', selo()) +
+        barsH(a.top_perguntas, 'pergunta', 'vezes', F.num) +
+        '<p style="font-size:.78rem;color:var(--dim);margin-top:14px">Exibimos apenas o agrupamento das perguntas. Nenhum dado de contato do cliente final aparece no portal.</p></div>' +
+    '</div>';
+    return h;
+  }
+},
+
+/* ---------------- ENTREGAS ---------------- */
+{
+  id: 'entregas', titulo: 'Entregas', grupo: 'Entrega', icone: 'i-check',
+  tem: function () { return !!(D.entregas && D.entregas.length); },
+  render: function () {
+    var feitas = D.entregas.filter(function (e) { return e.status === 'concluido'; }).length;
+    var h = '<div class="page-head"><div class="sec-tag">' + esc(D.periodo.label) + '</div>' +
+      '<h2>O que a Zync entregou</h2>' +
+      '<p>Cada item com data e status. É o registro do que o seu fee de gestão comprou no período.</p></div>';
+
+    h += '<div class="card mb-24">' + cardHead('Progresso do mês', feitas + ' de ' + D.entregas.length + ' concluídas', selo('manual')) +
+      '<div class="prog"><i style="width:' + ((feitas / D.entregas.length) * 100).toFixed(0) + '%"></i></div></div>';
+
+    h += '<div class="card">' + cardHead('Linha do tempo') +
+      '<div class="timeline">' + D.entregas.map(itemTimeline).join('') + '</div></div>';
+    return h;
+  }
+},
+
+/* ---------------- PRÓXIMOS PASSOS ---------------- */
+{
+  id: 'proximos', titulo: 'Próximos passos', grupo: 'Entrega', icone: 'i-flag',
+  tem: function () { return !!(D.proximos_passos && D.proximos_passos.length); },
+  render: function () {
+    var h = '<div class="page-head"><div class="sec-tag">plano do próximo ciclo</div>' +
+      '<h2>O que vem a seguir</h2>' +
+      '<p>As iniciativas que a Zync vai executar, e o motivo de cada uma. Nenhuma delas é palpite — todas saem da leitura dos números deste mês.</p></div>';
+
+    h += '<div class="grid g-2">' + D.proximos_passos.map(function (p, i) {
+      return '<div class="card"><div class="card-head">' +
+        '<span class="sec-tag" style="margin:0">0' + (i + 1) + '</span><span class="spacer"></span>' +
+        '<span class="badge b-blue">' + esc(p.prazo) + '</span></div>' +
+        '<h3 style="font-size:1rem;margin-bottom:8px">' + esc(p.titulo) + '</h3>' +
+        '<p style="color:var(--muted);font-size:.88rem">' + esc(p.desc) + '</p></div>';
+    }).join('') + '</div>';
+
+    h += '<div class="insight" style="margin-top:24px"><div class="ico">◆</div><div>' +
+      '<h4>Quer priorizar outra coisa?</h4>' +
+      '<p>O plano é uma recomendação técnica, não uma imposição. Se o seu momento de negócio pede outra prioridade, é só falar com o time.</p>' +
+      '<div style="margin-top:12px">' + ctaWhats('Olá! Quero conversar sobre as prioridades do próximo mês.', 'Falar sobre prioridades') + '</div></div></div>';
+    return h;
+  }
+},
+
+/* ---------------- PENDÊNCIAS ---------------- */
+{
+  id: 'pendencias', titulo: 'Para você aprovar', grupo: 'Entrega', icone: 'i-alert',
+  tem: function () { return !!(D.pendencias && D.pendencias.length); },
+  badge: function () { return Math.min(D.pendencias.length, 3); },
+  render: function () {
+    /* teto de 3: lista longa de pendência do cliente vira lista de culpa,
+       e lista de culpa não destrava nada */
+    var itens = D.pendencias.slice(0, 3);
+    var h = '<div class="page-head"><div class="sec-tag">ações rápidas</div>' +
+      '<h2>Três coisas destravam o próximo passo</h2>' +
+      '<p>Cada item aqui libera uma entrega que já está pronta para sair do nosso lado. Um clique resolve.</p></div>';
+
+    h += '<div class="list mb-24">' + itens.map(function (p) {
+      return '<div class="list-item" style="align-items:flex-start;padding:18px">' +
+        '<div class="li-ico" style="color:var(--accent-2)">→</div>' +
+        '<div class="li-body"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:4px">' +
+        '<h4>' + esc(p.titulo) + '</h4>' + badge(p.urgencia) + '</div>' +
+        '<p style="font-size:.85rem;color:var(--muted)">' + esc(p.desc) + '</p></div>' +
+        '<div style="flex:0 0 auto">' +
+          ctaWhats('Olá! Sobre o item "' + p.titulo + '" no portal: ', 'Resolver') + '</div></div>';
+    }).join('') + '</div>';
+
+    if (D.pendencias.length > 3) {
+      h += '<p style="font-size:.82rem;color:var(--dim);margin-bottom:24px">' +
+        'Há mais ' + (D.pendencias.length - 3) + ' item(ns) de menor prioridade. ' +
+        'Preferimos mostrar poucos por vez — os demais entram assim que estes saírem.</p>';
+    }
+
+    h += '<div class="insight"><div class="ico">≡</div><div><h4>Por que só três</h4>' +
+      '<p>Lista longa de pendência não é acompanhamento, é cobrança. Mantemos no máximo três itens ' +
+      'para que cada um seja resolvível na hora — e para que o portal continue sendo um lugar de destravar, não de cobrar.</p></div></div>';
+    return h;
+  }
+},
+
+/* ---------------- ARQUIVOS ---------------- */
+{
+  id: 'arquivos', titulo: 'Arquivos', grupo: 'Entrega', icone: 'i-folder',
+  tem: function () { return !!(D.arquivos && D.arquivos.length); },
+  render: function () {
+    var h = '<div class="page-head"><div class="sec-tag">biblioteca da conta</div>' +
+      '<h2>Tudo que a Zync já entregou</h2>' +
+      '<p>Relatórios, contratos, criativos e materiais. Nada mais se perde no histórico do WhatsApp.</p></div>';
+
+    h += '<div class="list">' + D.arquivos.map(function (a) {
+      return '<a class="list-item" href="' + esc(a.url || '#') + '"' + (a.url && a.url !== '#' ? ' target="_blank" rel="noopener"' : '') + '>' +
+        '<div class="li-ico mono" style="font-size:.68rem;color:var(--accent-2)">' + esc(a.tipo) + '</div>' +
+        '<div class="li-body"><h4>' + esc(a.nome) + '</h4><p>' + F.data(a.data) + ' · ' + esc(a.tam) + '</p></div>' +
+        '<div class="li-side">baixar →</div></a>';
+    }).join('') + '</div>';
+    return h;
+  }
+},
+
+/* ---------------- CONTA ---------------- */
+{
+  id: 'conta', titulo: 'Verba e contrato', grupo: 'Sua conta', icone: 'i-wallet',
+  tem: function () { return !!(D.financeiro || (D.contas && D.contas.length)); },
+  render: function () {
+    var h = '<div class="page-head"><div class="sec-tag">transparência da conta</div>' +
+      '<h2>Verba, contrato e acessos</h2>' +
+      '<p>Quanto da sua verba foi investida, o que está contratado e quais contas a Zync administra em seu nome.</p></div>';
+
+    if (D.financeiro) {
+      var f = D.financeiro;
+      var pct = f.verba_aprovada ? (f.verba_usada / f.verba_aprovada) * 100 : 0;
+      h += '<div class="card mb-24">' + cardHead('Verba de mídia do mês', D.periodo.label, selo()) +
+        '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">' +
+        '<div><span style="font-size:1.7rem;font-weight:800;letter-spacing:-1px">' + F.brl0(f.verba_usada) + '</span>' +
+        '<span style="color:var(--muted);font-size:.95rem"> de ' + F.brl0(f.verba_aprovada) + ' aprovados</span></div>' +
+        '<span class="badge b-blue">' + pct.toFixed(0) + '% investido</span></div>' +
+        '<div class="prog"><i style="width:' + pct.toFixed(1) + '%"></i></div>' +
+        '<p style="font-size:.82rem;color:var(--dim);margin-top:12px">Saldo disponível no período: ' +
+        F.brl0(f.verba_aprovada - f.verba_usada) + '. A Zync nunca ultrapassa a verba aprovada sem autorização por escrito.</p></div>';
+
+      h += '<div class="grid g-3 mb-24">' +
+        [['FEE DE GESTÃO', F.brl0(f.fee_mensal) + '/mês'],
+         ['PRÓXIMA COBRANÇA', F.data(f.proxima_cobranca)],
+         ['CONTRATO VIGENTE ATÉ', F.data(f.contrato_ate)]]
+        .map(function (p) {
+          return '<div class="kpi"><div class="k-label">' + p[0] + '</div><div class="k-val" style="font-size:1.35rem">' + p[1] + '</div></div>';
+        }).join('') + '</div>';
+    }
+
+    if (D.contas && D.contas.length) {
+      h += '<div class="card mb-24">' + cardHead('Contas administradas pela Zync', null, selo('manual')) +
+        '<div class="table-wrap"><table><thead><tr><th>Conta / plataforma</th><th>Proprietário</th><th>Papel da Zync</th><th>Status</th></tr></thead><tbody>' +
+        D.contas.map(function (c) {
+          return '<tr><td class="strong">' + esc(c.conta) + '</td><td>' + esc(c.proprietario) + '</td>' +
+            '<td>' + esc(c.papel) + '</td><td>' + tag(c.status, 'b-green') + '</td></tr>';
+        }).join('') + '</tbody></table></div>' +
+        '<div class="insight" style="margin-top:18px"><div class="ico">◆</div><div>' +
+        '<h4>As contas são suas, não nossas</h4>' +
+        '<p>Todas as plataformas acima estão registradas no nome da sua empresa. A Zync entra como administradora. ' +
+        'Se um dia a parceria terminar, você mantém o histórico, os públicos e os dados — sem depender de ninguém para recuperar nada.</p>' +
+        '</div></div></div>';
+    }
+    return h;
+  }
+},
+
+/* ---------------- SUPORTE ---------------- */
+{
+  id: 'suporte', titulo: 'Falar com a Zync', grupo: 'Sua conta', icone: 'i-chat',
+  sempre: true,
+  render: function () {
+    var c = D.cliente;
+    var h = '<div class="page-head"><div class="sec-tag">canal direto</div>' +
+      '<h2>Fale com quem opera a sua conta</h2>' +
+      '<p>Sem formulário, sem protocolo, sem fila. Você fala direto com o estrategista responsável.</p></div>';
+
+    h += '<div class="card mb-24" style="text-align:center;padding:40px 24px">' +
+      '<div class="sb-avatar" style="width:64px;height:64px;border-radius:18px;font-size:1.3rem;margin:0 auto 16px">' +
+      esc((c.gerente || 'Z').split(' ').slice(0, 2).map(function (p) { return p[0]; }).join('')) + '</div>' +
+      '<h3 style="font-size:1.15rem;margin-bottom:4px">' + esc(c.gerente || 'Time Zync') + '</h3>' +
+      '<p style="color:var(--accent-2);font-family:var(--mono);font-size:.8rem;margin-bottom:20px">' + esc(c.gerente_cargo || 'Zync') + '</p>' +
+      '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">' +
+        ctaWhats('Olá, ' + (c.gerente || '') + '! Sou da ' + (c.empresa || '') + ' e quero falar sobre a nossa conta.', 'Chamar no WhatsApp') +
+        '<a class="btn btn-ghost btn-sm" href="mailto:' + esc(CFG.suporte.email) + '">Enviar e-mail</a>' +
+      '</div></div>';
+
+    h += '<div class="grid g-3">' +
+      [['Cliente desde', F.data(c.cliente_desde)],
+       ['Plano contratado', c.plano || '—'],
+       ['Empresa', c.empresa || '—']]
+      .map(function (p) {
+        return '<div class="kpi"><div class="k-label">' + esc(p[0].toUpperCase()) + '</div>' +
+          '<div class="k-val" style="font-size:1.15rem">' + esc(p[1]) + '</div></div>';
+      }).join('') + '</div>';
+    return h;
+  }
+},
+
+];
+
+/* ---------- helpers de render compartilhados ---------- */
+
+function itemTimeline(e) {
+  var cls = e.status === 'concluido' ? 'done' : (e.status === 'andamento' ? 'doing' : '');
+  return '<div class="tl-item ' + cls + '">' +
+    '<div class="tl-head"><h4>' + esc(e.titulo) + '</h4>' + badge(e.status) +
+    '<span class="tl-date">' + F.data(e.prazo) + '</span></div>' +
+    '<p>' + esc(e.desc) + '</p></div>';
+}
+
+function funilHTML(funil) {
+  var max = funil[0].valor || 1;
+  return '<div class="funnel">' + funil.map(function (f, i) {
+    // escala de potência: sem isso, etapas finais somem ao lado das impressões
+    var w = Math.max(14, Math.pow(f.valor / max, 0.32) * 100);
+    var conv = i > 0 && funil[i - 1].valor
+      ? ((f.valor / funil[i - 1].valor) * 100) : null;
+    return '<div class="fn-step">' +
+      '<div class="fn-bar" style="width:' + w.toFixed(1) + '%">' + F.num(f.valor) + '</div>' +
+      '<div class="fn-meta">' + esc(f.etapa) +
+      (conv != null ? ' <span class="fn-conv">' + conv.toFixed(1).replace('.', ',') + '% da etapa anterior</span>' : '') +
+      '</div></div>';
+  }).join('') + '</div>';
+}
+
+/* ============================================================
+   NAVEGAÇÃO
+   ============================================================ */
+
+var ativas = [];
+var naoContratados = [];
+
+function montaNav() {
+  /* Módulo de serviço não contratado NÃO vira aba vazia: o portal só
+     mostra o que existe. A oferta vai para uma linha do rodapé. */
+  ativas = PAGINAS.filter(function (p) { return p.sempre || (p.tem && p.tem()); });
+
+  naoContratados = PAGINAS.filter(function (p) {
+    return !p.sempre && p.oferta && !(p.tem && p.tem());
+  }).map(function (p) { return p.oferta; });
+
+  var grupos = [];
+  ativas.forEach(function (p) {
+    var g = grupos.filter(function (x) { return x.nome === p.grupo; })[0];
+    if (!g) { g = { nome: p.grupo, itens: [] }; grupos.push(g); }
+    g.itens.push(p);
+  });
+
+  el('sbNav').innerHTML = grupos.map(function (g) {
+    return '<div class="sb-group">' + esc(g.nome) + '</div>' + g.itens.map(function (p) {
+      var n = p.badge ? p.badge() : 0;
+      return '<button class="sb-link" data-goto="' + p.id + '">' +
+        '<svg class="ico"><use href="#' + p.icone + '"/></svg>' + esc(p.titulo) +
+        (n ? '<span class="sb-badge">' + n + '</span>' : '') + '</button>';
+    }).join('');
+  }).join('');
+}
+
+function abrir(id) {
+  var p = ativas.filter(function (x) { return x.id === id; })[0] || ativas[0];
+  el('tbTitle').textContent = p.titulo;
+
+  var html;
+  try {
+    html = p.render();
+  } catch (err) {
+    html = vazio('Não conseguimos carregar este bloco agora. O time da Zync já foi avisado.');
+  }
+  el('content').innerHTML = '<div class="page active">' + html + rodape() + '</div>';
+
+  Array.prototype.forEach.call(document.querySelectorAll('.sb-link[data-goto]'), function (b) {
+    b.classList.toggle('active', b.getAttribute('data-goto') === p.id);
+  });
+
+  if (location.hash.slice(1) !== p.id) history.replaceState(null, '', '#' + p.id);
+  fechaMenu();
+  window.scrollTo(0, 0);
+}
+
+function fechaMenu() {
+  el('sidebar').classList.remove('open');
+  el('scrim').classList.remove('on');
+}
+
+document.addEventListener('click', function (e) {
+  var alvo = e.target.closest('[data-goto]');
+  if (alvo) { e.preventDefault(); abrir(alvo.getAttribute('data-goto')); return; }
+
+  var rev = e.target.closest('[data-revelar]');
+  if (rev) {
+    e.preventDefault();
+    var i = parseInt(rev.getAttribute('data-revelar'), 10);
+    rev.disabled = true;
+    rev.textContent = '…';
+    ZyncData.revelarTelefone(i).then(function (r) {
+      var cel = document.querySelector('[data-fone="' + i + '"]');
+      if (!cel) return;
+      if (!r.ok) { rev.disabled = false; rev.textContent = 'tentar de novo'; return; }
+      cel.textContent = r.fone;
+      aviso('Acesso registrado. A revelação deste contato ficou no log da conta.');
+    });
+    return;
+  }
+
+  var corr = e.target.closest('[data-corrigir]');
+  if (corr) {
+    e.preventDefault();
+    var idx = parseInt(corr.getAttribute('data-corrigir'), 10);
+    var c = D.agente_ia.conversas_recentes[idx];
+    var msg = 'Olá! Quero corrigir uma resposta do agente de IA.\n\n' +
+              'Pergunta do cliente: "' + c.pergunta + '"\n' +
+              'Resposta do agente: "' + c.resposta + '"\n\n' +
+              'O certo seria: ';
+    window.open('https://wa.me/' + CFG.suporte.whatsapp + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+    return;
+  }
+});
+
+var timerAviso;
+function aviso(txt) {
+  var t = el('toast');
+  t.textContent = txt;
+  t.classList.add('show');
+  clearTimeout(timerAviso);
+  timerAviso = setTimeout(function () { t.classList.remove('show'); }, 4200);
+}
+el('burger').addEventListener('click', function () {
+  el('sidebar').classList.add('open');
+  el('scrim').classList.add('on');
+});
+el('scrim').addEventListener('click', fechaMenu);
+el('btnSair').addEventListener('click', function () { ZyncAuth.sair(); });
+window.addEventListener('hashchange', function () {
+  var id = location.hash.slice(1);
+  if (id) abrir(id);
+});
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+
+ZyncAuth.exigirSessao()
+  .then(function (sessao) { return ZyncData.carregar(sessao); })
+  .then(function (dados) {
+    D = dados;
+
+    el('sbAvatar').textContent = D.cliente.iniciais || '··';
+    el('sbEmpresa').textContent = D.cliente.empresa || D.cliente.nome || '—';
+    el('sbPlano').textContent = D.cliente.plano || '—';
+
+    var t = D.periodo && D.periodo.atualizado_em;
+    el('tbSync').innerHTML = '<span class="dot"></span> ' +
+      (t ? 'dados de ' + F.data(t) + ' às ' + String(t).slice(11, 16) : 'dados atualizados');
+
+    /* Modo demonstração precisa ser inconfundível em QUALQUER print de
+       tela, não só na de login: barra fixa no topo + marca d'água
+       diagonal atrás de todo o conteúdo, inclusive dos gráficos. */
+    if (ZyncAuth.ehDemo()) {
+      var barra = document.createElement('div');
+      barra.className = 'demo-bar';
+      barra.textContent = 'SIMULAÇÃO · números ilustrativos para demonstração — não são resultado prometido';
+      var main = document.querySelector('.main');
+      main.insertBefore(barra, main.firstChild);
+
+      var wm = document.createElement('div');
+      wm.className = 'demo-wm';
+      document.body.appendChild(wm);
+
+      document.title = '[SIMULAÇÃO] ' + document.title;
+    }
+
+    montaNav();
+    abrir(location.hash.slice(1) || 'visao');
+  })
+  .catch(function (err) {
+    el('content').innerHTML =
+      '<div class="alert alert-err">Não foi possível carregar os dados da sua conta. ' +
+      'Tente recarregar a página — se continuar, fale com a Zync.</div>' +
+      '<div style="margin-top:16px">' +
+      ctaWhats('Olá! Estou com erro ao carregar a área do cliente.', 'Avisar a Zync') + '</div>';
+  });
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Área do Cliente — Zync</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Acesso exclusivo para clientes Zync. Acompanhe resultados, entregas e relatórios da sua operação de crescimento.">
+<link rel="icon" type="image/png" sizes="256x256" href="/favicon.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="portal.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<div class="auth-wrap">
+
+  <!-- ---------- painel de marca ---------- -->
+  <aside class="auth-brand">
+    <a href="/" class="logo">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="nz" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#9d7bff"/></linearGradient></defs><path d="M22 20 H78 V33 L45 67 H78 V80 H22 V67 L55 33 H22 Z" fill="url(#nz)"/><circle cx="50" cy="50" r="13" fill="none" stroke="#4dd0e1" stroke-width="2.5"/><circle cx="50" cy="50" r="6" fill="none" stroke="#4dd0e1" stroke-width="2.5"/><circle cx="50" cy="50" r="2" fill="#4dd0e1"/></svg>
+      <span class="z">zync</span>_<span class="cursor"></span>
+    </a>
+
+    <div class="auth-brand-mid">
+      <div class="sec-tag">área do cliente</div>
+      <h1>Sua operação de crescimento, <span class="grad">aberta em tempo real.</span></h1>
+      <p>Enquanto a Zync roda o motor, você acompanha cada número, cada entrega e cada próximo passo — sem precisar pedir relatório para ninguém.</p>
+      <ul class="auth-feats">
+        <li>Resultados de tráfego, leads e funil atualizados</li>
+        <li>Entregas do mês com prazo e status</li>
+        <li>Relatórios e arquivos sempre à mão</li>
+        <li>Canal direto com o time da Zync</li>
+      </ul>
+    </div>
+
+    <div class="auth-foot">zynchub.com.br · Brasília-DF</div>
+  </aside>
+
+  <!-- ---------- formulário ---------- -->
+  <main class="auth-panel">
+    <div class="auth-card">
+
+      <div id="demoBanner" class="alert hidden" style="background:rgba(250,204,21,.09);border-color:rgba(250,204,21,.35);color:#fde68a">
+        <span>◆</span>
+        <div>
+          <b>SIMULAÇÃO.</b> Este ambiente usa números ilustrativos, não são resultados prometidos.
+          Entre com <span class="mono">demo@zynchub.com.br</span> / <span class="mono">zync2026</span>.
+        </div>
+      </div>
+
+      <h2>Entrar na sua área</h2>
+      <p class="sub">Acesso exclusivo para clientes Zync.</p>
+
+      <div id="msg" class="alert hidden" role="alert"></div>
+
+      <form id="formLogin" novalidate>
+        <div class="field">
+          <label for="email">E-MAIL</label>
+          <input type="email" id="email" name="email" autocomplete="username"
+                 placeholder="voce@suaempresa.com.br" required>
+        </div>
+
+        <div class="field">
+          <div class="field-row">
+            <label for="senha">SENHA</label>
+            <a href="#" id="linkReset">Esqueci minha senha</a>
+          </div>
+          <input type="password" id="senha" name="senha" autocomplete="current-password"
+                 placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" id="btnEntrar" class="btn btn-primary btn-block">
+          <span id="btnTxt">Entrar</span>
+        </button>
+      </form>
+
+      <div class="auth-note">
+        Ainda não é cliente?
+        <a href="/#contato">Fale com a Zync</a><br>
+        <span style="opacity:.75">Problemas para acessar? <a id="linkSuporte" href="#">Chamar no WhatsApp</a></span>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script src="zync-auth.js"></script>
+<script>
+(function () {
+  var CFG      = window.ZYNC_CONFIG;
+  var form     = document.getElementById('formLogin');
+  var email    = document.getElementById('email');
+  var senha    = document.getElementById('senha');
+  var btn      = document.getElementById('btnEntrar');
+  var btnTxt   = document.getElementById('btnTxt');
+  var msg      = document.getElementById('msg');
+  var carregando = false;
+
+  // banner de demonstração
+  if (ZyncAuth.ehDemo()) {
+    document.getElementById('demoBanner').classList.remove('hidden');
+  }
+
+  // link de suporte
+  var sup = document.getElementById('linkSuporte');
+  sup.href = 'https://wa.me/' + CFG.suporte.whatsapp +
+             '?text=' + encodeURIComponent('Olá! Estou com dificuldade para acessar a área do cliente da Zync.');
+  sup.target = '_blank';
+  sup.rel = 'noopener';
+
+  function mostra(texto, tipo) {
+    msg.className = 'alert alert-' + tipo;
+    msg.textContent = texto;
+  }
+  function limpa() { msg.className = 'alert hidden'; msg.textContent = ''; }
+
+  function ocupado(v) {
+    carregando = v;
+    btn.disabled = v;
+    btnTxt.innerHTML = v ? '<span class="spinner"></span> Entrando…' : 'Entrar';
+  }
+
+  // se já houver sessão válida, pula o login
+  ZyncAuth.sessao().then(function (s) { if (s) irParaApp(); });
+
+  function irParaApp() {
+    var p = new URLSearchParams(location.search).get('redirect');
+    // só aceita destino interno — nunca redireciona para fora do domínio
+    var destino = (p && p.charAt(0) === '/' && p.indexOf('//') !== 0) ? p : ZyncAuth.URL_APP;
+    location.replace(destino);
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (carregando) return;
+    limpa();
+    ocupado(true);
+
+    ZyncAuth.entrar(email.value, senha.value).then(function (r) {
+      if (r.ok) { btnTxt.textContent = 'Entrando…'; irParaApp(); return; }
+      ocupado(false);
+      mostra(r.erro, 'err');
+      senha.value = '';
+      senha.focus();
+    });
+  });
+
+  document.getElementById('linkReset').addEventListener('click', function (e) {
+    e.preventDefault();
+    limpa();
+    if (!email.value.trim()) {
+      mostra('Digite seu e-mail no campo acima e clique de novo em "Esqueci minha senha".', 'info');
+      email.focus();
+      return;
+    }
+    ZyncAuth.redefinirSenha(email.value).then(function (r) {
+      if (r.ok) mostra('Enviamos um link de redefinição para ' + email.value.trim() + '.', 'ok');
+      else mostra(r.erro, 'err');
+    });
+  });
+})();
+</script>
+</body>
+</html>

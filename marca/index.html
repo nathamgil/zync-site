@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zync — Demo: 8 formatos × 11 paletas</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--bg:#07110d;--bd:#173026;--acc:#10c98d;--acc2:#4fe0b0;--txt:#e6f3ee;--mut:#88a89b;--ring:#e6f3ee;--bt:#04120c;--punch:#07110d}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:#e8e8f0;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:30px 24px 60px;
+background-image:linear-gradient(#161620 1px,transparent 1px),linear-gradient(90deg,#161620 1px,transparent 1px);background-size:48px 48px}
+.wrap{max-width:1120px;margin:0 auto}
+h1{font-size:25px;letter-spacing:-1px}
+.sub{color:#8b8b9e;font-family:Consolas,monospace;font-size:13px;margin:6px 0 20px}
+.lab{font-family:Consolas,monospace;font-size:11.5px;color:#6c6c80;margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.chip{cursor:pointer;border:1px solid #2a2a38;background:#13131d;color:#c9c9d6;font-family:Consolas,monospace;font-size:12.5px;
+padding:7px 12px;border-radius:99px;display:flex;align-items:center;gap:8px;transition:.15s;user-select:none}
+.chip:hover{border-color:#55556e}
+.chip.on{border-color:var(--acc);color:#fff;background:#1a1a26}
+.chip i{width:13px;height:13px;border-radius:50%;display:block}
+.chip svg{width:22px;height:22px;flex:0 0 22px}
+.hdr{display:flex;justify-content:space-between;align-items:flex-end;margin:22px 0 12px;flex-wrap:wrap;gap:8px;
+border-top:1px solid #1e1e2a;padding-top:18px}
+.name{font-size:19px;font-weight:700;margin-bottom:3px}
+.desc{color:#8b8b9e;font-size:13.5px}
+.hex{font-family:Consolas,monospace;font-size:11.5px;color:#7c7c90}
+.sec{font-family:Consolas,monospace;font-size:12px;color:#7c7c90;margin:24px 0 10px}
+.sec::before{content:'// '}
+.stage{background:var(--bg);border:1px solid var(--bd);border-radius:18px;padding:50px;display:flex;align-items:center;justify-content:center;gap:22px;transition:.25s}
+.stage svg{width:110px;height:110px}
+.stage .wm{font-family:Consolas,monospace;font-size:64px;font-weight:800;color:var(--acc);letter-spacing:-3px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.box{background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:26px;display:flex;flex-direction:column;
+align-items:center;justify-content:center;gap:12px;min-height:168px;transition:.25s}
+.box.horiz{flex-direction:row}
+.box svg{width:56px;height:56px}
+.box .wm{font-family:Consolas,monospace;font-size:29px;font-weight:800;color:var(--acc);letter-spacing:-1.5px}
+.cap{font-family:Consolas,monospace;font-size:11px;color:var(--mut)}
+.scale{background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:26px;display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap;transition:.25s}
+.si{display:flex;flex-direction:column;align-items:center;gap:8px}
+.si span{font-family:Consolas,monospace;font-size:10px;color:var(--mut)}
+.bgs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.bgs>div{border-radius:14px;padding:32px;display:flex;align-items:center;justify-content:center;gap:14px;border:1px solid var(--bd)}
+.onlight{background:#f4f3ef;--ring:#14110e;--punch:#f4f3ef;--acc2:#14110e}
+.ondark{background:#08080c;--punch:#08080c}
+.bgs svg{width:52px;height:52px}
+.bgs .wm{font-family:Consolas,monospace;font-size:27px;font-weight:800;letter-spacing:-1.5px;color:var(--acc)}
+.mock{background:var(--bg);border:1px solid var(--bd);border-radius:14px;overflow:hidden;transition:.25s}
+.mnav{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--bd)}
+.ml{display:flex;align-items:center;gap:9px;font-family:Consolas,monospace;font-weight:700;color:var(--txt);font-size:17px}
+.ml svg{width:26px;height:26px}
+.mbtn{background:var(--acc);color:var(--bt);font-size:12px;font-weight:700;padding:8px 15px;border-radius:8px}
+.mhero{padding:36px 30px 42px}
+.mhero h3{color:var(--txt);font-size:33px;letter-spacing:-1.5px;line-height:1.15;max-width:70%}
+.mhero h3 em{font-style:normal;color:var(--acc)}
+.mhero p{color:var(--mut);font-size:14px;margin:12px 0 20px}
+.mctas{display:flex;gap:10px}
+.c1{background:var(--acc);color:var(--bt);font-size:13px;font-weight:700;padding:12px 22px;border-radius:9px}
+.c2{border:1px solid var(--bd);color:var(--mut);font-size:13px;padding:12px 22px;border-radius:9px}
+.tip{font-family:Consolas,monospace;font-size:11.5px;color:#6c6c80;margin-top:8px}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<linearGradient id="zgrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" id="s1"/><stop offset="1" id="s2"/></linearGradient>
+</defs></svg>
+<div class="wrap">
+  <h1>Zync — 8 formatos × 11 paletas</h1>
+  <div class="sub">escolha um formato e uma cor · tudo abaixo se adapta</div>
+
+  <div class="lab">FORMATO DO Z</div>
+  <div class="chips" id="shapes"></div>
+  <div class="lab">PALETA</div>
+  <div class="chips" id="pals"></div>
+
+  <div class="hdr">
+    <div><div class="name" id="tit"></div><div class="desc" id="dsc"></div></div>
+    <div class="hex" id="hex"></div>
+  </div>
+
+  <div class="sec">marca principal</div>
+  <div class="stage"><svg viewBox="0 0 100 100" class="z"></svg><span class="wm">zync_</span></div>
+
+  <div class="sec">variações</div>
+  <div class="g3">
+    <div class="box"><svg viewBox="0 0 100 100" class="z"></svg><div class="cap">só o ícone</div></div>
+    <div class="box horiz"><svg viewBox="0 0 100 100" class="z"></svg><span class="wm">zync_</span></div>
+    <div class="box"><svg viewBox="0 0 100 100" class="z"></svg><span class="wm" style="font-size:23px">zync_</span></div>
+  </div>
+
+  <div class="sec">escala real (teste de favicon)</div>
+  <div class="scale">
+    <div class="si"><svg viewBox="0 0 100 100" class="z" style="width:16px;height:16px"></svg><span>16px</span></div>
+    <div class="si"><svg viewBox="0 0 100 100" class="z" style="width:24px;height:24px"></svg><span>24px</span></div>
+    <div class="si"><svg viewBox="0 0 100 100" class="z" style="width:32px;height:32px"></svg><span>32px</span></div>
+    <div class="si"><svg viewBox="0 0 100 100" class="z" style="width:48px;height:48px"></svg><span>48px</span></div>
+    <div class="si"><svg viewBox="0 0 100 100" class="z" style="width:72px;height:72px"></svg><span>72px</span></div>
+  </div>
+  <div class="tip">se sumir no 16px, o formato não serve como favicon</div>
+
+  <div class="sec">fundo claro vs escuro</div>
+  <div class="bgs">
+    <div class="onlight"><svg viewBox="0 0 100 100" class="z"></svg><span class="wm">zync_</span></div>
+    <div class="ondark"><svg viewBox="0 0 100 100" class="z"></svg><span class="wm">zync_</span></div>
+  </div>
+
+  <div class="sec">aplicado no site</div>
+  <div class="mock">
+    <div class="mnav"><div class="ml"><svg viewBox="0 0 100 100" class="z"></svg>zync_</div><div class="mbtn">Diagnóstico grátis</div></div>
+    <div class="mhero"><h3>Crescimento digital de <em>ponta a ponta.</em></h3><p>Tráfego pago, sites, agentes de IA e conteúdo automatizado.</p>
+    <div class="mctas"><div class="c1">Falar com a Zync</div><div class="c2">Ver serviços</div></div></div>
+  </div>
+</div>
+
+<script>
+const G='url(#zgrad)',R='var(--ring)',A2='var(--acc2)',PU='var(--punch)';
+const ZBIG='M22 20 H78 V33 L45 67 H78 V80 H22 V67 L55 33 H22 Z';
+const ZMID='M34 34 H66 V41 L46 59 H66 V66 H34 V59 L54 41 H34 Z';
+const ZSML='M30 34 H70 V42 L48 58 H70 V66 H30 V58 L52 42 H30 Z';
+
+const SHAPES=[
+ ["Z Sólido + Alvo","Robusto e corporativo. Lê-se o Z na hora, e o alvo reforça foco em resultado.",()=>`
+  <path d="${ZBIG}" fill="${G}"/><circle cx="50" cy="50" r="13" fill="${PU}"/>
+  <circle cx="50" cy="50" r="13" fill="none" stroke="${R}" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="6" fill="none" stroke="${R}" stroke-width="2.5"/><circle cx="50" cy="50" r="2" fill="${R}"/>`],
+ ["Flecha em Z","Dinâmico: a flecha desenha um Z no ar e acerta o alvo. Movimento e precisão.",()=>`
+  <circle cx="68" cy="62" r="26" fill="none" stroke="${R}" stroke-width="4" opacity=".22"/>
+  <circle cx="68" cy="62" r="16" fill="none" stroke="${G}" stroke-width="4" opacity=".6"/>
+  <circle cx="68" cy="62" r="6" fill="${G}"/>
+  <path d="M20 22 L62 22 L34 50 L68 62" fill="none" stroke="${G}" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M60 50 L68 62 L54 64 Z" fill="${A2}"/>`],
+ ["Selo Circular / Mira","O Z dentro de uma mira vira emblema. Ótimo p/ carimbo, cartão e assinatura.",()=>`
+  <circle cx="50" cy="50" r="42" fill="none" stroke="${G}" stroke-width="5"/>
+  <line x1="50" y1="4" x2="50" y2="15" stroke="${A2}" stroke-width="3"/><line x1="50" y1="85" x2="50" y2="96" stroke="${A2}" stroke-width="3"/>
+  <line x1="4" y1="50" x2="15" y2="50" stroke="${A2}" stroke-width="3"/><line x1="85" y1="50" x2="96" y2="50" stroke="${A2}" stroke-width="3"/>
+  <path d="${ZMID}" fill="${G}"/>`],
+ ["Z Minimalista","Linha fina com ponto de alvo. Elegante e leve; brilha em interfaces.",()=>`
+  <path d="M28 26 H72 L28 74 H72" fill="none" stroke="${G}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="50" cy="50" r="9" fill="${PU}"/><circle cx="50" cy="50" r="9" fill="none" stroke="${A2}" stroke-width="2"/>
+  <circle cx="50" cy="50" r="3" fill="${A2}"/>`],
+ ["Z + Flecha Diagonal","A diagonal do Z é a própria flecha cruzando o alvo. Meio-termo letra/símbolo.",()=>`
+  <rect x="24" y="20" width="52" height="10" rx="3" fill="${G}"/><rect x="24" y="70" width="52" height="10" rx="3" fill="${G}"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="${R}" stroke-width="3.5" opacity=".25"/>
+  <circle cx="50" cy="50" r="11" fill="none" stroke="${G}" stroke-width="3.5" opacity=".6"/>
+  <line x1="72" y1="28" x2="50" y2="50" stroke="${G}" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="50" cy="50" r="4.5" fill="${A2}"/>`],
+ ["Alvo em Negativo","O Z surge do vazio dentro do alvo. Conceito inteligente e memorável.",()=>`
+  <circle cx="50" cy="50" r="40" fill="${G}"/><circle cx="50" cy="50" r="40" fill="none" stroke="${A2}" stroke-width="2.5"/>
+  <path d="${ZSML}" fill="${PU}"/>`],
+ ["Z Tech / HUD","Marcas de mira no centro. Cara de tecnologia e dados — combina com IA.",()=>`
+  <path d="${ZBIG}" fill="${G}"/><rect x="38" y="38" width="24" height="24" rx="3" fill="${PU}"/>
+  <path d="M41 46 V41 H46" fill="none" stroke="${A2}" stroke-width="2.2"/><path d="M54 41 H59 V46" fill="none" stroke="${A2}" stroke-width="2.2"/>
+  <path d="M59 54 V59 H54" fill="none" stroke="${A2}" stroke-width="2.2"/><path d="M46 59 H41 V54" fill="none" stroke="${A2}" stroke-width="2.2"/>
+  <circle cx="50" cy="50" r="2.5" fill="${A2}"/>`],
+ ["Emblema Hexagonal","Z + alvo num hexágono. Sensação premium e 'engenheirada' — bom p/ SaaS.",()=>`
+  <path d="M50 6 L88 28 V72 L50 94 L12 72 V28 Z" fill="none" stroke="${G}" stroke-width="5" stroke-linejoin="round"/>
+  <path d="${ZMID}" fill="${G}"/><circle cx="50" cy="50" r="4.5" fill="${PU}"/><circle cx="50" cy="50" r="2" fill="${A2}"/>`]
+];
+
+const PALS=[
+ ["Lima Elétrica","#0b0f0a","#27311a","#b6f24a","#e4ff9c","#eef3e6","#94a684","#eef3e6","#0b0f0a"],
+ ["Âmbar Quente","#100b07","#33240f","#ff8b3d","#ffb26b","#f4ece4","#a8968a","#f4ece4","#160d05"],
+ ["Esmeralda","#07110d","#173026","#10c98d","#4fe0b0","#e6f3ee","#88a89b","#e6f3ee","#04120c"],
+ ["Magenta Punch","#0f0a0e","#331d29","#ff2d78","#ff6ea3","#f3e8ee","#a88b99","#f3e8ee","#ffffff"],
+ ["Editorial Claro","#f4f3ef","#e0ded7","#ff5a3c","#ff8564","#14110e","#6b6459","#14110e","#ffffff"],
+ ["Cobalto Elétrico","#070a12","#182034","#2f6bff","#5c8cff","#e6ebf5","#8895ad","#e6ebf5","#ffffff"],
+ ["Carmim","#110807","#331512","#ff3b3b","#ff6f5c","#f4e8e6","#a8908a","#f4e8e6","#ffffff"],
+ ["Dourado / Luxo","#0d0b06","#2e2712","#e8b64a","#f6dd9a","#f2ece0","#a89a80","#f2ece0","#140f04"],
+ ["Teal Profundo","#06110f","#123028","#14b8c4","#4fd6dc","#e2f2f2","#82a5a5","#e2f2f2","#04120f"],
+ ["Grafite Mono","#101012","#26262b","#f0f0f2","#c4c4cc","#f0f0f2","#7a7a86","#7a7a86","#101012"],
+ ["Índigo & Areia","#0a0a16","#20203a","#c9a36a","#e6cfa0","#eceaf5","#8f8fa8","#eceaf5","#14110a"]
+];
+
+let si=0, pi=2;
+const $=id=>document.getElementById(id);
+
+function draw(){
+  const html=SHAPES[si][2]();
+  document.querySelectorAll('svg.z').forEach(s=>s.innerHTML=html);
+}
+function apply(){
+  const[n,bg,bd,acc,acc2,txt,mut,ring,bt]=PALS[pi], r=document.documentElement.style;
+  r.setProperty('--bg',bg);r.setProperty('--bd',bd);r.setProperty('--acc',acc);r.setProperty('--acc2',acc2);
+  r.setProperty('--txt',txt);r.setProperty('--mut',mut);r.setProperty('--ring',ring);r.setProperty('--bt',bt);
+  r.setProperty('--punch',bg);
+  $('s1').style.stopColor=acc;$('s2').style.stopColor=acc2;
+  $('tit').textContent=SHAPES[si][0]+'  ·  '+n;
+  $('dsc').textContent=SHAPES[si][1];
+  $('hex').textContent=`fundo ${bg} · acento ${acc} · apoio ${acc2}`;
+  document.querySelectorAll('#shapes .chip').forEach(c=>c.classList.toggle('on',+c.dataset.i===si));
+  document.querySelectorAll('#pals .chip').forEach(c=>c.classList.toggle('on',+c.dataset.i===pi));
+  draw();
+}
+$('shapes').innerHTML=SHAPES.map((s,i)=>`<div class="chip" data-i="${i}"><svg viewBox="0 0 100 100" class="z"></svg>${s[0]}</div>`).join('');
+$('pals').innerHTML=PALS.map((p,i)=>`<div class="chip" data-i="${i}"><i style="background:${p[3]}"></i>${p[0]}</div>`).join('');
+$('shapes').onclick=e=>{const c=e.target.closest('.chip');if(c){si=+c.dataset.i;apply()}};
+$('pals').onclick=e=>{const c=e.target.closest('.chip');if(c){pi=+c.dataset.i;apply()}};
+apply();
+</script>
+</body></html>
