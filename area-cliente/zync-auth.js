@@ -51,6 +51,10 @@
     if (m.indexOf('failed to fetch') > -1 || m.indexOf('networkerror') > -1) {
       return 'Sem conexão com o servidor. Verifique sua internet.';
     }
+    // erro de configuração, não do usuário — mensagem direta para a Zync
+    if (m.indexOf('não configurado') > -1) {
+      return 'O portal ainda não está conectado ao banco de dados. Preencha supabaseUrl e supabaseAnonKey em config.js.';
+    }
     return 'Não foi possível entrar. Tente novamente ou fale com a Zync.';
   }
 

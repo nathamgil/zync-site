@@ -22,11 +22,15 @@ window.ZYNC_CONFIG = {
      ----------------------------------------------------------- */
   mode: 'demo',
 
-  /* Credenciais do projeto Supabase (Settings → API).
-     A anon key é pública por natureza — a segurança vem das
-     policies de Row Level Security, não do segredo da chave. */
-  supabaseUrl: '',
-  supabaseAnonKey: '',
+  /* Credenciais do projeto Supabase → Settings → API.
+     Preencha as duas linhas e troque o mode acima para 'supabase'.
+     São as ÚNICAS três edições necessárias para o portal virar real.
+
+     A anon key é pública por natureza — a segurança vem das policies
+     de Row Level Security no banco, não do segredo da chave.
+     A service_role key NUNCA entra aqui: ela ignora toda RLS. */
+  supabaseUrl: '',            // https://SEUPROJETO.supabase.co
+  supabaseAnonKey: '',        // eyJhbGciOi...
 
   /* Contato de suporte exibido no portal */
   suporte: {
