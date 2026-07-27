@@ -37,7 +37,7 @@
   <aside class="sidebar" id="sidebar">
     <div class="sb-head">
       <a href="/" class="logo">
-        <svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="nz" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#9d7bff"/></linearGradient></defs><path d="M22 20 H78 V33 L45 67 H78 V80 H22 V67 L55 33 H22 Z" fill="url(#nz)"/><circle cx="50" cy="50" r="13" fill="none" stroke="#4dd0e1" stroke-width="2.5"/><circle cx="50" cy="50" r="6" fill="none" stroke="#4dd0e1" stroke-width="2.5"/><circle cx="50" cy="50" r="2" fill="#4dd0e1"/></svg>
+        <svg viewBox="0 0 100 100" role="img" aria-label="Zync"><g class="seal" fill="none" stroke="#10c98d" stroke-width="7" stroke-linecap="round"><path d="M 90.57 60.87 A 42 42 0 0 1 60.87 90.57"/><path d="M 39.13 90.57 A 42 42 0 0 1 9.43 60.87"/><path d="M 9.43 39.13 A 42 42 0 0 1 39.13 9.43"/><path d="M 60.87 9.43 A 42 42 0 0 1 90.57 39.13"/></g><path d="M31 33 H69 L31 67 H69" fill="none" stroke="#c9a36a" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle class="bull" cx="50" cy="50" r="6.5" fill="#10c98d"/></svg>
         <span class="z">zync</span>_<span class="cursor"></span>
       </a>
       <div class="sb-client">
@@ -111,10 +111,10 @@ function sparkline(vals, w, h) {
   var uid = 'sp' + Math.round(vals[0] * 1000) + vals.length + w;
   return '<svg class="spark" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
     '<defs><linearGradient id="' + uid + '" x1="0" y1="0" x2="0" y2="1">' +
-    '<stop offset="0" stop-color="#7c5cff" stop-opacity=".38"/>' +
-    '<stop offset="1" stop-color="#7c5cff" stop-opacity="0"/></linearGradient></defs>' +
+    '<stop offset="0" stop-color="#10c98d" stop-opacity=".38"/>' +
+    '<stop offset="1" stop-color="#10c98d" stop-opacity="0"/></linearGradient></defs>' +
     '<path d="' + area + '" fill="url(#' + uid + ')"/>' +
-    '<path d="' + d + '" fill="none" stroke="#7c5cff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+    '<path d="' + d + '" fill="none" stroke="#10c98d" stroke-width="1.6" stroke-linejoin="round"/></svg>';
 }
 
 /* barras (investimento) + linha (leads) sobre o mesmo eixo x */
@@ -158,11 +158,11 @@ function chartBarLine(serie) {
 
   return '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '">' +
     '<defs><linearGradient id="gradBar" x1="0" y1="0" x2="0" y2="1">' +
-    '<stop offset="0" stop-color="#7c5cff" stop-opacity=".55"/>' +
-    '<stop offset="1" stop-color="#7c5cff" stop-opacity=".14"/></linearGradient></defs>' +
+    '<stop offset="0" stop-color="#10c98d" stop-opacity=".55"/>' +
+    '<stop offset="1" stop-color="#10c98d" stop-opacity=".14"/></linearGradient></defs>' +
     gy + bars + '<path class="line" d="' + line + '"/>' + dots + gx + '</svg>' +
-    '<div class="legend"><span><i style="background:rgba(124,92,255,.55)"></i>Investimento (R$)</span>' +
-    '<span><i style="background:#7c5cff"></i>Leads gerados</span></div>';
+    '<div class="legend"><span><i style="background:rgba(16,201,141,.55)"></i>Investimento (R$)</span>' +
+    '<span><i style="background:#10c98d"></i>Leads gerados</span></div>';
 }
 
 /* barras horizontais simples */
@@ -319,7 +319,7 @@ var PAGINAS = [
 
     /* Leitura do estrategista */
     if (D.leitura) {
-      h += '<div class="card mb-24" style="border-color:rgba(124,92,255,.4);background:linear-gradient(160deg,rgba(124,92,255,.07),var(--panel) 55%)">' +
+      h += '<div class="card mb-24" style="border-color:rgba(16,201,141,.4);background:linear-gradient(160deg,rgba(16,201,141,.07),var(--panel) 55%)">' +
         '<div class="card-head">' +
           '<div class="sb-avatar" style="width:40px;height:40px;border-radius:11px;font-size:.9rem">' + esc(D.leitura.iniciais) + '</div>' +
           '<div><h3 style="font-size:.92rem">' + esc(D.leitura.autor) + '</h3>' +

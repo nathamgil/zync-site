@@ -7,19 +7,19 @@
 <meta name="robots" content="noindex">
 <style>
   :root{
-    --bg:#0a0a0f;--panel:#13131d;--border:#22222f;--text:#e8e8f0;--muted:#8b8b9e;
-    --dim:#5c5c70;--accent:#7c5cff;--accent-2:#4dd0e1;--green:#4ade80;
+    --bg:#0a0a16;--panel:#12121f;--border:#20203a;--text:#eceaf5;--muted:#8f8fa8;
+    --dim:#5c5c78;--accent:#10c98d;--accent-2:#c9a36a;--green:#4ade80;
     --mono:'SFMono-Regular',Consolas,Menlo,monospace;
     --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:#000;color:var(--text);font-family:var(--sans);overflow:hidden}
-  ::selection{background:var(--accent);color:#fff}
+  ::selection{background:var(--accent);color:var(--bg)}
 
   .slide{
     position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;
     padding:6vh 8vw;background:var(--bg);
-    background-image:linear-gradient(#1a1a26 1px,transparent 1px),linear-gradient(90deg,#1a1a26 1px,transparent 1px);
+    background-image:linear-gradient(#191930 1px,transparent 1px),linear-gradient(90deg,#191930 1px,transparent 1px);
     background-size:48px 48px;
   }
   .slide.active{display:flex;animation:fade .4s ease}
@@ -29,7 +29,7 @@
   .tag::before{content:'// '}
   h1{font-size:clamp(2rem,5.5vw,4.2rem);letter-spacing:-2px;line-height:1.1;font-weight:800}
   h2{font-size:clamp(1.5rem,3.6vw,2.8rem);letter-spacing:-1px;margin-bottom:3.5vh;font-weight:700}
-  .grad{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .grad{color:var(--accent-2)}
   .sub{color:var(--muted);font-size:clamp(.95rem,1.8vw,1.35rem);max-width:60ch;margin-top:2.5vh}
   .mono{font-family:var(--mono)}
 
@@ -38,21 +38,21 @@
   .g3{grid-template-columns:repeat(3,1fr)}
   .g4{grid-template-columns:repeat(4,1fr)}
   .box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:2.2vh 1.4vw}
-  .box.feat{border-color:rgba(124,92,255,.6);background:linear-gradient(180deg,rgba(124,92,255,.1),var(--panel) 60%)}
+  .box.feat{border-color:rgba(16,201,141,.6);background:linear-gradient(180deg,rgba(16,201,141,.1),var(--panel) 60%)}
   .box .ic{font-family:var(--mono);font-size:clamp(.65rem,1vw,.8rem);color:var(--accent-2);background:var(--bg);border:1px solid var(--border);display:inline-block;padding:.5vh .6vw;border-radius:8px;margin-bottom:1.2vh}
   .box h3{font-size:clamp(.95rem,1.7vw,1.3rem);margin-bottom:.8vh}
   .box p{color:var(--muted);font-size:clamp(.75rem,1.3vw,1rem);line-height:1.5}
   .num{font-family:var(--mono);color:var(--accent);font-size:clamp(.8rem,1.4vw,1.05rem);display:block;margin-bottom:1vh}
 
-  .avatar{width:clamp(64px,8vw,110px);height:clamp(64px,8vw,110px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:clamp(1.2rem,2.2vw,1.8rem);font-weight:700;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2));margin:0 auto 1.6vh}
+  .avatar{width:clamp(64px,8vw,110px);height:clamp(64px,8vw,110px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:clamp(1.2rem,2.2vw,1.8rem);font-weight:700;color:var(--bg);background:var(--accent-2);margin:0 auto 1.6vh}
   .member{text-align:center}
   .member .role{font-family:var(--mono);font-size:clamp(.7rem,1.2vw,.9rem);color:var(--accent-2);margin:.5vh 0 1vh}
 
-  .stat .v{font-size:clamp(1.8rem,4vw,3.2rem);font-weight:800;letter-spacing:-1px;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat .v{font-size:clamp(1.8rem,4vw,3.2rem);font-weight:800;letter-spacing:-1px;color:var(--accent)}
   .stat .l{color:var(--muted);font-size:clamp(.75rem,1.3vw,1rem);margin-top:.6vh}
 
   .term{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:3vh;max-width:640px}
-  .term .bar{display:flex;gap:7px;padding:10px 14px;background:#101018;border-bottom:1px solid var(--border)}
+  .term .bar{display:flex;gap:7px;padding:10px 14px;background:#101020;border-bottom:1px solid var(--border)}
   .term .bar span{width:10px;height:10px;border-radius:50%}
   .term .body{padding:2vh 1.6vw;font-family:var(--mono);font-size:clamp(.72rem,1.3vw,.95rem);line-height:2}
   .ok{color:var(--green)}.cy{color:var(--accent-2)}.dm{color:var(--dim)}
@@ -62,7 +62,7 @@
 
   .hud{position:fixed;bottom:18px;right:24px;font-family:var(--mono);font-size:.75rem;color:var(--dim);z-index:10}
   .hint{position:fixed;bottom:18px;left:24px;font-family:var(--mono);font-size:.7rem;color:var(--dim);z-index:10}
-  .bar-prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent-2));z-index:10;transition:width .3s}
+  .bar-prog{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:10;transition:width .3s}
 
   .foot{position:absolute;bottom:3.5vh;left:8vw;font-family:var(--mono);font-size:clamp(.6rem,1vw,.78rem);color:var(--dim)}
   ul.clean{list-style:none;margin-top:1vh}
@@ -89,7 +89,7 @@
   <h1><span class="grad mono">zync_</span></h1>
   <h1 style="font-size:clamp(1.6rem,4vw,3rem);margin-top:1.5vh">Crescimento digital de ponta a ponta.</h1>
   <p class="sub">Tráfego pago · Sites · Agentes de IA · Conteúdo automatizado · Sistemas · Consultoria</p>
-  <div class="foot">zynhub.com.br</div>
+  <div class="foot">zynchub.com.br</div>
 </section>
 
 <!-- 2 QUEM SOMOS -->

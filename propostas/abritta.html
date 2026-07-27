@@ -9,9 +9,9 @@
 <title>Zync × Abritta — Proposta de Crescimento</title>
 <style>
   :root{
-    --bg:#0a0a0f; --bg-soft:#101018; --panel:#13131d; --border:#22222f; --border-soft:#1a1a26;
-    --text:#e8e8f0; --muted:#8b8b9e; --dim:#5c5c70;
-    --accent:#7c5cff; --accent-soft:rgba(124,92,255,.12); --accent2:#4dd0e1; --accent2-soft:rgba(77,208,225,.10);
+    --bg:#0a0a16; --bg-soft:#101020; --panel:#12121f; --border:#20203a; --border-soft:#191930;
+    --text:#eceaf5; --muted:#8f8fa8; --dim:#5c5c78;
+    --accent:#10c98d; --accent-soft:rgba(16,201,141,.12); --accent2:#c9a36a; --accent2-soft:rgba(201,163,106,.10);
     --green:#4ade80; --yellow:#facc15;
     --mono:'Cascadia Code','SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
     --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Inter',sans-serif;
@@ -22,7 +22,7 @@
     font-family:var(--sans); color:var(--text); line-height:1.6; font-size:17px;
     -webkit-font-smoothing:antialiased;
   }
-  ::selection{background:var(--accent); color:#fff}
+  ::selection{background:var(--accent); color:var(--bg)}
 
   /* ---------- barra superior de navegação ---------- */
   .topbar{
@@ -56,7 +56,7 @@
     scroll-snap-align:start; scroll-margin-top:54px; position:relative;
   }
   .slide:nth-child(even){background:var(--bg-soft)}
-  #s-capa{background:radial-gradient(55% 48% at 22% 34%, rgba(124,92,255,.08), transparent 70%)}
+  #s-capa{background:radial-gradient(55% 48% at 22% 34%, rgba(16,201,141,.08), transparent 70%)}
   .wrap{width:100%; max-width:1120px; margin:0 auto}
 
   .eyebrow{
@@ -72,7 +72,7 @@
   h3{font-size:19px; font-weight:650}
   .lead{color:var(--muted); font-size:19px; line-height:1.62; max-width:60ch}
   .lead strong{color:var(--text); font-weight:650}
-  .hl{color:var(--accent)}
+  .hl{color:var(--accent2)}
   .hl2{color:var(--accent2)}
 
   /* cabeçalho de seção em duas colunas: título à esquerda, texto à direita */
@@ -186,7 +186,7 @@
     border:1px solid var(--border); border-radius:8px; padding:10px 16px; cursor:pointer;
   }
   .tab:hover{color:var(--text)}
-  .tab.on{color:#fff; background:var(--accent); border-color:var(--accent); font-weight:600}
+  .tab.on{color:var(--bg); background:var(--accent); border-color:var(--accent); font-weight:600}
   .panel{
     background:var(--panel); border:1px solid var(--border); border-radius:0 10px 10px 10px;
     padding:30px; margin-top:10px; display:none;
@@ -223,7 +223,7 @@
   .msg{max-width:87%; padding:10px 14px; border-radius:12px; font-size:14.5px; line-height:1.5; opacity:0; transform:translateY(10px); transition:opacity .45s ease,transform .45s ease}
   .msg.show{opacity:1; transform:none}
   .msg.lead-m{align-self:flex-start; background:var(--bg-soft); border:1px solid var(--border)}
-  .msg.bot-m{align-self:flex-end; background:var(--accent-soft); border:1px solid rgba(124,92,255,.4)}
+  .msg.bot-m{align-self:flex-end; background:var(--accent-soft); border:1px solid rgba(16,201,141,.4)}
   .msg.sys-m{
     align-self:center; background:transparent; border:1px dashed var(--border); color:var(--accent2);
     font-family:var(--mono); font-size:12px; text-align:center; max-width:100%;
