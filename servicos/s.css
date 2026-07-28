@@ -30,3 +30,4 @@ strong{color:var(--text)}
 .others a{font-family:var(--mono);font-size:.78rem;color:var(--accent-2);border:1px solid var(--border);background:var(--panel);padding:8px 14px;border-radius:99px}
 .others a:hover{border-color:var(--accent-2)}
 footer .container{max-width:1080px}
+nav .container{max-width:1080px}
