@@ -7,6 +7,12 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/png" sizes="256x256" href="/favicon.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/area-cliente/manifest.webmanifest">
+<meta name="theme-color" content="#0a0a16">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Zync">
 <link rel="stylesheet" href="portal.css">
 </head>
 <body>
@@ -81,15 +87,47 @@
   }
   function limpa() { msg.className = 'alert hidden'; msg.textContent = ''; }
 
+  var sessaoRecuperacaoOk = false;
+
   if (ZyncAuth.ehDemo()) {
     mostra('O portal está em modo demonstração. A redefinição de senha só funciona com o backend ligado.', 'info');
     btn.disabled = true;
+  } else {
+    // o link de recuperação chega com um token na própria URL; o cliente
+    // Supabase o lê ao ser criado e transforma isso numa sessão temporária.
+    // Só liberamos o envio depois de confirmar que essa sessão existe —
+    // assim, um link inválido/expirado já avisa o usuário de cara.
+    btn.disabled = true;
+    ZyncAuth._supabase()
+      .then(function (sb) { return sb.auth.getSession(); })
+      .then(function (r) {
+        if (r.data && r.data.session) {
+          sessaoRecuperacaoOk = true;
+          btn.disabled = false;
+        } else {
+          mostra('Este link é inválido ou expirou. Volte à tela de login e peça um novo link em "Esqueci minha senha".', 'err');
+        }
+      })
+      .catch(function () {
+        mostra('Não foi possível verificar o link de redefinição. Peça um novo na tela de login.', 'err');
+      });
   }
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (ocupado) return;
     limpa();
+
+    if (!ZyncAuth.ehDemo() && !sessaoRecuperacaoOk) {
+      mostra('Este link é inválido ou expirou. Volte à tela de login e peça um novo link em "Esqueci minha senha".', 'err');
+      return;
+    }
+
+    if (senha.value.length < 8) {
+      mostra('A senha precisa ter pelo menos 8 caracteres.', 'err');
+      senha.focus();
+      return;
+    }
 
     if (senha.value !== senha2.value) {
       mostra('As duas senhas precisam ser iguais.', 'err');
@@ -114,6 +152,14 @@
     });
   });
 })();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/area-cliente/sw.js', { scope: '/area-cliente/' })
+      .catch(function (e) { console.warn('SW não registrado:', e); });
+  });
+}
 </script>
 </body>
 </html>

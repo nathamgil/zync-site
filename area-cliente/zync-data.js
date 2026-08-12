@@ -357,11 +357,15 @@
         sb.from('leitura_estrategista').select('*').order('data', { ascending: false }).limit(1).single(),
         sb.from('pendencias').select('*').eq('resolvida', false).order('desde'),
         sb.from('contas_acessos').select('*').order('conta'),
+        sb.from('conteudo_resumo').select('*').maybeSingle(),
       ]).then(function (r) {
         var v = function (i) { return r[i] && !r[i].error ? r[i].data : null; };
         var cli = v(0) || {};
         var traf = v(4);
         var leadsLista = v(8) || [];
+        var qualif = leadsLista.filter(function (l) { return l.status !== 'novo' && l.status !== 'perdido'; }).length;
+        var contItens = v(10) || [];
+        var contRes = v(19) || {};
 
         return {
           cliente: {
@@ -381,10 +385,19 @@
           leads: leadsLista.length ? {
             total: leadsLista.length,
             lista: leadsLista,
-            qualificados: leadsLista.filter(function (l) { return l.status !== 'novo' && l.status !== 'perdido'; }).length,
+            qualificados: qualif,
+            taxa_qualificacao: +(qualif / leadsLista.length * 100).toFixed(1),
+            tempo_medio_resposta: traf ? traf.tempo_medio_resposta : null,
           } : null,
           site: v(9),
-          conteudo: (v(10) || []).length ? { itens: v(10) } : null,
+          conteudo: contItens.length ? {
+            itens: contItens,
+            publicados: contItens.length,
+            alcance: contItens.reduce(function (s, i) { return s + (i.alcance || 0); }, 0),
+            engajamento: +(contItens.reduce(function (s, i) { return s + (Number(i.eng) || 0); }, 0) / contItens.length).toFixed(1),
+            seguidores_novos: contRes.seguidores_novos != null ? contRes.seguidores_novos : null,
+            delta_alcance: contRes.delta_alcance != null ? contRes.delta_alcance : null,
+          } : null,
           agente_ia: v(11),
           entregas: v(12) || [],
           proximos_passos: v(13) || [],

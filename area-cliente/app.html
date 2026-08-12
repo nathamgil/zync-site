@@ -7,6 +7,12 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/png" sizes="256x256" href="/favicon.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/area-cliente/manifest.webmanifest">
+<meta name="theme-color" content="#0a0a16">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Zync">
 <link rel="stylesheet" href="portal.css">
 </head>
 <body>
@@ -959,6 +965,14 @@ ZyncAuth.exigirSessao()
   });
 
 })();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/area-cliente/sw.js', { scope: '/area-cliente/' })
+      .catch(function (e) { console.warn('SW não registrado:', e); });
+  });
+}
 </script>
 </body>
 </html>

@@ -8,6 +8,12 @@
 <meta name="description" content="Acesso exclusivo para clientes Zync. Acompanhe resultados, entregas e relatórios da sua operação de crescimento.">
 <link rel="icon" type="image/png" sizes="256x256" href="/favicon.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/area-cliente/manifest.webmanifest">
+<meta name="theme-color" content="#0a0a16">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Zync">
 <link rel="stylesheet" href="portal.css">
 </head>
 <body>
@@ -147,20 +153,42 @@
     });
   });
 
-  document.getElementById('linkReset').addEventListener('click', function (e) {
+  var linkReset = document.getElementById('linkReset');
+  var resetEnviando = false;
+
+  linkReset.addEventListener('click', function (e) {
     e.preventDefault();
+    if (carregando || resetEnviando) return;
     limpa();
     if (!email.value.trim()) {
       mostra('Digite seu e-mail no campo acima e clique de novo em "Esqueci minha senha".', 'info');
       email.focus();
       return;
     }
+
+    resetEnviando = true;
+    var textoOriginal = linkReset.textContent;
+    linkReset.textContent = 'Enviando…';
+
     ZyncAuth.redefinirSenha(email.value).then(function (r) {
-      if (r.ok) mostra('Enviamos um link de redefinição para ' + email.value.trim() + '.', 'ok');
-      else mostra(r.erro, 'err');
+      resetEnviando = false;
+      linkReset.textContent = textoOriginal;
+      if (r.ok) {
+        mostra('Se o e-mail existir na nossa base, enviamos um link de redefinição. Verifique sua caixa de entrada (e o spam).', 'ok');
+      } else {
+        mostra(r.erro, 'err');
+      }
     });
   });
 })();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/area-cliente/sw.js', { scope: '/area-cliente/' })
+      .catch(function (e) { console.warn('SW não registrado:', e); });
+  });
+}
 </script>
 </body>
 </html>

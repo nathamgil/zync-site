@@ -51,6 +51,12 @@
     if (m.indexOf('failed to fetch') > -1 || m.indexOf('networkerror') > -1) {
       return 'Sem conexão com o servidor. Verifique sua internet.';
     }
+    if (m.indexOf('auth session missing') > -1 || m.indexOf('session missing') > -1 || m.indexOf('session_not_found') > -1) {
+      return 'Este link expirou ou já foi usado. Peça um novo link de redefinição na tela de login.';
+    }
+    if (m.indexOf('same_password') > -1 || m.indexOf('should be different') > -1) {
+      return 'A nova senha precisa ser diferente da senha atual.';
+    }
     // erro de configuração, não do usuário — mensagem direta para a Zync
     if (m.indexOf('não configurado') > -1) {
       return 'O portal ainda não está conectado ao banco de dados. Preencha supabaseUrl e supabaseAnonKey em config.js.';
