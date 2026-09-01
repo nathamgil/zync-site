@@ -61,8 +61,8 @@
         empresa: 'Empresa Demo',
         iniciais: 'ED',
         plano: 'Full Growth',
-        gerente: 'Gabriel Briglia',
-        gerente_cargo: 'CMO · Zync',
+        gerente: 'Natham Gil',
+        gerente_cargo: 'CEO · Zync',
         cliente_desde: '2026-02-10',
       },
 
@@ -105,9 +105,9 @@
          Bloco humano. É o que nenhuma ferramenta automática entrega
          e o que sustenta o fee de gestão. */
       leitura: {
-        autor: 'Gabriel Briglia',
-        cargo: 'CMO · Zync',
-        iniciais: 'GB',
+        autor: 'Natham Gil',
+        cargo: 'CEO · Zync',
+        iniciais: 'NG',
         data: '2026-07-22',
         titulo: 'Julho foi o mês em que o gargalo saiu da mídia e foi para o atendimento',
         paragrafos: [

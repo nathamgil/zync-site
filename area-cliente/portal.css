@@ -397,6 +397,56 @@ td.num,th.num{text-align:right;font-family:var(--mono)}
 .empty .big{font-size:1.8rem;margin-bottom:10px;opacity:.5}
 .empty p{font-size:.88rem}
 
+/* ============================================================
+   MÉTRICA BLOQUEADA
+   Métrica que existe no plano, mas cuja fonte ainda não é
+   confiável. Ocupa o lugar do número em vez de sumir: decisão
+   de produto declarada, não erro nem tela quebrada.
+   Configurada em config.js → metricasBloqueadas.
+   ============================================================ */
+.blk{
+  border:1px dashed rgba(250,204,21,.38);border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(250,204,21,.055),var(--panel) 62%);
+  padding:20px;position:relative;
+}
+.blk-head{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap}
+.blk-head h4{font-size:.95rem;color:var(--text)}
+.blk-lock{
+  width:26px;height:26px;border-radius:8px;flex:0 0 auto;
+  display:grid;place-items:center;color:#fde68a;
+  background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.3);
+}
+.blk-lock .ico{width:14px;height:14px;display:block}
+.blk-tag{
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.4px;text-transform:uppercase;
+  color:#fde68a;background:rgba(250,204,21,.11);border:1px solid rgba(250,204,21,.28);
+  padding:2px 8px;border-radius:99px;
+}
+.blk-razao{font-size:.855rem;line-height:1.55;color:var(--muted);max-width:640px}
+.blk-prev{
+  margin-top:12px;padding-top:11px;border-top:1px solid var(--border-soft);
+  font-family:var(--mono);font-size:.7rem;color:var(--dim);
+}
+
+/* variação compacta: ocupa o lugar de um card de KPI na grade */
+.blk.blk-kpi{padding:20px;display:flex;flex-direction:column}
+.blk.blk-kpi .blk-head{margin-bottom:10px;gap:7px}
+.blk.blk-kpi .k-label{
+  font-family:var(--mono);font-size:.72rem;color:var(--muted);
+  display:flex;align-items:center;gap:6px;
+}
+.blk.blk-kpi .blk-valor{
+  font-size:1.5rem;font-weight:800;letter-spacing:-1px;line-height:1.1;
+  color:var(--dim);margin-bottom:8px;
+}
+/* a razão curta é limitada para o card não esticar a linha da grade;
+   o texto integral vive no card grande da métrica */
+.blk.blk-kpi .blk-razao{
+  font-size:.79rem;line-height:1.45;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;
+  overflow:hidden;
+}
+
 /* skeleton */
 .skel{
   background:linear-gradient(90deg,var(--panel) 25%,var(--panel-2) 50%,var(--panel) 75%);

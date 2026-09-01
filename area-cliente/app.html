@@ -32,6 +32,7 @@
   <symbol id="i-folder" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 4.5A1.5 1.5 0 013.5 3h2.6l1.4 1.8h5A1.5 1.5 0 0114 6.3V12a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 12V4.5z"/></symbol>
   <symbol id="i-wallet" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1.8"/><path d="M2 7h12M11 10h1.5" stroke-linecap="round"/></symbol>
   <symbol id="i-chat" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.5 4.2A1.7 1.7 0 014.2 2.5h7.6a1.7 1.7 0 011.7 1.7v5a1.7 1.7 0 01-1.7 1.7H6.5L3 14v-2.9a1.7 1.7 0 01-.5-1.2v-5z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="7" width="10" height="7" rx="1.6"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2"/></symbol>
   <symbol id="i-out" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14H3.5A1.5 1.5 0 012 12.5v-9A1.5 1.5 0 013.5 2H6M10.5 11L14 8l-3.5-3M14 8H6.5"/></symbol>
 </svg>
 
@@ -191,6 +192,45 @@ function vazio(txt, cta) {
 }
 
 /* ============================================================
+   MÉTRICA BLOQUEADA
+   ------------------------------------------------------------
+   Métrica cuja fonte a Zync sabe que ainda não é confiável.
+   Não some da tela e não é publicada errada: aparece no lugar
+   dela, bloqueada, com a razão escrita. Quem manda é
+   config.js → metricasBloqueadas. Destravar = apagar de lá.
+   ============================================================ */
+
+function bloqueio(chave) {
+  if (!chave) return null;
+  var m = (CFG && CFG.metricasBloqueadas) || {};
+  return m[chave] || null;
+}
+
+var LOCK_ICO = '<span class="blk-lock"><svg class="ico"><use href="#i-lock"/></svg></span>';
+
+/* card inteiro — ocupa o lugar de um gráfico ou tabela */
+function bloqueadoHTML(b, titulo) {
+  return '<div class="blk">' +
+    '<div class="blk-head">' + LOCK_ICO +
+      '<h4>' + esc(titulo || b.titulo || 'Métrica') + '</h4>' +
+      '<span class="blk-tag">bloqueado pela Zync</span>' +
+    '</div>' +
+    '<p class="blk-razao">' + esc(b.razao || '') + '</p>' +
+    (b.previsao ? '<div class="blk-prev">' + esc(b.previsao) + '</div>' : '') +
+  '</div>';
+}
+
+/* variação compacta — ocupa o lugar de um card de KPI na grade */
+function kpiBloqueadoHTML(b, label) {
+  return '<div class="blk blk-kpi">' +
+    '<div class="blk-head"><span class="k-label">' + esc(label || b.titulo || '') + '</span>' +
+      '<span class="blk-tag">bloqueado</span></div>' +
+    '<div class="blk-valor">' + LOCK_ICO + '</div>' +
+    '<p class="blk-razao">' + esc(b.resumo || b.razao || '') + '</p>' +
+  '</div>';
+}
+
+/* ============================================================
    COMPONENTES
    ============================================================ */
 
@@ -204,6 +244,10 @@ function deltaHTML(k) {
 }
 
 function kpiHTML(k) {
+  /* métrica bloqueada em config.js não vira número: vira estado */
+  var b = bloqueio(k.id);
+  if (b) return kpiBloqueadoHTML(b, k.label);
+
   var valor = F[k.fmt] ? F[k.fmt](k.valor) : k.valor;
   /* a anotação fica ancorada no número que ela explica — interpretação
      com lastro, em vez de um bloco de prosa solto na tela */
@@ -350,7 +394,11 @@ var PAGINAS = [
     /* funil + pendências lado a lado */
     h += '<div class="grid g-2 mb-24">';
 
-    if (D.funil && D.funil.length) {
+    var bFunil = bloqueio('funil');
+    if (bFunil) {
+      h += '<div class="card">' + cardHead('Funil do mês', null, '') +
+           bloqueadoHTML(bFunil, 'Funil do mês') + '</div>';
+    } else if (D.funil && D.funil.length) {
       h += '<div class="card">' + cardHead('Funil do mês', null, selo()) + funilHTML(D.funil) + '</div>';
     }
 
@@ -400,17 +448,26 @@ var PAGINAS = [
       '<h2>Para onde foi o investimento</h2>' +
       '<p>Investimento, alcance e resultado das campanhas em operação no período.</p></div>';
 
+    /* 3º item = id da métrica em config.js → metricasBloqueadas (opcional) */
     h += '<div class="grid g-4 mb-24">' +
       [['INVESTIDO', F.brl0(t.investimento)], ['IMPRESSÕES', F.num(t.impressoes)],
        ['CLIQUES', F.num(t.cliques)], ['CTR', F.pct(t.ctr)],
-       ['CPC MÉDIO', F.brl(t.cpc)], ['LEADS', F.num(t.leads)],
-       ['CUSTO POR LEAD', F.brl(t.cpl)], ['CUSTO POR QUALIFICADO', F.brl(t.custo_qualificado)]]
+       ['CPC MÉDIO', F.brl(t.cpc)], ['LEADS', F.num(t.leads), 'leads'],
+       ['CUSTO POR LEAD', F.brl(t.cpl), 'cpl'],
+       ['CUSTO POR QUALIFICADO', F.brl(t.custo_qualificado), 'custo_qualificado']]
       .map(function (p) {
+        var b = bloqueio(p[2]);
+        if (b) return kpiBloqueadoHTML(b, p[0]);
         return '<div class="kpi"><div class="k-label">' + p[0] + '</div><div class="k-val" style="font-size:1.5rem">' + p[1] + '</div></div>';
       }).join('') + '</div>';
 
     h += '<div class="card mb-24">' + cardHead('Investimento e leads por dia', null, selo()) +
          chartBarLine(t.serie) + '</div>';
+
+    /* a coluna de CPL por campanha nasce da mesma fonte do KPI de CPL:
+       se o KPI está bloqueado, a coluna também precisa estar */
+    var bCPL = bloqueio('cpl');
+    var celCPL = bCPL ? '<td class="num">' + tag('bloqueado', 'b-yellow') + '</td>' : null;
 
     h += '<div class="card mb-24">' + cardHead('Campanhas em operação', t.campanhas.length + ' campanhas', selo()) +
       '<div class="table-wrap"><table><thead><tr>' +
@@ -419,9 +476,12 @@ var PAGINAS = [
       t.campanhas.map(function (c) {
         return '<tr><td class="strong">' + esc(c.nome) + '</td><td>' + esc(c.canal) + '</td>' +
           '<td>' + badge(c.status) + '</td><td class="num">' + F.brl0(c.invest) + '</td>' +
-          '<td class="num">' + F.num(c.leads) + '</td><td class="num">' + F.brl(c.cpl) + '</td>' +
+          '<td class="num">' + F.num(c.leads) + '</td>' +
+          (celCPL || '<td class="num">' + F.brl(c.cpl) + '</td>') +
           '<td class="num">' + F.pct(c.ctr) + '</td></tr>';
-      }).join('') + '</tbody></table></div></div>';
+      }).join('') + '</tbody></table></div>' +
+      (bCPL ? '<p class="blk-razao" style="margin-top:14px">' + esc(bCPL.razao) + '</p>' : '') +
+      '</div>';
 
     h += '<div class="insight"><div class="ico">≡</div><div><h4>Como lemos esses números</h4>' +
       '<p>Consideramos a conversão atribuída em até 7 dias após o clique e 1 dia após a visualização. ' +
@@ -435,13 +495,21 @@ var PAGINAS = [
 /* ---------------- FUNIL E LEADS ---------------- */
 {
   id: 'funil', titulo: 'Funil e leads', grupo: 'Operação', icone: 'i-funnel',
-  tem: function () { return !!(D.funil && D.funil.length); },
+  /* métrica bloqueada mantém a aba viva: o cliente precisa ver a razão,
+     não um módulo que sumiu sem explicação */
+  tem: function () { return !!(D.funil && D.funil.length) || !!bloqueio('funil'); },
   render: function () {
     var h = '<div class="page-head"><div class="sec-tag">' + esc(D.periodo.label) + '</div>' +
       '<h2>Do anúncio até a venda</h2>' +
       '<p>Onde cada etapa perde volume. É aqui que se descobre se o problema está na campanha ou no atendimento.</p></div>';
 
-    h += '<div class="card mb-24">' + cardHead('Funil completo', null, selo()) + funilHTML(D.funil) + '</div>';
+    var bFun = bloqueio('funil');
+    if (bFun) {
+      h += '<div class="card mb-24">' + cardHead('Funil completo', null, '') +
+           bloqueadoHTML(bFun, 'Funil completo') + '</div>';
+    } else {
+      h += '<div class="card mb-24">' + cardHead('Funil completo', null, selo()) + funilHTML(D.funil) + '</div>';
+    }
 
     if (D.leads) {
       h += '<div class="grid g-4 mb-24">' +

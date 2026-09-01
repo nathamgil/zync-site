@@ -1,0 +1,25 @@
+# ============================================================
+# Nada aqui pode ir para o ar: o repositório é PÚBLICO e o
+# GitHub Pages publica tudo que for commitado.
+# ============================================================
+
+# Documentos internos de planejamento e auditoria
+ANALISE-*.md
+AUDITORIA-*.md
+CHECKLIST-*.md
+COMO-*.md
+PLANO-*.md
+ESCOPO-*.md
+PARECER-*.md
+SETUP.md
+revisoes/
+
+# Dados reais de cliente — nunca versionar
+area-cliente/dados-*.js
+*.seed.js
+seed-*.sql
+
+# Credenciais
+.env
+.env.*
+*service_role*
