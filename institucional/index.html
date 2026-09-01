@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Zync em uma página — apresentação institucional | Brasília-DF</title>
+<meta name="description" content="Apresentação institucional da Zync: onde o dinheiro vaza na sua operação, quem conduz a sua conta, clientes atendidos, a área do cliente e os níveis de trabalho da agência.">
+<link rel="canonical" href="https://zynchub.com.br/institucional/">
+<meta property="og:title" content="A Zync em uma página">
+<meta property="og:description" content="Quem somos, o que construímos e como trabalhamos — a apresentação institucional da Zync em uma leitura de 5 minutos.">
+<meta property="og:image" content="https://zynchub.com.br/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://zynchub.com.br/institucional/">
+<meta property="og:type" content="website"><meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/estilo.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"AboutPage","name":"A Zync em uma página","url":"https://zynchub.com.br/institucional/","mainEntity":{"@type":"ProfessionalService","name":"Zync","url":"https://zynchub.com.br","logo":"https://zynchub.com.br/favicon-192.png","telephone":"+5561982503561","areaServed":"BR","founder":[{"@type":"Person","name":"Natham Gil","jobTitle":"CEO"},{"@type":"Person","name":"Daniel Vaz","jobTitle":"CTO"}]}}
+</script>
+<style>
+  /* ponte entre os tokens do site e as peças desta página */
+  .inst{--em:var(--accent); --sand:var(--accent-2);
+        --em-soft:rgba(16,201,141,.11); --em-line:rgba(16,201,141,.32);
+        --sand-soft:rgba(201,163,106,.10); --sand-line:rgba(201,163,106,.28);
+        --red:#e0574f; --red-line:rgba(224,87,79,.30)}
+  .inst svg{display:block}
+  .inst .split{display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr); gap:46px; align-items:center}
+  @media (max-width:900px){ .inst .split{grid-template-columns:1fr; gap:32px} }
+
+  /* gargalos */
+  .gar{display:grid; grid-template-columns:34px minmax(0,1fr); gap:0 14px; border-top:1px solid var(--border-soft); padding:16px 0}
+  .gar:last-child{border-bottom:1px solid var(--border-soft)}
+  .gar .n{font-family:var(--mono); font-size:.78rem; color:var(--red); padding-top:4px}
+  .gar h3{font-size:1.02rem; margin-bottom:4px; font-weight:650}
+  .gar p{margin:0; color:var(--muted); font-size:.94rem}
+
+  /* liderança */
+  .lider{border:1px solid var(--border); border-radius:16px; background:var(--panel); overflow:hidden; display:grid; grid-template-columns:150px minmax(0,1fr)}
+  @media (max-width:620px){ .lider{grid-template-columns:1fr} }
+  .foto{position:relative; background:var(--bg-soft); min-height:196px; border-right:1px solid var(--border-soft)}
+  @media (max-width:620px){ .foto{border-right:none; border-bottom:1px solid var(--border-soft); min-height:240px} }
+  .foto img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; z-index:1}
+  .foto .ph{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px;
+            background:radial-gradient(80% 70% at 50% 30%, rgba(201,163,106,.10), transparent 72%)}
+  .foto .ph b{font-family:var(--mono); font-size:1.3rem; color:var(--sand)}
+  .foto .ph small{font-family:var(--mono); font-size:.6rem; color:var(--dim); letter-spacing:.09em; text-transform:uppercase}
+  .lider .info{padding:24px; display:flex; flex-direction:column; gap:10px}
+  .lider .fn{font-family:var(--mono); font-size:.72rem; color:var(--em); letter-spacing:.08em; text-transform:uppercase}
+  .lider .nome{font-size:1.32rem; font-weight:700; letter-spacing:-.4px}
+  .lider p{margin:0; color:var(--muted); font-size:.94rem}
+  .lider .tags{display:flex; flex-wrap:wrap; gap:7px; margin-top:2px}
+  .lider .tags span{font-family:var(--mono); font-size:.68rem; color:var(--muted); border:1px solid var(--border); border-radius:99px; padding:4px 10px}
+
+  /* comparativo */
+  .vs{display:grid; grid-template-columns:1fr 46px 1fr; gap:16px; align-items:stretch}
+  @media (max-width:860px){ .vs{grid-template-columns:1fr} .vs .arrow{transform:rotate(90deg); justify-self:center} }
+  .vs .col{border:1px solid var(--border); border-radius:14px; background:var(--panel); padding:26px}
+  .vs .col.bad{border-color:var(--red-line)}
+  .vs .col.good{border-color:var(--em-line); background:linear-gradient(160deg, var(--em-soft), transparent 74%)}
+  .vs .col h3{margin-bottom:16px; font-size:1.05rem; font-weight:650}
+  .vs .arrow{display:grid; place-items:center; color:var(--dim); font-family:var(--mono)}
+  .peca{display:flex; align-items:center; gap:10px; font-size:.9rem; color:var(--muted);
+        border:1px dashed var(--border); border-radius:9px; padding:10px 13px; margin-bottom:9px; background:var(--bg-soft)}
+  .peca em{font-style:normal; margin-left:auto; font-family:var(--mono); font-size:.68rem; color:var(--red)}
+  .bloco{border:1px solid var(--em-line); border-radius:11px; background:rgba(16,201,141,.07); padding:15px; margin-bottom:10px}
+  .bloco:last-child{margin-bottom:0}
+  .bloco b{display:block; font-size:.94rem; margin-bottom:3px}
+  .bloco span{color:var(--muted); font-size:.87rem}
+
+  /* cases */
+  .case{border:1px solid var(--border); border-radius:14px; background:var(--panel); overflow:hidden; display:flex; flex-direction:column}
+  .case .top{padding:20px 22px 17px; border-bottom:1px solid var(--border-soft); display:flex; gap:13px; align-items:center}
+  .case .mono{width:42px; height:42px; border-radius:11px; display:grid; place-items:center; border:1px solid var(--sand-line); background:var(--sand-soft); flex:0 0 auto; color:var(--sand)}
+  .case .mono svg{width:22px; height:22px}
+  .case .seg{font-family:var(--mono); font-size:.62rem; color:var(--dim); letter-spacing:.07em; text-transform:uppercase}
+  .case .top b{display:block; font-size:1.08rem; margin-top:4px; line-height:1.2}
+  .case .body{padding:18px 22px 22px; display:flex; flex-direction:column; gap:13px; flex:1}
+  .case .lin{font-size:.9rem; color:var(--muted); margin:0}
+  .case .lin b{color:var(--text); font-weight:650}
+  .case .rot{font-family:var(--mono); font-size:.6rem; color:var(--dim); letter-spacing:.08em; text-transform:uppercase; display:block; margin-bottom:5px}
+  .case .out{margin-top:auto; border-top:1px solid var(--border-soft); padding-top:13px; font-size:.9rem; color:var(--text)}
+  .case .out b{color:var(--em)}
+
+  /* mockup do painel */
+  .app{border:1px solid var(--border); border-radius:14px; background:var(--panel); overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.45)}
+  .app .chrome{display:flex; align-items:center; gap:7px; padding:11px 14px; background:var(--bg-soft); border-bottom:1px solid var(--border-soft)}
+  .app .chrome i{width:9px; height:9px; border-radius:50%; background:var(--border)}
+  .app .chrome span{margin-left:8px; font-family:var(--mono); font-size:.68rem; color:var(--dim)}
+  .app .tela{padding:17px; display:grid; gap:13px}
+  .app .row{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:11px}
+  .mini{border:1px solid var(--border-soft); border-radius:10px; background:var(--bg-soft); padding:12px}
+  .mini small{font-family:var(--mono); font-size:.58rem; color:var(--dim); letter-spacing:.07em; text-transform:uppercase; display:block}
+  .mini b{display:block; font-size:1.2rem; margin-top:5px; letter-spacing:-.4px; font-variant-numeric:tabular-nums}
+  .mini b.g{color:var(--em)} .mini b.s{color:var(--sand)}
+  .painel{border:1px solid var(--border-soft); border-radius:10px; background:var(--bg-soft); padding:14px}
+  .painel .hd{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px}
+  .painel .hd small{font-family:var(--mono); font-size:.6rem; color:var(--muted); letter-spacing:.06em; text-transform:uppercase}
+  .painel .hd em{font-style:normal; font-family:var(--mono); font-size:.6rem; color:var(--dim)}
+  .barra{display:grid; grid-template-columns:84px minmax(0,1fr) 38px; gap:9px; align-items:center; margin-bottom:8px; font-size:.75rem; color:var(--muted)}
+  .barra .tr{height:7px; border-radius:99px; background:var(--border-soft); overflow:hidden}
+  .barra .fi{height:100%; border-radius:99px; background:var(--em)}
+  .barra .fi.s{background:var(--sand)}
+  .barra em{font-style:normal; font-family:var(--mono); font-size:.68rem; color:var(--text); text-align:right}
+  .legenda{font-family:var(--mono); font-size:.62rem; color:var(--dim); text-align:right; margin:2px 0 0}
+
+  /* níveis */
+  .nivel{border:1px solid var(--border); border-radius:16px; background:var(--panel); padding:26px; display:flex; flex-direction:column; gap:14px}
+  .nivel.rec{border-color:var(--em-line); background:linear-gradient(165deg, var(--em-soft), transparent 70%)}
+  .nivel .selo{font-family:var(--mono); font-size:.62rem; color:var(--em); letter-spacing:.09em; text-transform:uppercase}
+  .nivel .nome{font-size:1.3rem; font-weight:700; letter-spacing:-.4px}
+  .nivel .quando{color:var(--sand); font-size:.87rem; font-family:var(--mono); margin:0}
+  .nivel ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:9px}
+  .nivel li{font-size:.9rem; color:var(--dim); padding-left:22px; position:relative}
+  .nivel li::before{content:"\2013"; position:absolute; left:2px}
+  .nivel li.on{color:var(--muted)}
+  .nivel li.on::before{content:"\2713"; color:var(--em)}
+
+
+  .selos{display:flex; flex-wrap:wrap; gap:9px}
+  .selos span{font-family:var(--mono); font-size:.74rem; color:var(--muted);
+              border:1px solid var(--border); border-radius:99px; padding:6px 13px; background:var(--panel)}
+
+  /* atalhos para o resto do site */
+  .atalhos{display:flex; flex-wrap:wrap; gap:10px; margin-top:26px}
+  .atalhos a{font-family:var(--mono); font-size:.8rem; color:var(--muted); border:1px solid var(--border);
+             border-radius:99px; padding:9px 16px; background:var(--panel); transition:.2s}
+  .atalhos a:hover{border-color:var(--accent); color:var(--text)}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="container nav-inner">
+    <a href="/" class="logo"><svg viewBox="0 0 100 100" role="img" aria-label="Zync"><g fill="none" stroke="#10c98d" stroke-width="7" stroke-linecap="round"><path d="M 90.57 60.87 A 42 42 0 0 1 60.87 90.57"/><path d="M 39.13 90.57 A 42 42 0 0 1 9.43 60.87"/><path d="M 9.43 39.13 A 42 42 0 0 1 39.13 9.43"/><path d="M 60.87 9.43 A 42 42 0 0 1 90.57 39.13"/></g><path d="M31 33 H69 L31 67 H69" fill="none" stroke="#c9a36a" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="50" r="6.5" fill="#10c98d"/></svg><span class="z">zync</span>_</a>
+    <div class="nav-links">
+      <a href="/servicos/">Serviços</a>
+      <a href="/como-funciona/">Como funciona</a>
+      <a href="/resultados/">Resultados</a>
+      <a href="/sobre/">Sobre</a>
+      <a href="/contato/">Contato</a>
+    </div>
+    <div class="nav-acts">
+      <a href="/area-cliente/" class="nav-login">Área do cliente</a>
+      <a href="https://wa.me/5561982503561" class="nav-cta">Falar com a Zync</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="container">
+    <div class="crumb">institucional</div>
+    <h1>A Zync <em>em uma página.</em></h1>
+    <p class="lead">Se você está avaliando trabalhar com a gente, esta página responde o essencial em cinco minutos de leitura: onde o dinheiro costuma vazar numa operação, quem vai conduzir a sua conta, o que já construímos para outros clientes e como você acompanha tudo depois que o contrato começa.</p>
+  </div>
+</header>
+
+<main class="inst">
+
+<!-- O GARGALO -->
+<section>
+  <div class="container">
+    <h2>Empresa boa não perde cliente por falta de qualidade.</h2>
+    <p class="sec-sub">Perde por atrito. Quatro furos se repetem em quase toda operação que auditamos — e nenhum deles aparece no extrato do fim do mês.</p>
+    <div class="split">
+      <div>
+        <div class="gar"><div class="n">01</div><div><h3>O digital não fecha o círculo</h3><p>Site fora do ar, link quebrado na bio, perfil sem endereço no Google. O cliente procura, encontra e não consegue chegar.</p></div></div>
+        <div class="gar"><div class="n">02</div><div><h3>O lead esfria no WhatsApp</h3><p>Mensagem chega fora do horário, no dia cheio, no meio do atendimento. Quem responde em 5 minutos leva o cliente de quem responde em 5 horas.</p></div></div>
+        <div class="gar"><div class="n">03</div><div><h3>Anúncio sem estratégia é imposto</h3><p>Verba subindo, público errado, criativo genérico. O gestor troca a cada três meses e cada troca reinicia o aprendizado do zero.</p></div></div>
+        <div class="gar"><div class="n">04</div><div><h3>Ninguém sabe de onde veio o cliente</h3><p>Sem dado, decisão vira palpite — e o dono paga a conta do palpite todo mês.</p></div></div>
+      </div>
+      <div>
+        <svg viewBox="0 0 420 400" role="img" aria-label="Funil de vendas mostrando perda de clientes por destino ruim, demora na resposta e falta de follow-up">
+          <defs><linearGradient id="fun" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#10c98d" stop-opacity=".22"/><stop offset="100%" stop-color="#10c98d" stop-opacity=".05"/>
+          </linearGradient></defs>
+          <text x="210" y="22" text-anchor="middle" font-family="Consolas,monospace" font-size="12" fill="#5c5c78" letter-spacing="2">INTERESSE QUE CHEGA</text>
+          <path d="M60 44h300l-60 110h-180Z" fill="url(#fun)" stroke="#20203a"/>
+          <path d="M120 154h180l-32 96h-116Z" fill="url(#fun)" stroke="#20203a"/>
+          <path d="M152 250h116l-24 92h-68Z" fill="url(#fun)" stroke="#20203a"/>
+          <text x="210" y="108" text-anchor="middle" font-family="-apple-system,Segoe UI,sans-serif" font-size="15" fill="#eceaf5" font-weight="600">Vê o anúncio</text>
+          <text x="210" y="208" text-anchor="middle" font-family="-apple-system,Segoe UI,sans-serif" font-size="15" fill="#eceaf5" font-weight="600">Chama no WhatsApp</text>
+          <text x="210" y="302" text-anchor="middle" font-family="-apple-system,Segoe UI,sans-serif" font-size="15" fill="#eceaf5" font-weight="600">Fecha</text>
+          <g stroke="#e0574f" stroke-width="2" stroke-linecap="round" fill="#e0574f">
+            <path d="M300 154c22 10 34 24 40 40"/><circle cx="344" cy="200" r="4.5"/><circle cx="352" cy="222" r="3.2" opacity=".65"/><circle cx="358" cy="242" r="2.4" opacity=".4"/>
+            <path d="M120 154c-22 10-34 24-40 40"/><circle cx="76" cy="200" r="4.5"/><circle cx="68" cy="222" r="3.2" opacity=".65"/><circle cx="62" cy="242" r="2.4" opacity=".4"/>
+            <path d="M268 250c16 8 26 18 30 30"/><circle cx="302" cy="292" r="4"/><circle cx="309" cy="312" r="2.8" opacity=".55"/>
+          </g>
+          <text x="368" y="196" font-family="Consolas,monospace" font-size="11" fill="#e0574f">demora</text>
+          <text x="16" y="196" font-family="Consolas,monospace" font-size="11" fill="#e0574f">destino</text>
+          <text x="322" y="336" font-family="Consolas,monospace" font-size="11" fill="#e0574f">follow-up</text>
+          <path d="M60 366h300" stroke="#20203a" stroke-dasharray="4 6"/>
+          <text x="210" y="388" text-anchor="middle" font-family="Consolas,monospace" font-size="12" fill="#c9a36a">o vazamento é operacional, não de verba</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIDERANÇA -->
+<section style="background:var(--bg-soft);border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)">
+  <div class="container">
+    <h2>Quem conduz a sua conta.</h2>
+    <p class="sec-sub">A estratégia e a engenharia da sua operação ficam com quem responde pela empresa — do diagnóstico à otimização do terceiro mês.</p>
+    <div class="cards">
+      <div class="lider">
+        <div class="foto">
+          <img src="/fotos/natham.jpg" alt="Natham Gil, CEO da Zync" onerror="this.remove()">
+          <div class="ph"><b>NG</b><small>foto</small></div>
+        </div>
+        <div class="info">
+          <span class="fn">Sócio-fundador &middot; CEO</span>
+          <div class="nome">Natham Gil</div>
+          <p>Conduz o diagnóstico, desenha a estratégia de aquisição e responde pelo resultado do ciclo. É o seu ponto de contato direto do primeiro dia ao último.</p>
+          <div class="tags"><span>estratégia</span><span>mídia paga</span><span>comercial</span></div>
+        </div>
+      </div>
+      <div class="lider">
+        <div class="foto">
+          <img src="/fotos/daniel.jpg" alt="Daniel Vaz, CTO da Zync" onerror="this.remove()">
+          <div class="ph"><b>DV</b><small>foto</small></div>
+        </div>
+        <div class="info">
+          <span class="fn">Sócio-fundador &middot; CTO</span>
+          <div class="nome">Daniel Vaz</div>
+          <p>Responsável pela engenharia: site, integrações, banco de dados e os agentes de IA que atendem no WhatsApp. É o que nos permite construir em vez de revender.</p>
+          <div class="tags"><span>engenharia</span><span>IA</span><span>dados</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONSTRUÍMOS x ALUGAMOS -->
+<section>
+  <div class="container">
+    <h2>Construímos o que a maioria aluga.</h2>
+    <p class="sec-sub">Essa é a diferença que aparece no seu custo fixo e no dia em que a parceria acabar: a estrutura que montamos continua sendo sua.</p>
+    <div class="vs">
+      <div class="col bad">
+        <h3>Operação alugada</h3>
+        <div class="peca">Construtor de site <em>mensalidade</em></div>
+        <div class="peca">App de agendamento <em>mensalidade</em></div>
+        <div class="peca">Chatbot de prateleira <em>mensalidade</em></div>
+        <div class="peca">Planilha de relatório <em>manual</em></div>
+        <div class="peca">Base de clientes na plataforma <em>não é sua</em></div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="col good">
+        <h3>Operação Zync</h3>
+        <div class="bloco"><b>Site e sistema próprios</b><span>construídos sob medida, sem mensalidade de plataforma</span></div>
+        <div class="bloco"><b>Agente de IA com as suas regras</b><span>seu tom de voz, seu processo, seu WhatsApp</span></div>
+        <div class="bloco"><b>Painel de dados em tempo real</b><span>o número não espera o fim do mês</span></div>
+        <div class="bloco"><b>A base de clientes é sua</b><span>se um dia sairmos, a estrutura continua funcionando</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTES -->
+<section style="background:var(--bg-soft);border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)">
+  <div class="container">
+    <h2>Segmentos diferentes, mesmo método.</h2>
+    <p class="sec-sub">Três operações que a Zync colocou de pé — cada uma com um gargalo diferente e a mesma lógica de solução.</p>
+    <div class="cards">
+      <div class="case">
+        <div class="top">
+          <div class="mono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5h15v13h-15Z"/><path d="M12 10v6M9 13h6"/><path d="M9 6.5V4.5h6v2"/></svg></div>
+          <div><span class="seg">saúde &middot; perícia médica</span><b>Plexus Perícias</b></div>
+        </div>
+        <div class="body">
+          <p class="lin"><span class="rot">o gargalo</span>Três gestores de tráfego em cinco meses. O formulário do site aceitava envio em branco, sem campo de nome nem e-mail. Pixel e ferramenta de gravação coletando dados que ninguém lia.</p>
+          <p class="lin"><span class="rot">o que fizemos</span>Auditoria técnica completa, correção do funil de contato e reposicionamento da mídia para o público que realmente recontrata: <b>o escritório de advocacia</b>, não o cliente avulso.</p>
+          <p class="out">Virou o <b>primeiro contrato de ciclo recorrente</b> da Zync, com indicação de uma segunda perita na mesa.</p>
+        </div>
+      </div>
+      <div class="case">
+        <div class="top">
+          <div class="mono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="17.5" r="2.6"/><circle cx="17.5" cy="17.5" r="2.6"/><path d="M8.4 15.6 18 4M15.6 15.6 6 4"/></svg></div>
+          <div><span class="seg">serviços &middot; barbearia</span><b>HM Barbershop</b></div>
+        </div>
+        <div class="body">
+          <p class="lin"><span class="rot">o gargalo</span>Atendimento só com hora marcada e toda a agenda no WhatsApp, manualmente. O tempo do barbeiro ia embora respondendo mensagem em vez de cortar cabelo.</p>
+          <p class="lin"><span class="rot">o que fizemos</span>Site próprio com sistema de agendamento construído por nós, integrado à rotina real da cadeira — e com a orientação de chegada que o cliente precisava para achar a porta.</p>
+          <p class="out">Agenda online <b>sem mensalidade de aplicativo</b> e com a base de clientes na mão do dono.</p>
+        </div>
+      </div>
+      <div class="case">
+        <div class="top">
+          <div class="mono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 8.5h12v6a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4Z"/><path d="M16.5 10h1.6a2.4 2.4 0 0 1 0 4.8h-1.6"/><path d="M8 5.2V3.5M12 5.2V3.5"/></svg></div>
+          <div><span class="seg">alimentação &middot; 2 unidades</span><b>A Barraca</b></div>
+        </div>
+        <div class="body">
+          <p class="lin"><span class="rot">o gargalo</span>Casa querida no Guará, 4,6 no Google com mais de 500 avaliações e quase 5 mil seguidores — mas sem site, sem cardápio online e com tudo represado no WhatsApp.</p>
+          <p class="lin"><span class="rot">o que fizemos</span>Site institucional com cardápio, as duas unidades no ar e o Google Business tratado como vitrine de bairro.</p>
+          <p class="out">A reputação que já existia passou a ter <b>para onde mandar o cliente</b>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ÁREA DO CLIENTE -->
+<section>
+  <div class="container">
+    <div class="split">
+      <div>
+        <h2>Você não espera o relatório para saber como está.</h2>
+        <p class="sec-sub" style="margin-bottom:22px">Todo cliente da Zync recebe login em uma área exclusiva com o andamento do projeto, as entregas da semana, as campanhas no ar e os números da operação. Instalável no celular como aplicativo.</p>
+        <div class="selos">
+          <span>acesso por login</span>
+          <span>dados isolados por cliente</span>
+          <span>funciona como app no celular</span>
+        </div>
+      </div>
+      <div class="app">
+        <div class="chrome"><i></i><i></i><i></i><span>zynchub.com.br/area-cliente</span></div>
+        <div class="tela">
+          <div class="row">
+            <div class="mini"><small>conversas</small><b class="g">128</b></div>
+            <div class="mini"><small>custo/conversa</small><b>R$ 9,40</b></div>
+            <div class="mini"><small>reuniões</small><b class="s">17</b></div>
+          </div>
+          <div class="painel">
+            <div class="hd"><small>origem das conversas</small><em>últimos 30 dias</em></div>
+            <div class="barra"><span>Meta Ads</span><div class="tr"><div class="fi" style="width:72%"></div></div><em>72%</em></div>
+            <div class="barra"><span>Google Ads</span><div class="tr"><div class="fi" style="width:41%"></div></div><em>41%</em></div>
+            <div class="barra"><span>Orgânico</span><div class="tr"><div class="fi s" style="width:26%"></div></div><em>26%</em></div>
+            <div class="barra"><span>Indicação</span><div class="tr"><div class="fi s" style="width:14%"></div></div><em>14%</em></div>
+          </div>
+          <div class="painel">
+            <div class="hd"><small>entregas da semana</small><em>3 de 4 concluídas</em></div>
+            <div class="barra"><span>Criativos</span><div class="tr"><div class="fi" style="width:100%"></div></div><em>ok</em></div>
+            <div class="barra"><span>Landing page</span><div class="tr"><div class="fi" style="width:100%"></div></div><em>ok</em></div>
+            <div class="barra"><span>Agente de IA</span><div class="tr"><div class="fi s" style="width:60%"></div></div><em>60%</em></div>
+          </div>
+          <p class="legenda">ilustração da interface</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NÍVEIS -->
+<section style="background:var(--bg-soft);border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)">
+  <div class="container">
+    <h2>Três níveis de operação.</h2>
+    <p class="sec-sub">Não trabalhamos com pacote fechado: o nível certo sai do diagnóstico, e o investimento é definido em cima do escopo que o seu gargalo exige. O que muda entre eles é a profundidade da operação.</p>
+    <div class="cards">
+      <div class="nivel">
+        <div><span class="selo">porta de entrada</span><div class="nome">Essencial</div></div>
+        <p class="quando">para quem ainda não tem base montada</p>
+        <ul>
+          <li class="on">Diagnóstico e plano de crescimento</li>
+          <li class="on">Uma frente de mídia (Google ou Meta)</li>
+          <li class="on">Presença digital arrumada</li>
+          <li class="on">Relatório e leitura mensal</li>
+          <li>Agente de IA no WhatsApp</li>
+          <li>Conteúdo orgânico</li>
+        </ul>
+      </div>
+      <div class="nivel rec">
+        <div><span class="selo">★ mais contratado</span><div class="nome">Crescimento</div></div>
+        <p class="quando">para quem já vende e quer previsibilidade</p>
+        <ul>
+          <li class="on">Tudo do Essencial</li>
+          <li class="on">Google e Meta operando juntos</li>
+          <li class="on">Site ou sistema sob medida</li>
+          <li class="on">Agente de IA no WhatsApp</li>
+          <li class="on">Área do cliente e leitura semanal</li>
+          <li>Personal branding do sócio</li>
+        </ul>
+      </div>
+      <div class="nivel">
+        <div><span class="selo">operação completa</span><div class="nome">Full Growth</div></div>
+        <p class="quando">para quem quer escalar com estrutura</p>
+        <ul>
+          <li class="on">Tudo do Crescimento</li>
+          <li class="on">Conteúdo orgânico e produção audiovisual</li>
+          <li class="on">Agente de IA com CRM próprio</li>
+          <li class="on">Personal branding do sócio</li>
+          <li class="on">Reunião quinzenal de estratégia</li>
+        </ul>
+      </div>
+    </div>
+    <p class="sec-sub" style="margin:26px 0 0">A verba de mídia é sempre separada do valor da Zync e paga por você diretamente ao Google e à Meta. Ciclo mínimo de 90 dias, sem fidelidade abusiva.</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="container narrow">
+    <h2>Perguntas que aparecem antes de fechar.</h2>
+    <p class="sec-sub">O passo a passo do trabalho e as dúvidas sobre investimento estão em <a href="/como-funciona/" style="color:var(--accent)">como funciona</a>. Aqui ficam as que vêm depois.</p>
+
+    <details open>
+      <summary>Em quanto tempo eu vejo resultado?</summary>
+      <div class="ans">Tráfego pago gera dado no primeiro dia e leitura confiável a partir do primeiro mês. O que costuma demorar é a fundação — site, rastreamento e atendimento — e é justamente por isso que ela vem antes da mídia. Conteúdo orgânico e busca levam mais tempo, e a gente diz isso antes de você contratar.</div>
+    </details>
+    <details>
+      <summary>De quem são as contas, os dados e o site?</summary>
+      <div class="ans">Seus. As contas de anúncio, o domínio, o site, o banco de dados e a base de clientes ficam no seu nome. Se a parceria terminar, você não perde a estrutura nem precisa reconstruir nada — e não fica pagando mensalidade de plataforma para continuar usando o que já é seu.</div>
+    </details>
+    <details>
+      <summary>Preciso de quanto de verba de mídia?</summary>
+      <div class="ans">Depende do seu ticket e da concorrência do seu leilão — é uma das primeiras contas que fazemos no diagnóstico. O que não muda: a verba é paga por você direto ao Google e à Meta, separada do valor da Zync, e você vê exatamente quanto foi gasto e o que voltou.</div>
+    </details>
+    <details>
+      <summary>O que vocês precisam de mim no dia a dia?</summary>
+      <div class="ans">Menos do que a maioria imagina: acessos no começo, aprovação do que vai ao ar e retorno rápido sobre a qualidade dos leads que chegam. Esse último ponto é o que mais acelera a otimização — quem atende sabe antes de qualquer painel se o lead presta.</div>
+    </details>
+    <details>
+      <summary>Vocês atendem fora de Brasília?</summary>
+      <div class="ans">Sim. Ficamos em Brasília-DF e atendemos empresas de todo o Brasil de forma remota: reuniões por vídeo, operação online e canal aberto no WhatsApp. Boa parte do que fazemos não depende de estar na mesma cidade.</div>
+    </details>
+    <details>
+      <summary>E se eu já tiver agência ou alguém cuidando disso?</summary>
+      <div class="ans">O diagnóstico continua valendo — inclusive para saber se o problema é de execução ou de estratégia. Já aconteceu de a nossa recomendação ser manter quem está e arrumar só uma peça. Se for esse o caso, falamos abertamente.</div>
+    </details>
+    <details>
+      <summary>Como funciona o encerramento?</summary>
+      <div class="ans">Ciclo mínimo de 90 dias, porque é o tempo honesto para o aprendizado das plataformas maturar. Depois disso, saída com aviso prévio combinado em contrato, entrega dos acessos organizados e nenhum tipo de retenção de conta ou de dado.</div>
+    </details>
+    <div class="atalhos">
+      <a href="/servicos/">o que fazemos →</a>
+      <a href="/como-funciona/">como funciona →</a>
+      <a href="/resultados/">o que medimos →</a>
+      <a href="/sobre/">sobre a Zync →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="cta-box">
+      <h2>Comece pelo diagnóstico.</h2>
+      <p>É gratuito e sem compromisso. Se trabalharmos juntos, ele vira o plano do primeiro ciclo. Se não, você fica com o mapa do que está vazando e resolve com quem quiser.</p>
+      <a href="https://wa.me/5561982503561" class="btn btn-primary">Falar com a Zync no WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <svg class="foot-mark" viewBox="0 0 100 100" role="img" aria-label="Zync">
+      <g><circle cx="50" cy="50" r="44" fill="none" stroke="#10c98d" stroke-width="2.4" opacity=".9"/><circle cx="50" cy="50" r="38" fill="none" stroke="#10c98d" stroke-width=".8" opacity=".35"/></g>
+      <g stroke="#10c98d" stroke-width="2.8" stroke-linecap="round"><line x1="50" y1="2" x2="50" y2="13"/><line x1="50" y1="87" x2="50" y2="98"/><line x1="2" y1="50" x2="13" y2="50"/><line x1="87" y1="50" x2="98" y2="50"/></g>
+      <path d="M33 31 H67 L33 69 H67" fill="none" stroke="#c9a36a" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <g><circle cx="50" cy="50" r="9.5" fill="none" stroke="#10c98d" stroke-width="2.4"/><circle cx="50" cy="50" r="3.6" fill="#10c98d"/></g>
+    </svg>
+    <span class="foot-word">zync_</span>
+    <p class="foot-tag">Crescimento digital de ponta a ponta.</p>
+    <div class="foot-links">
+      <a href="/servicos/">Serviços</a>
+      <a href="/como-funciona/">Como funciona</a>
+      <a href="/resultados/">Resultados</a>
+      <a href="/sobre/">Sobre</a>
+      <a href="/institucional/">Institucional</a>
+      <a href="/contato/">Contato</a>
+      <a href="/area-cliente/">Área do cliente</a>
+    </div>
+    <div class="foot-copy">© 2026 Zync · zynchub.com.br · Brasília-DF</div>
+  </div>
+</footer>
+
+</body>
+</html>
