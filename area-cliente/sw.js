@@ -15,7 +15,7 @@
 
 'use strict';
 
-var CACHE_VERSION = 'zync-area-cliente-v2-supabase';
+var CACHE_VERSION = 'zync-area-cliente-v3';
 
 var APP_SHELL = [
   '/area-cliente/',
@@ -36,7 +36,14 @@ var APP_SHELL = [
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(CACHE_VERSION).then(function (cache) {
-      return cache.addAll(APP_SHELL);
+      /* `cache: 'reload'` obriga a ida à rede e ignora o cache HTTP.
+         Com addAll simples, o navegador pode servir uma cópia velha
+         do config.js e o pré-cache nasce desatualizado — foi
+         exatamente o que aconteceu na virada de 05/09/2026, e o
+         portal ficou preso em modo demo depois do deploy. */
+      return Promise.all(APP_SHELL.map(function (u) {
+        return cache.add(new Request(u, { cache: 'reload' }));
+      }));
     }).then(function () {
       return self.skipWaiting();
     })
@@ -75,6 +82,25 @@ self.addEventListener('fetch', function (event) {
           JSON.stringify({ erro: 'Sem conexão com o servidor.' }),
           { status: 503, headers: { 'Content-Type': 'application/json' } }
         );
+      })
+    );
+    return;
+  }
+
+  /* config.js decide se o portal roda em demonstração ou com dado
+     real do cliente. Servir uma versão velha dele é o pior erro que
+     este service worker pode cometer, então aqui é network-first:
+     o cache só entra em jogo se a rede falhar. */
+  if (url.origin === self.location.origin && url.pathname.indexOf('/config.js') > -1) {
+    event.respondWith(
+      fetch(req, { cache: 'no-store' }).then(function (resp) {
+        if (resp && resp.ok) {
+          var copia = resp.clone();
+          caches.open(CACHE_VERSION).then(function (cache) { cache.put(req, copia); });
+        }
+        return resp;
+      }).catch(function () {
+        return caches.match(req);
       })
     );
     return;
