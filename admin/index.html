@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel — Zync</title>
+<link rel="icon" href="../favicon.svg">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<div class="top">
+  <div class="brand"><b>ZYNC</b> <span>painel interno</span></div>
+  <div class="sp"></div>
+  <span class="quem" id="quem"></span>
+</div>
+
+<div class="shell">
+
+  <nav class="lista" aria-label="Clientes">
+    <input class="busca" id="busca" type="search" placeholder="Buscar cliente…" aria-label="Buscar cliente">
+    <div class="filtros" id="filtros" role="group" aria-label="Filtrar por situação">
+      <button class="fx on" data-f="todos">Todos</button>
+      <button class="fx" data-f="cliente">Clientes</button>
+      <button class="fx" data-f="proposta">Proposta</button>
+      <button class="fx" data-f="prospect">Prospects</button>
+      <button class="fx" data-f="perdido">Perdidos</button>
+    </div>
+    <div class="clientes" id="clientes"></div>
+  </nav>
+
+  <main class="main" id="main"></main>
+
+</div>
+
+<footer>
+  Painel interno da Zync · dados que não saem daqui · <span id="rodape"></span>
+</footer>
+
+<script src="../area-cliente/config.js"></script>
+<script src="config-admin.js"></script>
+<script src="dados-locais.js" onerror="window.__semArquivo=true"></script>
+<script src="admin-data.js"></script>
+<script>
+(function(){
+  'use strict';
+  var F = ZyncAdmin.Fmt;
+  var estado = { clientes: [], filtro: 'todos', busca: '', sel: null, aba: 'visao' };
+
+  var elLista = document.getElementById('clientes');
+  var elMain  = document.getElementById('main');
+
+  function esc(s){
+    return String(s === null || s === undefined ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  /* ---------- lista lateral ---------- */
+  function visiveis(){
+    var q = estado.busca.trim().toLowerCase();
+    return estado.clientes.filter(function(c){
+      if(estado.filtro !== 'todos' && c.status !== estado.filtro) return false;
+      if(!q) return true;
+      return (c.empresa + ' ' + c.contato_nome + ' ' + c.segmento + ' ' + c.cidade)
+             .toLowerCase().indexOf(q) > -1;
+    });
+  }
+
+  function pintaLista(){
+    var lista = visiveis();
+    if(!lista.length){
+      elLista.innerHTML = '<p class="vazio">Nenhum cliente com esse filtro.</p>';
+      return;
+    }
+    elLista.innerHTML = lista.map(function(c){
+      var val = c.status === 'cliente' && c.valor_mensal
+        ? F.brl(c.valor_mensal) : '';
+      return '<button class="ci' + (estado.sel === c.slug ? ' on' : '') + '" data-s="' + esc(c.slug) + '">' +
+        '<span class="faixa f-' + esc(c.status) + '"></span>' +
+        '<span class="txt">' +
+          '<span class="nome">' + esc(c.empresa) + '</span>' +
+          '<span class="sub">' + esc(ZyncAdmin.rotuloStatus(c.status)) +
+            (c.cidade ? ' · ' + esc(c.cidade) : '') + '</span>' +
+        '</span>' +
+        '<span class="val nums">' + val + '</span>' +
+      '</button>';
+    }).join('');
+    Array.prototype.forEach.call(elLista.querySelectorAll('.ci'), function(b){
+      b.addEventListener('click', function(){
+        estado.sel = b.dataset.s; estado.aba = 'visao';
+        pintaLista(); pintaMain();
+        if(window.innerWidth <= 900) elMain.scrollIntoView({behavior:'smooth'});
+      });
+    });
+  }
+
+  /* ---------- detalhe ---------- */
+  function achado(){
+    return estado.clientes.filter(function(c){ return c.slug === estado.sel; })[0];
+  }
+
+  function blocoVisao(c){
+    var h = '';
+    if(c.resumo) h += '<div class="bloco"><h3>Quem são</h3><p>' + esc(c.resumo) + '</p></div>';
+    h += '<div class="bloco"><h3>Ficha</h3><dl class="dl">' +
+      linha('Contato', c.contato_nome ? c.contato_nome + (c.contato_papel ? ' — ' + c.contato_papel : '') : '') +
+      linha('Segmento', c.segmento) +
+      linha('Cidade', c.cidade) +
+      linha('Situação', ZyncAdmin.rotuloStatus(c.status)) +
+      linha(c.status === 'cliente' ? 'Cliente desde' : 'Primeiro contato', F.data(c.desde)) +
+      linha('Mensalidade', c.valor_mensal ? F.brl(c.valor_mensal) : '') +
+      linha('Implantação', c.valor_implantacao ? F.brl(c.valor_implantacao) : '') +
+    '</dl></div>';
+
+    var abertos = c.passos.filter(function(p){ return !p.feito; });
+    h += '<div class="bloco"><h3>Próximo passo</h3>';
+    if(!abertos.length && !c.passos.length){
+      h += '<p>Nada pendente registrado.</p>';
+    } else {
+      h += c.passos.map(function(p,i){
+        var tarde = !p.feito && F.atrasado(p.prazo);
+        return '<div class="passo' + (p.feito ? ' ok' : '') + '">' +
+          '<input type="checkbox" data-p="' + i + '"' + (p.feito ? ' checked' : '') +
+            ' aria-label="Concluir: ' + esc(p.texto) + '">' +
+          '<span class="p">' + esc(p.texto) + '</span>' +
+          '<span class="prazo nums' + (tarde ? ' tarde' : '') + '">' +
+            (p.prazo ? F.dataCurta(p.prazo) + (tarde ? ' · atrasado' : '') : '') + '</span>' +
+        '</div>';
+      }).join('');
+    }
+    h += '</div>';
+    return h;
+  }
+
+  function linha(k, v){
+    if(!v || v === '—') return '';
+    return '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>';
+  }
+
+  function blocoReunioes(c){
+    if(!c.reunioes.length) return '<div class="bloco"><p>Nenhuma reunião registrada. Peça ao Claude para importar as anotações do Gemini do Drive.</p></div>';
+    return c.reunioes.map(function(r, i){
+      var pontos = (r.pontos || []).map(function(p){
+        return '<li><span class="tm">' + esc(p.t || '') + '</span><span>' + esc(p.texto) + '</span></li>';
+      }).join('');
+      var links = '';
+      if(r.notas_url)    links += '<a class="btn" href="' + esc(r.notas_url) + '" target="_blank" rel="noopener">Anotações no Drive</a>';
+      if(r.gravacao_url) links += '<a class="btn" href="' + esc(r.gravacao_url) + '" target="_blank" rel="noopener">Gravação</a>';
+      return '<details class="reu"' + (i === 0 ? ' open' : '') + '>' +
+        '<summary><span class="d nums">' + F.data(r.data) + '</span>' +
+          '<span class="t">' + esc(r.titulo) + '</span>' +
+          '<span class="who">' + esc((r.participantes || []).join(', ')) + '</span></summary>' +
+        '<div class="corpo">' +
+          (r.resumo ? '<p>' + esc(r.resumo) + '</p>' : '') +
+          (pontos ? '<div class="rot">o que foi dito</div><ul class="pontos">' + pontos + '</ul>' : '') +
+          (links ? '<div class="links">' + links + '</div>' : '') +
+        '</div></details>';
+    }).join('');
+  }
+
+  function blocoApres(c){
+    if(!c.apresentacoes.length) return '<div class="bloco"><p>Nenhuma apresentação registrada.</p></div>';
+    return '<div class="aps">' + c.apresentacoes.map(function(a){
+      var acao = '';
+      if(a.url_publica) acao += '<a class="btn pri" href="' + esc(a.url_publica) + '" target="_blank" rel="noopener">Abrir</a>' +
+        '<button class="btn" data-copiar="' + esc(a.url_publica) + '">Copiar link</button>';
+      return '<div class="ap">' +
+        '<span class="t">' + esc(a.titulo) + '</span>' +
+        '<span class="st st-' + (a.status === 'aceita' ? 'cliente' : a.status === 'recusada' ? 'perdido' : 'proposta') + '">' + esc(a.status) + '</span>' +
+        '<span class="m nums">' + F.data(a.data) + (a.caminho ? ' · ' + esc(a.caminho) : '') + '</span>' +
+        '<span class="acao">' + acao + '</span>' +
+      '</div>';
+    }).join('') + '</div>';
+  }
+
+  function blocoTimeline(c){
+    if(!c.timeline.length) return '<div class="bloco"><p>Sem histórico registrado.</p></div>';
+    var cor = { reuniao:'var(--info)', proposta:'var(--sand)', fechamento:'var(--ok)',
+                perda:'var(--bad)', pagamento:'var(--ok)', nota:'var(--dim)' };
+    return '<ul class="tl">' + c.timeline.map(function(t){
+      return '<li>' +
+        '<span class="d nums">' + F.data(t.data) + '</span>' +
+        '<span class="eixo"><span class="pt" style="background:' + (cor[t.tipo] || 'var(--dim)') + '"></span></span>' +
+        '<span class="txt"><b>' + esc(t.tipo) + '</b>' + esc(t.texto) + '</span>' +
+      '</li>';
+    }).join('') + '</ul>';
+  }
+
+  function pintaMain(){
+    var c = achado();
+    if(!c){
+      elMain.innerHTML = '<div class="bloco"><h3>Selecione um cliente</h3>' +
+        '<p>' + estado.clientes.length + ' no painel. A lista começa por quem tem proposta em aberto.</p></div>';
+      return;
+    }
+    var abas = [
+      ['visao','Visão geral', ''],
+      ['reunioes','Reuniões', c.reunioes.length],
+      ['apres','Apresentações', c.apresentacoes.length],
+      ['tl','Histórico', c.timeline.length]
+    ];
+
+    elMain.innerHTML =
+      '<div class="cab"><div>' +
+        '<h1>' + esc(c.empresa) + '</h1>' +
+        '<div class="meta">' + esc(c.segmento || '—') + (c.cidade ? ' · ' + esc(c.cidade) : '') + '</div>' +
+      '</div><div class="dir"><span class="st st-' + esc(c.status) + '">' + esc(ZyncAdmin.rotuloStatus(c.status)) + '</span></div></div>' +
+
+      '<div class="kpis">' +
+        kpi('Mensalidade', c.valor_mensal ? F.brl(c.valor_mensal) : '—') +
+        kpi('Implantação', c.valor_implantacao ? F.brl(c.valor_implantacao) : '—') +
+        kpi('Reuniões', String(c.reunioes.length)) +
+        kpi('Pendências', String(c.passos.filter(function(p){return !p.feito;}).length)) +
+      '</div>' +
+
+      '<div class="abas" role="tablist">' + abas.map(function(a){
+        return '<button class="aba' + (estado.aba === a[0] ? ' on' : '') + '" data-a="' + a[0] + '" role="tab">' +
+          a[1] + (a[2] !== '' ? '<span class="n">' + a[2] + '</span>' : '') + '</button>';
+      }).join('') + '</div>' +
+
+      '<div class="painel' + (estado.aba==='visao'?' on':'') + '" data-p="visao">' + blocoVisao(c) + '</div>' +
+      '<div class="painel' + (estado.aba==='reunioes'?' on':'') + '" data-p="reunioes">' + blocoReunioes(c) + '</div>' +
+      '<div class="painel' + (estado.aba==='apres'?' on':'') + '" data-p="apres">' + blocoApres(c) + '</div>' +
+      '<div class="painel' + (estado.aba==='tl'?' on':'') + '" data-p="tl">' + blocoTimeline(c) + '</div>';
+
+    Array.prototype.forEach.call(elMain.querySelectorAll('.aba'), function(b){
+      b.addEventListener('click', function(){ estado.aba = b.dataset.a; pintaMain(); });
+    });
+    Array.prototype.forEach.call(elMain.querySelectorAll('[data-copiar]'), function(b){
+      b.addEventListener('click', function(){
+        navigator.clipboard.writeText(b.dataset.copiar).then(function(){
+          var t = b.textContent; b.textContent = 'Copiado';
+          setTimeout(function(){ b.textContent = t; }, 1600);
+        });
+      });
+    });
+    /* marcar passo é só visual enquanto o modo for local — o
+       arquivo local não é gravável pelo navegador. */
+    Array.prototype.forEach.call(elMain.querySelectorAll('.passo input'), function(i){
+      i.addEventListener('change', function(){
+        c.passos[+i.dataset.p].feito = i.checked;
+        pintaMain();
+      });
+    });
+  }
+
+  function kpi(k, v){
+    return '<div class="kpi"><div class="k">' + esc(k) + '</div><div class="v nums">' + v + '</div></div>';
+  }
+
+  /* ---------- avisos de estado ---------- */
+  function avisar(res){
+    var m = {
+      'sem-arquivo': ['O painel está vazio porque o arquivo local não existe',
+        'O modo <code>local</code> lê <code>admin/dados-locais.js</code>, que fica de fora do repositório de propósito — ele carrega dossiê de cliente e não pode ir para um repositório público. Peça ao Claude para gerar o arquivo a partir da memória dele.'],
+      'sem-credencial': ['Supabase ainda não configurado',
+        'Preencha <code>supabaseUrl</code> e <code>supabaseAnonKey</code> em <code>area-cliente/config.js</code>. Passo a passo em <code>zync-docs/SETUP-ADMIN.md</code>.'],
+      'sem-sdk': ['A biblioteca do Supabase não carregou',
+        'Verifique a conexão e recarregue a página.'],
+      'sem-sessao': ['Você não está autenticado',
+        'Entre pela Área do Cliente com a sua conta da Zync e volte para cá.'],
+      'sem-admin': ['Sua conta não está na lista de admins',
+        'O banco devolveu vazio porque a policy negou, não porque a tela escondeu. Rode o <code>insert into admins</code> da seção 3 do <code>SETUP-ADMIN.md</code>.'],
+      'erro': ['Erro ao carregar', esc(res.detalhe || 'Motivo não informado pelo servidor.')],
+    }[res.motivo] || ['Não foi possível carregar', 'Motivo desconhecido.'];
+
+    elMain.innerHTML = '<div class="aviso"><h3>' + m[0] + '</h3><p>' + m[1] + '</p></div>';
+  }
+
+  /* ---------- eventos globais ---------- */
+  document.getElementById('busca').addEventListener('input', function(){
+    estado.busca = this.value; pintaLista();
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.fx'), function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.fx'), function(o){ o.classList.remove('on'); });
+      b.classList.add('on'); estado.filtro = b.dataset.f; pintaLista();
+    });
+  });
+
+  /* ---------- carga ---------- */
+  document.getElementById('rodape').textContent = 'modo ' + ZyncAdmin.modo;
+  ZyncAdmin.carregar().then(function(res){
+    if(!res.ok){ avisar(res); return; }
+    estado.clientes = res.clientes;
+    var fechados = res.clientes.filter(function(c){ return c.status === 'cliente'; });
+    var mrr = fechados.reduce(function(s,c){ return s + (Number(c.valor_mensal) || 0); }, 0);
+    document.getElementById('quem').textContent =
+      res.clientes.length + ' no funil · ' + fechados.length + ' ativos · ' + F.brl(mrr) + '/mês';
+    pintaLista(); pintaMain();
+  });
+})();
+</script>
+
+</body>
+</html>

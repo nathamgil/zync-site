@@ -23,3 +23,6 @@ seed-*.sql
 .env
 .env.*
 *service_role*
+
+# Painel admin — dossies de cliente NUNCA vao para o repositorio publico
+admin/dados-locais.js

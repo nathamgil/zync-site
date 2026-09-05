@@ -1,0 +1,194 @@
+/* ============================================================
+   Zync — Painel do Administrador
+   ------------------------------------------------------------
+   Tema CLARO e de alto contraste, de propósito. A Área do
+   Cliente é escura porque é a cara da marca para fora; este
+   painel é ferramenta de trabalho interna, lida por horas.
+   ============================================================ */
+
+:root{
+  --bg:#f7f7f4;
+  --panel:#ffffff;
+  --panel-2:#f0f0ec;
+  --border:#c9c9c0;
+  --border-soft:#e2e2db;
+  --text:#14141c;
+  --muted:#4d4d5c;
+  --dim:#6e6e80;
+
+  --accent:#067a55;        /* esmeralda escurecida: 6.1:1 sobre branco */
+  --accent-soft:#e3f5ee;
+  --accent-line:#9dd6c2;
+  --sand:#8a6a2f;          /* areia escurecida para texto */
+  --sand-soft:#f6efe1;
+
+  --ok:#0b7a3c;
+  --warn:#8a6320;
+  --bad:#9e2222;
+  --info:#1f4f8f;
+
+  --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  --r:10px;
+  --r-sm:7px;
+  --nav-w:290px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg)}
+body{
+  color:var(--text); font-family:var(--sans);
+  font-size:16.5px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--info); text-decoration:underline; text-underline-offset:2px}
+button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; font-size:inherit}
+input,select,textarea{font-family:inherit; font-size:inherit}
+h1,h2,h3{line-height:1.22; letter-spacing:-.01em; text-wrap:balance}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:3px}
+.mono{font-family:var(--mono)}
+.hidden{display:none !important}
+.nums{font-variant-numeric:tabular-nums}
+
+/* ---------------- topo ---------------- */
+.top{
+  position:sticky; top:0; z-index:20;
+  display:flex; align-items:center; gap:18px;
+  padding:0 22px; height:60px;
+  background:var(--panel); border-bottom:2px solid var(--border);
+}
+.top .brand{display:flex; align-items:baseline; gap:9px; font-weight:800; letter-spacing:.02em}
+.top .brand b{font-size:17px}
+.top .brand span{font-size:12px; color:var(--dim); font-weight:600; letter-spacing:.16em; text-transform:uppercase}
+.top .sp{margin-left:auto}
+.top .quem{font-size:14px; color:var(--muted)}
+.btn{
+  background:var(--panel); border:1.5px solid var(--border); border-radius:var(--r-sm);
+  padding:8px 14px; font-size:14.5px; font-weight:600; color:var(--text);
+}
+.btn:hover{border-color:var(--accent); color:var(--accent)}
+.btn.pri{background:var(--accent); border-color:var(--accent); color:#fff}
+.btn.pri:hover{background:#056646; color:#fff}
+
+/* ---------------- layout ---------------- */
+.shell{display:grid; grid-template-columns:var(--nav-w) minmax(0,1fr); min-height:calc(100vh - 60px)}
+@media (max-width:900px){ .shell{grid-template-columns:1fr} .lista{border-right:none; border-bottom:2px solid var(--border)} }
+
+.lista{border-right:2px solid var(--border); background:var(--panel); padding:16px 14px 40px; display:flex; flex-direction:column; gap:14px}
+.busca{width:100%; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--r-sm); padding:10px 12px}
+.busca:focus{border-color:var(--accent); outline:none}
+.filtros{display:flex; flex-wrap:wrap; gap:5px}
+.fx{border:1.5px solid var(--border); border-radius:99px; padding:5px 11px; font-size:13px; font-weight:600; color:var(--muted); background:var(--panel)}
+.fx.on{background:var(--text); border-color:var(--text); color:#fff}
+.clientes{display:flex; flex-direction:column; gap:5px}
+.ci{
+  display:grid; grid-template-columns:6px minmax(0,1fr) auto; gap:0 11px; align-items:center;
+  border:1.5px solid var(--border-soft); border-radius:var(--r-sm); background:var(--panel);
+  padding:0; overflow:hidden; text-align:left; width:100%;
+}
+.ci:hover{border-color:var(--accent)}
+.ci.on{border-color:var(--text); border-width:2px; background:var(--panel-2)}
+.ci .faixa{align-self:stretch; background:var(--border)}
+.ci .txt{display:block; min-width:0; padding:11px 0}
+.ci .nome{display:block; font-weight:700; font-size:15.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.ci .sub{display:block; font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.ci .val{display:block; padding-right:11px; font-size:13.5px; font-weight:700; color:var(--muted); white-space:nowrap}
+.vazio{padding:18px 4px; color:var(--dim); font-size:14.5px}
+
+/* estado por status — cor + palavra, nunca só cor */
+.st{display:inline-block; font-size:11.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+    padding:3px 9px; border-radius:99px; border:1.5px solid}
+.st-cliente {color:var(--ok);   border-color:var(--ok);   background:#e8f6ee}
+.st-proposta{color:var(--info); border-color:var(--info); background:#e8f0fa}
+.st-prospect{color:var(--sand); border-color:var(--sand); background:var(--sand-soft)}
+.st-perdido {color:var(--bad);  border-color:var(--bad);  background:#fbeaea}
+.st-pausado {color:var(--dim);  border-color:var(--dim);  background:var(--panel-2)}
+/* especificidade .ci .faixa (0,2,0) — estas precisam empatar ou passar */
+.ci .f-cliente {background:var(--ok)}
+.ci .f-proposta{background:var(--info)}
+.ci .f-prospect{background:var(--sand)}
+.ci .f-perdido {background:var(--bad)}
+.ci .f-pausado {background:var(--dim)}
+
+/* ---------------- conteúdo ---------------- */
+.main{padding:26px 30px 70px; min-width:0}
+@media (max-width:640px){ .main{padding:20px 16px 60px} }
+.cab{display:flex; flex-wrap:wrap; align-items:flex-start; gap:14px 20px; padding-bottom:18px; border-bottom:2px solid var(--border)}
+.cab h1{font-size:30px; font-weight:800}
+.cab .meta{color:var(--muted); font-size:15px; margin-top:5px}
+.cab .dir{margin-left:auto; display:flex; gap:8px; flex-wrap:wrap}
+
+.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:12px; margin:20px 0 24px}
+.kpi{border:1.5px solid var(--border); border-radius:var(--r); background:var(--panel); padding:14px 16px}
+.kpi .k{font-size:11.5px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:var(--dim)}
+.kpi .v{font-size:25px; font-weight:800; margin-top:5px; letter-spacing:-.02em}
+.kpi .v small{font-size:14px; font-weight:600; color:var(--muted)}
+
+.abas{display:flex; gap:4px; flex-wrap:wrap; border-bottom:2px solid var(--border); margin-bottom:20px}
+.aba{padding:11px 15px; font-size:15px; font-weight:700; color:var(--muted); border-bottom:3px solid transparent; margin-bottom:-2px}
+.aba:hover{color:var(--text)}
+.aba.on{color:var(--accent); border-bottom-color:var(--accent)}
+.aba .n{font-size:12.5px; color:var(--dim); font-weight:700; margin-left:5px}
+.painel{display:none} .painel.on{display:block}
+
+.bloco{border:1.5px solid var(--border); border-radius:var(--r); background:var(--panel); padding:18px 20px; margin-bottom:14px}
+.bloco h3{font-size:17px; font-weight:800; margin-bottom:9px}
+.bloco p{color:var(--muted)}
+.bloco p + p{margin-top:9px}
+.rot{font-size:11.5px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:var(--dim); margin-bottom:7px}
+
+.dl{display:grid; grid-template-columns:auto minmax(0,1fr); gap:9px 18px; font-size:15.5px}
+.dl dt{color:var(--dim); font-weight:700; white-space:nowrap}
+.dl dd{color:var(--text)}
+
+/* reuniões */
+.reu{border:1.5px solid var(--border); border-radius:var(--r); background:var(--panel); margin-bottom:12px; overflow:hidden}
+.reu > summary{padding:15px 18px; cursor:pointer; list-style:none; display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline}
+.reu > summary::-webkit-details-marker{display:none}
+.reu > summary:hover{background:var(--panel-2)}
+.reu .d{font-family:var(--mono); font-size:13.5px; color:var(--accent); font-weight:700}
+.reu .t{font-weight:700; font-size:16px}
+.reu .who{color:var(--dim); font-size:13.5px; margin-left:auto}
+.reu .corpo{padding:0 18px 18px; border-top:1.5px solid var(--border-soft)}
+.reu .corpo p{color:var(--muted); margin:14px 0}
+.pontos{list-style:none; display:grid; gap:8px; margin:12px 0}
+.pontos li{display:grid; grid-template-columns:66px minmax(0,1fr); gap:12px; font-size:15px; align-items:baseline}
+.pontos .tm{font-family:var(--mono); font-size:13px; color:var(--accent); font-weight:700}
+.links{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
+
+/* apresentações */
+.aps{display:grid; grid-template-columns:repeat(auto-fill,minmax(272px,1fr)); gap:12px}
+.ap{border:1.5px solid var(--border); border-radius:var(--r); background:var(--panel); padding:16px 18px; display:flex; flex-direction:column; gap:9px}
+.ap .t{font-weight:800; font-size:16.5px}
+.ap .m{font-size:13.5px; color:var(--dim); font-family:var(--mono)}
+.ap .acao{margin-top:auto; display:flex; gap:8px; flex-wrap:wrap; padding-top:6px}
+
+/* timeline */
+.tl{list-style:none; display:grid; gap:0; margin-top:4px}
+.tl li{display:grid; grid-template-columns:96px 22px minmax(0,1fr); gap:0 14px; padding:0 0 20px}
+.tl .d{font-family:var(--mono); font-size:13.5px; color:var(--dim); padding-top:2px; text-align:right; font-weight:700}
+.tl .eixo{position:relative; display:flex; justify-content:center}
+.tl .eixo::before{content:""; position:absolute; top:16px; bottom:-20px; width:2px; background:var(--border)}
+.tl li:last-child .eixo::before{display:none}
+.tl .pt{width:13px; height:13px; border-radius:50%; margin-top:5px; border:2.5px solid var(--panel); position:relative; z-index:1}
+.tl .txt{font-size:15.5px}
+.tl .txt b{display:block; font-size:11.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--dim); margin-bottom:2px}
+
+/* próximos passos */
+.passo{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px; align-items:start;
+       border:1.5px solid var(--border); border-radius:var(--r-sm); background:var(--panel); padding:13px 15px; margin-bottom:8px}
+.passo.ok{opacity:.6}
+.passo.ok .p{text-decoration:line-through}
+.passo input[type=checkbox]{width:21px; height:21px; margin-top:2px; accent-color:var(--accent)}
+.passo .p{font-size:15.5px; font-weight:600}
+.passo .prazo{font-family:var(--mono); font-size:13px; color:var(--muted); white-space:nowrap; font-weight:700}
+.passo .prazo.tarde{color:var(--bad)}
+
+/* avisos */
+.aviso{border:2px solid var(--warn); border-left-width:6px; border-radius:var(--r); background:#fdf6e7; padding:18px 20px; margin-bottom:18px}
+.aviso h3{font-size:17px; font-weight:800; margin-bottom:7px; color:#6b4d18}
+.aviso p{color:#5a4614; font-size:15.5px}
+.aviso p + p{margin-top:9px}
+.aviso code{font-family:var(--mono); font-size:14px; background:#f5e9cd; padding:2px 6px; border-radius:4px}
+
+footer{padding:26px 30px 40px; color:var(--dim); font-size:13.5px; border-top:1.5px solid var(--border-soft); margin-top:30px}
