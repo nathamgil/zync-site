@@ -192,3 +192,30 @@ h1,h2,h3{line-height:1.22; letter-spacing:-.01em; text-wrap:balance}
 .aviso code{font-family:var(--mono); font-size:14px; background:#f5e9cd; padding:2px 6px; border-radius:4px}
 
 footer{padding:26px 30px 40px; color:var(--dim); font-size:13.5px; border-top:1.5px solid var(--border-soft); margin-top:30px}
+
+/* ---------------- login ---------------- */
+.login{
+  position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center;
+  background:var(--bg); padding:24px;
+}
+.login-card{
+  width:100%; max-width:390px; background:var(--panel);
+  border:2px solid var(--border); border-radius:var(--r);
+  padding:32px 30px; display:flex; flex-direction:column; gap:9px;
+}
+.login-card .brand{display:flex; align-items:baseline; gap:9px; font-weight:800; letter-spacing:.02em; margin-bottom:6px}
+.login-card .brand b{font-size:17px}
+.login-card .brand span{font-size:12px; color:var(--dim); font-weight:600; letter-spacing:.16em; text-transform:uppercase}
+.login-card h2{font-size:24px; font-weight:800; margin-bottom:12px}
+.login-card label{font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); margin-top:8px}
+.login-card input{
+  background:var(--bg); border:1.5px solid var(--border); border-radius:var(--r-sm);
+  padding:11px 13px; color:var(--text);
+}
+.login-card input:focus{border-color:var(--accent); outline:none}
+.login-card .btn{margin-top:18px; padding:12px; font-size:15.5px}
+.login-card .btn:disabled{opacity:.6; cursor:default}
+.login-erro{
+  margin-top:12px; color:var(--bad); font-size:14.5px; font-weight:600;
+  border-left:4px solid var(--bad); padding-left:11px;
+}

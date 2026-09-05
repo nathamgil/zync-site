@@ -29,8 +29,8 @@ window.ZYNC_CONFIG = {
      A anon key é pública por natureza — a segurança vem das policies
      de Row Level Security no banco, não do segredo da chave.
      A service_role key NUNCA entra aqui: ela ignora toda RLS. */
-  supabaseUrl: '',            // https://SEUPROJETO.supabase.co
-  supabaseAnonKey: '',        // eyJhbGciOi...
+  supabaseUrl: 'https://okybfmwlcddbgasafndk.supabase.co',
+  supabaseAnonKey: 'sb_publishable_E0prEca72hxtJsRqeIJZKg_8mLj8gOp',
 
   /* -----------------------------------------------------------
      MÉTRICAS BLOQUEADAS

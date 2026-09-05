@@ -162,6 +162,30 @@
     });
   }
 
+  /* ---------- autenticação ---------- */
+  function cliente() {
+    var url = PORTAL.supabaseUrl, key = PORTAL.supabaseAnonKey;
+    if (!url || !key || !global.supabase) return null;
+    return global.__sbAdmin || (global.__sbAdmin = global.supabase.createClient(url, key));
+  }
+
+  function traduzErro(msg) {
+    var m = String(msg || '').toLowerCase();
+    if (m.indexOf('invalid login') > -1 || m.indexOf('invalid_credentials') > -1) {
+      return 'E-mail ou senha incorretos.';
+    }
+    if (m.indexOf('email not confirmed') > -1) {
+      return 'Este usuário ainda não foi confirmado no painel do Supabase.';
+    }
+    if (m.indexOf('rate limit') > -1 || m.indexOf('too many') > -1) {
+      return 'Muitas tentativas. Aguarde alguns minutos.';
+    }
+    if (m.indexOf('failed to fetch') > -1) {
+      return 'Sem conexão com o servidor.';
+    }
+    return msg || 'Não foi possível entrar.';
+  }
+
   /* ---------- API pública ---------- */
   global.ZyncAdmin = {
     modo: MODO,
@@ -169,6 +193,24 @@
     rotuloStatus: function (s) { return ROTULO_STATUS[s] || s; },
     carregar: function () {
       return MODO === 'supabase' ? carregaSupabase() : carregaLocal();
+    },
+    entrar: function (email, senha) {
+      var sb = cliente();
+      if (!sb) return Promise.resolve({ ok: false, msg: 'Supabase não configurado.' });
+      return sb.auth.signInWithPassword({
+        email: String(email || '').trim().toLowerCase(),
+        password: String(senha || ''),
+      }).then(function (r) {
+        if (r.error) return { ok: false, msg: traduzErro(r.error.message) };
+        return { ok: true };
+      }).catch(function (e) {
+        return { ok: false, msg: traduzErro(e && e.message) };
+      });
+    },
+    sair: function () {
+      var sb = cliente();
+      if (!sb) return Promise.resolve();
+      return sb.auth.signOut().catch(function () {});
     },
   };
 

@@ -10,10 +10,27 @@
 </head>
 <body>
 
+<!-- Tela de entrada. Cobre o painel inteiro até haver sessão.
+     Não é a segurança — a segurança é a RLS no banco. Isto é só
+     a porta: sem sessão, o banco não devolveria nada mesmo. -->
+<div class="login" id="login" hidden>
+  <form class="login-card" id="loginForm">
+    <div class="brand"><b>ZYNC</b> <span>painel interno</span></div>
+    <h2>Entrar</h2>
+    <label for="li-mail">E-mail</label>
+    <input id="li-mail" type="email" autocomplete="username" required>
+    <label for="li-senha">Senha</label>
+    <input id="li-senha" type="password" autocomplete="current-password" required>
+    <button class="btn pri" id="li-btn" type="submit">Entrar</button>
+    <p class="login-erro" id="li-erro" hidden></p>
+  </form>
+</div>
+
 <div class="top">
   <div class="brand"><b>ZYNC</b> <span>painel interno</span></div>
   <div class="sp"></div>
   <span class="quem" id="quem"></span>
+  <button class="btn" id="sair" hidden>Sair</button>
 </div>
 
 <div class="shell">
@@ -38,6 +55,7 @@
   Painel interno da Zync · dados que não saem daqui · <span id="rodape"></span>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="../area-cliente/config.js"></script>
 <script src="config-admin.js"></script>
 <script src="dados-locais.js" onerror="window.__semArquivo=true"></script>
@@ -282,15 +300,55 @@
 
   /* ---------- carga ---------- */
   document.getElementById('rodape').textContent = 'modo ' + ZyncAdmin.modo;
-  ZyncAdmin.carregar().then(function(res){
-    if(!res.ok){ avisar(res); return; }
-    estado.clientes = res.clientes;
-    var fechados = res.clientes.filter(function(c){ return c.status === 'cliente'; });
-    var mrr = fechados.reduce(function(s,c){ return s + (Number(c.valor_mensal) || 0); }, 0);
-    document.getElementById('quem').textContent =
-      res.clientes.length + ' no funil · ' + fechados.length + ' ativos · ' + F.brl(mrr) + '/mês';
-    pintaLista(); pintaMain();
+
+  function carregar(){
+    return ZyncAdmin.carregar().then(function(res){
+      /* sem sessão não é erro: é a hora de pedir login */
+      if(!res.ok && res.motivo === 'sem-sessao'){ mostraLogin(); return; }
+      escondeLogin();
+      if(!res.ok){ avisar(res); return; }
+      estado.clientes = res.clientes;
+      var fechados = res.clientes.filter(function(c){ return c.status === 'cliente'; });
+      var mrr = fechados.reduce(function(s,c){ return s + (Number(c.valor_mensal) || 0); }, 0);
+      document.getElementById('quem').textContent =
+        res.clientes.length + ' no funil · ' + fechados.length + ' ativos · ' + F.brl(mrr) + '/mês';
+      pintaLista(); pintaMain();
+    });
+  }
+
+  /* ---------- login ---------- */
+  var elLogin = document.getElementById('login');
+  var elSair  = document.getElementById('sair');
+
+  function mostraLogin(){
+    elLogin.hidden = false; elSair.hidden = true;
+    document.getElementById('li-mail').focus();
+  }
+  function escondeLogin(){
+    elLogin.hidden = true;
+    elSair.hidden = (ZyncAdmin.modo !== 'supabase');
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = document.getElementById('li-btn'), erro = document.getElementById('li-erro');
+    erro.hidden = true; btn.disabled = true; btn.textContent = 'Entrando…';
+    ZyncAdmin.entrar(
+      document.getElementById('li-mail').value,
+      document.getElementById('li-senha').value
+    ).then(function(r){
+      btn.disabled = false; btn.textContent = 'Entrar';
+      if(!r.ok){ erro.textContent = r.msg; erro.hidden = false; return; }
+      document.getElementById('li-senha').value = '';
+      carregar();
+    });
   });
+
+  elSair.addEventListener('click', function(){
+    ZyncAdmin.sair().then(function(){ location.reload(); });
+  });
+
+  carregar();
 })();
 </script>
 

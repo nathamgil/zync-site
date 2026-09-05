@@ -14,6 +14,6 @@ window.ZYNC_ADMIN = {
      'supabase' → lê as tabelas crm_* com RLS de admin, usando
                   as credenciais de area-cliente/config.js.
      ----------------------------------------------------------- */
-  mode: 'local',
+  mode: 'supabase',
 
 };
