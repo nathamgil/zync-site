@@ -23,7 +23,7 @@
   /* texto */
   --text:#eceaf5;      /* 16,5:1 */
   --muted:#a8a8c0;     /*  8,5:1 */
-  --dim:#7e7e9c;       /*  5,2:1 — só rótulo, nunca texto corrido */
+  --dim:#9a9ab8;       /*  7,3:1 — rótulo pequeno em maiúscula precisa disso */
 
   /* ação — esmeralda. nunca usada como acabamento. */
   --accent:#10c98d;    /*  8,8:1 */
