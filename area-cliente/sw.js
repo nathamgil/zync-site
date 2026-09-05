@@ -15,7 +15,7 @@
 
 'use strict';
 
-var CACHE_VERSION = 'zync-area-cliente-v1';
+var CACHE_VERSION = 'zync-area-cliente-v2-supabase';
 
 var APP_SHELL = [
   '/area-cliente/',

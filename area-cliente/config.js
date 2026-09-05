@@ -20,7 +20,7 @@ window.ZYNC_CONFIG = {
      'supabase' → autenticação e dados reais via Supabase.
                   Exige preencher supabaseUrl e supabaseAnonKey.
      ----------------------------------------------------------- */
-  mode: 'demo',
+  mode: 'supabase',
 
   /* Credenciais do projeto Supabase → Settings → API.
      Preencha as duas linhas e troque o mode acima para 'supabase'.
