@@ -1,36 +1,52 @@
 /* ============================================================
    Zync — Painel do Administrador
    ------------------------------------------------------------
-   Tema CLARO e de alto contraste, de propósito. A Área do
-   Cliente é escura porque é a cara da marca para fora; este
-   painel é ferramenta de trabalho interna, lida por horas.
+   Identidade Zync, com as três cores nas funções que não se
+   misturam: índigo é base, esmeralda é ação, areia é acabamento.
+
+   Escuro NÃO é sinônimo de contraste baixo. Todos os pares aqui
+   passam folgado no AA: texto 16,5:1, apagado 8,5:1, esmeralda
+   8,8:1, areia 8,4:1 sobre o índigo. O `muted` é mais claro que
+   o do site principal de propósito — este painel é lido por
+   horas seguidas.
    ============================================================ */
 
 :root{
-  --bg:#f7f7f4;
-  --panel:#ffffff;
-  --panel-2:#f0f0ec;
-  --border:#c9c9c0;
-  --border-soft:#e2e2db;
-  --text:#14141c;
-  --muted:#4d4d5c;
-  --dim:#6e6e80;
+  /* base — índigo */
+  --bg:#0a0a16;
+  --bg-2:#101020;
+  --panel:#12121f;
+  --panel-2:#171726;
+  --border:#2a2a48;
+  --border-soft:#1e1e36;
 
-  --accent:#067a55;        /* esmeralda escurecida: 6.1:1 sobre branco */
-  --accent-soft:#e3f5ee;
-  --accent-line:#9dd6c2;
-  --sand:#8a6a2f;          /* areia escurecida para texto */
-  --sand-soft:#f6efe1;
+  /* texto */
+  --text:#eceaf5;      /* 16,5:1 */
+  --muted:#a8a8c0;     /*  8,5:1 */
+  --dim:#7e7e9c;       /*  5,2:1 — só rótulo, nunca texto corrido */
 
-  --ok:#0b7a3c;
-  --warn:#8a6320;
-  --bad:#9e2222;
-  --info:#1f4f8f;
+  /* ação — esmeralda. nunca usada como acabamento. */
+  --accent:#10c98d;    /*  8,8:1 */
+  --accent-2:#3ee0aa;
+  --accent-soft:rgba(16,201,141,.12);
+  --accent-line:rgba(16,201,141,.42);
+
+  /* acabamento — areia. nunca usada como ação. */
+  --sand:#c9a36a;      /*  8,4:1 */
+  --sand-2:#e0be8c;
+  --sand-soft:rgba(201,163,106,.12);
+  --sand-line:rgba(201,163,106,.38);
+
+  /* estado */
+  --ok:#34d399;
+  --warn:#e8c264;
+  --bad:#fb8a8a;
+  --info:#7dc4fc;
 
   --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
   --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
-  --r:10px;
-  --r-sm:7px;
+  --r:12px;
+  --r-sm:8px;
   --nav-w:290px;
 }
 
@@ -41,7 +57,7 @@ body{
   font-size:16.5px; line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
-a{color:var(--info); text-decoration:underline; text-underline-offset:2px}
+a{color:var(--accent); text-decoration:underline; text-underline-offset:3px}
 button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; font-size:inherit}
 input,select,textarea{font-family:inherit; font-size:inherit}
 h1,h2,h3{line-height:1.22; letter-spacing:-.01em; text-wrap:balance}
@@ -67,8 +83,8 @@ h1,h2,h3{line-height:1.22; letter-spacing:-.01em; text-wrap:balance}
   padding:8px 14px; font-size:14.5px; font-weight:600; color:var(--text);
 }
 .btn:hover{border-color:var(--accent); color:var(--accent)}
-.btn.pri{background:var(--accent); border-color:var(--accent); color:#fff}
-.btn.pri:hover{background:#056646; color:#fff}
+.btn.pri{background:var(--accent); border-color:var(--accent); color:#04140e; font-weight:700}
+.btn.pri:hover{background:var(--accent-2); color:#04140e}
 
 /* ---------------- layout ---------------- */
 .shell{display:grid; grid-template-columns:var(--nav-w) minmax(0,1fr); min-height:calc(100vh - 60px)}
@@ -79,7 +95,7 @@ h1,h2,h3{line-height:1.22; letter-spacing:-.01em; text-wrap:balance}
 .busca:focus{border-color:var(--accent); outline:none}
 .filtros{display:flex; flex-wrap:wrap; gap:5px}
 .fx{border:1.5px solid var(--border); border-radius:99px; padding:5px 11px; font-size:13px; font-weight:600; color:var(--muted); background:var(--panel)}
-.fx.on{background:var(--text); border-color:var(--text); color:#fff}
+.fx.on{background:var(--accent-soft); border-color:var(--accent); color:var(--accent)}
 .clientes{display:flex; flex-direction:column; gap:5px}
 .ci{
   display:grid; grid-template-columns:6px minmax(0,1fr) auto; gap:0 11px; align-items:center;
@@ -87,7 +103,7 @@ h1,h2,h3{line-height:1.22; letter-spacing:-.01em; text-wrap:balance}
   padding:0; overflow:hidden; text-align:left; width:100%;
 }
 .ci:hover{border-color:var(--accent)}
-.ci.on{border-color:var(--text); border-width:2px; background:var(--panel-2)}
+.ci.on{border-color:var(--sand); border-width:2px; background:var(--panel-2)}
 .ci .faixa{align-self:stretch; background:var(--border)}
 .ci .txt{display:block; min-width:0; padding:11px 0}
 .ci .nome{display:block; font-weight:700; font-size:15.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
@@ -98,10 +114,10 @@ h1,h2,h3{line-height:1.22; letter-spacing:-.01em; text-wrap:balance}
 /* estado por status — cor + palavra, nunca só cor */
 .st{display:inline-block; font-size:11.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
     padding:3px 9px; border-radius:99px; border:1.5px solid}
-.st-cliente {color:var(--ok);   border-color:var(--ok);   background:#e8f6ee}
-.st-proposta{color:var(--info); border-color:var(--info); background:#e8f0fa}
-.st-prospect{color:var(--sand); border-color:var(--sand); background:var(--sand-soft)}
-.st-perdido {color:var(--bad);  border-color:var(--bad);  background:#fbeaea}
+.st-cliente {color:var(--ok);   border-color:var(--ok);   background:rgba(52,211,153,.12)}
+.st-proposta{color:var(--info); border-color:var(--info); background:rgba(125,196,252,.12)}
+.st-prospect{color:var(--sand-2); border-color:var(--sand); background:var(--sand-soft)}
+.st-perdido {color:var(--bad);  border-color:var(--bad);  background:rgba(251,138,138,.12)}
 .st-pausado {color:var(--dim);  border-color:var(--dim);  background:var(--panel-2)}
 /* especificidade .ci .faixa (0,2,0) — estas precisam empatar ou passar */
 .ci .f-cliente {background:var(--ok)}
@@ -170,7 +186,7 @@ h1,h2,h3{line-height:1.22; letter-spacing:-.01em; text-wrap:balance}
 .tl .eixo{position:relative; display:flex; justify-content:center}
 .tl .eixo::before{content:""; position:absolute; top:16px; bottom:-20px; width:2px; background:var(--border)}
 .tl li:last-child .eixo::before{display:none}
-.tl .pt{width:13px; height:13px; border-radius:50%; margin-top:5px; border:2.5px solid var(--panel); position:relative; z-index:1}
+.tl .pt{width:13px; height:13px; border-radius:50%; margin-top:5px; border:2.5px solid var(--bg); position:relative; z-index:1}
 .tl .txt{font-size:15.5px}
 .tl .txt b{display:block; font-size:11.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--dim); margin-bottom:2px}
 
@@ -185,11 +201,11 @@ h1,h2,h3{line-height:1.22; letter-spacing:-.01em; text-wrap:balance}
 .passo .prazo.tarde{color:var(--bad)}
 
 /* avisos */
-.aviso{border:2px solid var(--warn); border-left-width:6px; border-radius:var(--r); background:#fdf6e7; padding:18px 20px; margin-bottom:18px}
-.aviso h3{font-size:17px; font-weight:800; margin-bottom:7px; color:#6b4d18}
-.aviso p{color:#5a4614; font-size:15.5px}
+.aviso{border:1.5px solid var(--sand-line); border-left:5px solid var(--sand); border-radius:var(--r); background:var(--sand-soft); padding:20px 22px; margin-bottom:18px}
+.aviso h3{font-size:17.5px; font-weight:800; margin-bottom:8px; color:var(--sand-2)}
+.aviso p{color:var(--muted); font-size:15.5px}
 .aviso p + p{margin-top:9px}
-.aviso code{font-family:var(--mono); font-size:14px; background:#f5e9cd; padding:2px 6px; border-radius:4px}
+.aviso code{font-family:var(--mono); font-size:13.5px; background:rgba(0,0,0,.35); color:var(--sand-2); padding:2px 6px; border-radius:4px; border:1px solid var(--sand-line)}
 
 footer{padding:26px 30px 40px; color:var(--dim); font-size:13.5px; border-top:1.5px solid var(--border-soft); margin-top:30px}
 
@@ -218,4 +234,57 @@ footer{padding:26px 30px 40px; color:var(--dim); font-size:13.5px; border-top:1.
 .login-erro{
   margin-top:12px; color:var(--bad); font-size:14.5px; font-weight:600;
   border-left:4px solid var(--bad); padding-left:11px;
+}
+
+/* ============================================================
+   MARCA
+   ============================================================ */
+
+/* grade de fundo — mesma assinatura do site principal */
+.grid-bg{
+  position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background-image:linear-gradient(var(--border-soft) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--border-soft) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 20%,transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 20%,transparent 78%);
+}
+
+/* a mira: anéis em esmeralda (ação), Z em areia (acabamento).
+   As duas cores nunca trocam de função — é a regra da marca. */
+.mira{width:30px; height:30px; flex:0 0 auto; display:block}
+.mira .seal{stroke:var(--accent)}
+.mira .bull{fill:var(--accent)}
+.mira .z{stroke:var(--sand)}
+.login-card .mira{width:46px; height:46px}
+
+.brand{display:flex; align-items:center; gap:11px}
+.brand .wm{display:flex; align-items:baseline; gap:8px}
+.brand b{font-size:17px; font-weight:800; letter-spacing:.14em; color:var(--text)}
+.brand span{font-size:11px; color:var(--dim); font-weight:700; letter-spacing:.18em; text-transform:uppercase}
+
+/* barra superior: fundo translúcido sobre a grade */
+.top{background:rgba(10,10,22,.88); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+     border-bottom:1px solid var(--border)}
+.lista{background:rgba(18,18,31,.72)}
+
+/* login sobre a grade, com um respiro de esmeralda ao fundo */
+.login{
+  background:
+    radial-gradient(62% 48% at 50% 18%, rgba(16,201,141,.09), transparent 70%),
+    radial-gradient(48% 40% at 82% 88%, rgba(201,163,106,.06), transparent 72%),
+    var(--bg);
+}
+.login-card{
+  background:var(--panel); border:1px solid var(--border);
+  box-shadow:0 30px 80px rgba(0,0,0,.55);
+  align-items:stretch;
+}
+.login-card .brand{margin-bottom:18px}
+.login-card h2{color:var(--text)}
+.login-card input{background:var(--bg-2); color:var(--text)}
+.login-card input::placeholder{color:var(--dim)}
+.login-card .rodape{
+  margin-top:20px; padding-top:16px; border-top:1px solid var(--border-soft);
+  font-size:12.5px; color:var(--dim); text-align:center;
 }

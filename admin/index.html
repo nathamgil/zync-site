@@ -10,12 +10,14 @@
 </head>
 <body>
 
+<div class="grid-bg" aria-hidden="true"></div>
+
 <!-- Tela de entrada. Cobre o painel inteiro até haver sessão.
      Não é a segurança — a segurança é a RLS no banco. Isto é só
      a porta: sem sessão, o banco não devolveria nada mesmo. -->
 <div class="login" id="login" hidden>
   <form class="login-card" id="loginForm">
-    <div class="brand"><b>ZYNC</b> <span>painel interno</span></div>
+    <div class="brand"><svg class="mira" viewBox="0 0 100 100" aria-hidden="true"><g class="seal" fill="none" stroke-width="7" stroke-linecap="round"><path d="M 90.57 60.87 A 42 42 0 0 1 60.87 90.57"/><path d="M 39.13 90.57 A 42 42 0 0 1 9.43 60.87"/><path d="M 9.43 39.13 A 42 42 0 0 1 39.13 9.43"/><path d="M 60.87 9.43 A 42 42 0 0 1 90.57 39.13"/></g><path class="z" d="M31 33 H69 L31 67 H69" fill="none" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle class="bull" cx="50" cy="50" r="6.5"/></svg><span class="wm"><b>ZYNC</b> <span>painel interno</span></span></div>
     <h2>Entrar</h2>
     <label for="li-mail">E-mail</label>
     <input id="li-mail" type="email" autocomplete="username" required>
@@ -23,11 +25,12 @@
     <input id="li-senha" type="password" autocomplete="current-password" required>
     <button class="btn pri" id="li-btn" type="submit">Entrar</button>
     <p class="login-erro" id="li-erro" hidden></p>
+    <p class="rodape">Acesso restrito à equipe Zync.</p>
   </form>
 </div>
 
 <div class="top">
-  <div class="brand"><b>ZYNC</b> <span>painel interno</span></div>
+  <div class="brand"><svg class="mira" viewBox="0 0 100 100" aria-hidden="true"><g class="seal" fill="none" stroke-width="7" stroke-linecap="round"><path d="M 90.57 60.87 A 42 42 0 0 1 60.87 90.57"/><path d="M 39.13 90.57 A 42 42 0 0 1 9.43 60.87"/><path d="M 9.43 39.13 A 42 42 0 0 1 39.13 9.43"/><path d="M 60.87 9.43 A 42 42 0 0 1 90.57 39.13"/></g><path class="z" d="M31 33 H69 L31 67 H69" fill="none" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle class="bull" cx="50" cy="50" r="6.5"/></svg><span class="wm"><b>ZYNC</b> <span>painel interno</span></span></div>
   <div class="sp"></div>
   <span class="quem" id="quem"></span>
   <button class="btn" id="sair" hidden>Sair</button>
