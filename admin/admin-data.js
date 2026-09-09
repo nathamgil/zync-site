@@ -68,6 +68,7 @@
   /* ---------- normaliza um cliente vindo de qualquer origem ---------- */
   function normaliza(c) {
     return {
+      id: c.id,
       slug: c.slug,
       empresa: c.empresa,
       contato_nome: c.contato_nome || '',
@@ -186,6 +187,19 @@
     return msg || 'Não foi possível entrar.';
   }
 
+  function traduzEscrita(err) {
+    var m = String(err && err.message || '').toLowerCase();
+    var cod = String(err && err.code || '');
+    if (cod === '42501' || m.indexOf('row-level security') > -1) {
+      return 'O banco recusou a gravacao. Sua conta nao esta na tabela admins.';
+    }
+    if (cod === '23505') return 'Ja existe um registro com esse identificador.';
+    if (cod === '23514') return 'Valor fora das opcoes aceitas por esse campo.';
+    if (cod === '23503') return 'O cliente referenciado nao existe mais. Recarregue a pagina.';
+    if (m.indexOf('failed to fetch') > -1) return 'Sem conexao com o servidor.';
+    return (err && err.message) || 'Nao foi possivel gravar.';
+  }
+
   /* ---------- API pública ---------- */
   global.ZyncAdmin = {
     modo: MODO,
@@ -207,6 +221,34 @@
         return { ok: false, msg: traduzErro(e && e.message) };
       });
     },
+    /* ---------- escrita ----------
+       Toda gravacao passa pela RLS: o banco so aceita se
+       e_admin() for verdadeiro. O front nao decide nada. */
+    inserir: function (tabela, dados) {
+      var sb = cliente();
+      if (!sb) return Promise.resolve({ ok: false, erro: 'Supabase nao configurado.' });
+      return sb.from(tabela).insert(dados).select().then(function (r) {
+        if (r.error) return { ok: false, erro: traduzEscrita(r.error) };
+        return { ok: true, linha: (r.data || [])[0] };
+      }).catch(function (e) { return { ok: false, erro: String(e && e.message || e) }; });
+    },
+    atualizar: function (tabela, id, dados) {
+      var sb = cliente();
+      if (!sb) return Promise.resolve({ ok: false, erro: 'Supabase nao configurado.' });
+      return sb.from(tabela).update(dados).eq('id', id).then(function (r) {
+        if (r.error) return { ok: false, erro: traduzEscrita(r.error) };
+        return { ok: true };
+      }).catch(function (e) { return { ok: false, erro: String(e && e.message || e) }; });
+    },
+    remover: function (tabela, id) {
+      var sb = cliente();
+      if (!sb) return Promise.resolve({ ok: false, erro: 'Supabase nao configurado.' });
+      return sb.from(tabela).delete().eq('id', id).then(function (r) {
+        if (r.error) return { ok: false, erro: traduzEscrita(r.error) };
+        return { ok: true };
+      }).catch(function (e) { return { ok: false, erro: String(e && e.message || e) }; });
+    },
+
     sair: function () {
       var sb = cliente();
       if (!sb) return Promise.resolve();

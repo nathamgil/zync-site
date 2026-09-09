@@ -288,3 +288,51 @@ footer{padding:26px 30px 40px; color:var(--dim); font-size:13.5px; border-top:1.
   margin-top:20px; padding-top:16px; border-top:1px solid var(--border-soft);
   font-size:12.5px; color:var(--dim); text-align:center;
 }
+
+/* ============================================================
+   ESCRITA — formulários e ações
+   ============================================================ */
+.acoes-topo{display:flex; gap:8px; margin-bottom:12px}
+.btn.mini{padding:6px 11px; font-size:13px}
+.btn.perigo{border-color:var(--bad); color:var(--bad)}
+.btn.perigo:hover{background:rgba(251,138,138,.12); border-color:var(--bad); color:var(--bad)}
+
+details.novo{border:1px dashed var(--border); border-radius:var(--r-sm); background:var(--panel); margin-bottom:12px}
+details.novo > summary{
+  padding:11px 15px; cursor:pointer; list-style:none;
+  font-size:14px; font-weight:700; color:var(--accent);
+}
+details.novo > summary::-webkit-details-marker{display:none}
+details.novo > summary::before{content:"+ "; font-weight:800}
+details.novo[open] > summary{border-bottom:1px solid var(--border-soft); color:var(--muted)}
+details.novo[open] > summary::before{content:"− "}
+.form{padding:15px; display:grid; gap:11px}
+.form .par{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:11px}
+.form label{display:block; font-size:10.5px; font-weight:800; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--dim); margin-bottom:5px}
+.form input,.form select,.form textarea{
+  width:100%; background:var(--bg-2); border:1.5px solid var(--border);
+  border-radius:var(--r-sm); padding:9px 11px; color:var(--text); font-size:14.5px;
+}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--accent); outline:none}
+.form textarea{min-height:74px; resize:vertical; line-height:1.55}
+.form .linha-btn{display:flex; gap:9px; align-items:center; flex-wrap:wrap}
+.form .msg{font-size:14px; font-weight:600}
+.form .msg.erro{color:var(--bad)}
+.form .msg.ok{color:var(--accent)}
+
+.passo .apagar{
+  background:none; border:none; color:var(--dim); font-size:17px; line-height:1;
+  padding:0 2px; cursor:pointer;
+}
+.passo .apagar:hover{color:var(--bad)}
+.passo{grid-template-columns:auto minmax(0,1fr) auto auto}
+
+.selstatus{
+  background:var(--panel); border:1.5px solid var(--border); border-radius:99px;
+  color:var(--text); font-size:12px; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; padding:5px 10px; cursor:pointer;
+}
+.selstatus:focus{border-color:var(--accent); outline:none}
+
+.salvando{opacity:.5; pointer-events:none}

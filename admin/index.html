@@ -47,6 +47,52 @@
       <button class="fx" data-f="prospect">Prospects</button>
       <button class="fx" data-f="perdido">Perdidos</button>
     </div>
+    <details class="novo" id="novoCliente">
+      <summary>Novo cliente</summary>
+      <form class="form" data-f="novo-cliente">
+        <div class="par">
+          <div><label for="nc-empresa">Empresa</label>
+            <input id="nc-empresa" name="empresa" required></div>
+        </div>
+        <div class="par">
+          <div><label for="nc-contato">Contato</label>
+            <input id="nc-contato" name="contato_nome"></div>
+          <div><label for="nc-papel">Papel</label>
+            <input id="nc-papel" name="contato_papel" placeholder="sócio, decisor…"></div>
+        </div>
+        <div class="par">
+          <div><label for="nc-segmento">Segmento</label>
+            <input id="nc-segmento" name="segmento"></div>
+          <div><label for="nc-cidade">Cidade</label>
+            <input id="nc-cidade" name="cidade" placeholder="Cidade / UF"></div>
+        </div>
+        <div class="par">
+          <div><label for="nc-status">Situação</label>
+            <select id="nc-status" name="status">
+              <option value="prospect">prospect</option>
+              <option value="proposta">proposta enviada</option>
+              <option value="cliente">cliente</option>
+              <option value="pausado">pausado</option>
+              <option value="perdido">não fechou</option>
+            </select></div>
+          <div><label for="nc-desde">Primeiro contato</label>
+            <input id="nc-desde" name="desde" type="date"></div>
+        </div>
+        <div class="par">
+          <div><label for="nc-mensal">Mensalidade</label>
+            <input id="nc-mensal" name="valor_mensal" type="number" step="0.01" placeholder="R$"></div>
+          <div><label for="nc-impl">Implantação</label>
+            <input id="nc-impl" name="valor_implantacao" type="number" step="0.01" placeholder="R$"></div>
+        </div>
+        <div><label for="nc-resumo">Quem são</label>
+          <textarea id="nc-resumo" name="resumo" placeholder="O que a empresa é e o que foi descoberto."></textarea></div>
+        <div class="linha-btn">
+          <button type="submit" class="btn pri mini">Cadastrar</button>
+          <span class="msg"></span>
+        </div>
+      </form>
+    </details>
+
     <div class="clientes" id="clientes"></div>
   </nav>
 
@@ -76,6 +122,111 @@
     return String(s === null || s === undefined ? '' : s)
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
       .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  /* ============================================================
+     ESCRITA
+     ------------------------------------------------------------
+     Toda gravacao vai para o Supabase e a RLS decide. O front
+     nunca esconde nada que o banco teria devolvido.
+     ============================================================ */
+  var FORMS = {}, seq = 0;
+  var HOJE = new Date().toISOString().slice(0,10);
+
+  var STATUS = [
+    ['prospect','prospect'], ['proposta','proposta enviada'],
+    ['cliente','cliente'], ['pausado','pausado'], ['perdido','não fechou']
+  ];
+  var TIPOS_TL = [
+    ['reuniao','reunião'], ['proposta','proposta'], ['fechamento','fechamento'],
+    ['perda','perda'], ['pagamento','pagamento'], ['nota','nota']
+  ];
+  var STATUS_APRES = [
+    ['rascunho','rascunho'], ['enviada','enviada'], ['apresentada','apresentada'],
+    ['aceita','aceita'], ['recusada','recusada']
+  ];
+
+  function opcoes(lista, sel){
+    return lista.map(function(o){
+      return '<option value="' + esc(o[0]) + '"' + (o[0] === sel ? ' selected' : '') + '>' +
+             esc(o[1]) + '</option>';
+    }).join('');
+  }
+
+  function campo(c){
+    var id = 'c' + (++seq);
+    var ctrl;
+    if(c.tipo === 'select'){
+      ctrl = '<select id="' + id + '" name="' + c.k + '">' + opcoes(c.opcoes, c.valor) + '</select>';
+    } else if(c.tipo === 'textarea'){
+      ctrl = '<textarea id="' + id + '" name="' + c.k + '" placeholder="' + esc(c.ph || '') + '">' +
+             esc(c.valor || '') + '</textarea>';
+    } else {
+      ctrl = '<input id="' + id + '" name="' + c.k + '" type="' + (c.tipo || 'text') + '"' +
+             ' value="' + esc(c.valor === undefined ? '' : c.valor) + '"' +
+             ' placeholder="' + esc(c.ph || '') + '"' + (c.req ? ' required' : '') +
+             (c.tipo === 'number' ? ' step="0.01"' : '') + '>';
+    }
+    return '<div><label for="' + id + '">' + esc(c.label) + '</label>' + ctrl + '</div>';
+  }
+
+  /* linhas = array de arrays de campos; cada array vira uma faixa */
+  function formNovo(titulo, linhas, botao, onSalvar){
+    var fid = 'f' + (++seq);
+    FORMS[fid] = onSalvar;
+    return '<details class="novo"><summary>' + esc(titulo) + '</summary>' +
+      '<form class="form" data-f="' + fid + '">' +
+      linhas.map(function(l){
+        return '<div class="par">' + l.map(campo).join('') + '</div>';
+      }).join('') +
+      '<div class="linha-btn"><button type="submit" class="btn pri mini">' + esc(botao) + '</button>' +
+      '<span class="msg"></span></div></form></details>';
+  }
+
+  function ligaForms(raiz){
+    Array.prototype.forEach.call(raiz.querySelectorAll('form.form'), function(f){
+      if(f.dataset.ligado) return;
+      f.dataset.ligado = '1';
+      f.addEventListener('submit', function(e){
+        e.preventDefault();
+        var acao = FORMS[f.dataset.f];
+        if(!acao) return;
+        var dados = {};
+        Array.prototype.forEach.call(f.querySelectorAll('input,select,textarea'), function(i){
+          if(!i.name) return;
+          var v = String(i.value || '').trim();
+          dados[i.name] = v === '' ? null : v;
+        });
+        var msg = f.querySelector('.msg');
+        msg.className = 'msg'; msg.textContent = 'Salvando…';
+        f.classList.add('salvando');
+        Promise.resolve(acao(dados)).then(function(r){
+          f.classList.remove('salvando');
+          if(!r || !r.ok){
+            msg.className = 'msg erro';
+            msg.textContent = (r && r.erro) || 'Não foi possível gravar.';
+            return;
+          }
+          msg.className = 'msg ok'; msg.textContent = 'Salvo.';
+          f.reset();
+          recarregar();
+        });
+      });
+    });
+  }
+
+  /* recarrega do banco preservando onde voce estava */
+  function recarregar(){
+    var sel = estado.sel, aba = estado.aba;
+    return carregar().then(function(){
+      estado.sel = sel; estado.aba = aba;
+      pintaLista(); pintaMain();
+    });
+  }
+
+  function idDoSel(){
+    var c = achado();
+    return c ? c.id : null;
   }
 
   /* ---------- lista lateral ---------- */
@@ -135,22 +286,30 @@
       linha('Implantação', c.valor_implantacao ? F.brl(c.valor_implantacao) : '') +
     '</dl></div>';
 
-    var abertos = c.passos.filter(function(p){ return !p.feito; });
     h += '<div class="bloco"><h3>Próximo passo</h3>';
-    if(!abertos.length && !c.passos.length){
+    if(!c.passos.length){
       h += '<p>Nada pendente registrado.</p>';
     } else {
       h += c.passos.map(function(p,i){
         var tarde = !p.feito && F.atrasado(p.prazo);
         return '<div class="passo' + (p.feito ? ' ok' : '') + '">' +
-          '<input type="checkbox" data-p="' + i + '"' + (p.feito ? ' checked' : '') +
+          '<input type="checkbox" data-passo="' + esc(p.id) + '"' + (p.feito ? ' checked' : '') +
             ' aria-label="Concluir: ' + esc(p.texto) + '">' +
           '<span class="p">' + esc(p.texto) + '</span>' +
           '<span class="prazo nums' + (tarde ? ' tarde' : '') + '">' +
             (p.prazo ? F.dataCurta(p.prazo) + (tarde ? ' · atrasado' : '') : '') + '</span>' +
+          '<button class="apagar" data-apagar-passo="' + esc(p.id) + '" title="Apagar" ' +
+            'aria-label="Apagar: ' + esc(p.texto) + '">&times;</button>' +
         '</div>';
       }).join('');
     }
+    h += formNovo('Nova pendência', [
+      [{k:'texto', label:'O que falta', req:true, ph:'Retomar contato, cobrar assinatura…'},
+       {k:'prazo', label:'Prazo', tipo:'date'}]
+    ], 'Adicionar', function(d){
+      d.cliente_id = idDoSel(); d.feito = false;
+      return ZyncAdmin.inserir('crm_passos', d);
+    });
     h += '</div>';
     return h;
   }
@@ -160,9 +319,28 @@
     return '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>';
   }
 
+  function formReuniao(){
+    return formNovo('Registrar reunião', [
+      [{k:'data', label:'Data', tipo:'date', valor:HOJE, req:true},
+       {k:'titulo', label:'Título', req:true, ph:'Diagnóstico, apresentação…'}],
+      [{k:'participantes_txt', label:'Participantes', ph:'Natham, Daniel, cliente'}],
+      [{k:'resumo', label:'Resumo', tipo:'textarea', ph:'O que ficou decidido.'}],
+      [{k:'notas_url', label:'Anotações no Drive', ph:'https://docs.google.com/…'},
+       {k:'gravacao_url', label:'Gravação', ph:'https://drive.google.com/…'}]
+    ], 'Registrar', function(d){
+      d.cliente_id = idDoSel();
+      d.participantes = d.participantes_txt
+        ? d.participantes_txt.split(',').map(function(x){ return x.trim(); }).filter(Boolean)
+        : null;
+      delete d.participantes_txt;
+      return ZyncAdmin.inserir('crm_reunioes', d);
+    });
+  }
+
   function blocoReunioes(c){
-    if(!c.reunioes.length) return '<div class="bloco"><p>Nenhuma reunião registrada. Peça ao Claude para importar as anotações do Gemini do Drive.</p></div>';
-    return c.reunioes.map(function(r, i){
+    if(!c.reunioes.length) return formReuniao() +
+      '<div class="bloco"><p>Nenhuma reunião registrada ainda.</p></div>';
+    return formReuniao() + c.reunioes.map(function(r, i){
       var pontos = (r.pontos || []).map(function(p){
         return '<li><span class="tm">' + esc(p.t || '') + '</span><span>' + esc(p.texto) + '</span></li>';
       }).join('');
@@ -181,9 +359,23 @@
     }).join('');
   }
 
+  function formApres(){
+    return formNovo('Registrar apresentação', [
+      [{k:'titulo', label:'Título', req:true, ph:'Proposta de site, plano de crescimento…'},
+       {k:'data', label:'Data', tipo:'date', valor:HOJE}],
+      [{k:'status', label:'Situação', tipo:'select', opcoes:STATUS_APRES, valor:'apresentada'},
+       {k:'url_publica', label:'Link público', ph:'https://zynchub.com.br/proposta/…'}],
+      [{k:'caminho', label:'Arquivo no repositório', ph:'cliente/apresentacao-zync-cliente.html'}]
+    ], 'Registrar', function(d){
+      d.cliente_id = idDoSel();
+      return ZyncAdmin.inserir('crm_apresentacoes', d);
+    });
+  }
+
   function blocoApres(c){
-    if(!c.apresentacoes.length) return '<div class="bloco"><p>Nenhuma apresentação registrada.</p></div>';
-    return '<div class="aps">' + c.apresentacoes.map(function(a){
+    if(!c.apresentacoes.length) return formApres() +
+      '<div class="bloco"><p>Nenhuma apresentação registrada.</p></div>';
+    return formApres() + '<div class="aps">' + c.apresentacoes.map(function(a){
       var acao = '';
       if(a.url_publica) acao += '<a class="btn pri" href="' + esc(a.url_publica) + '" target="_blank" rel="noopener">Abrir</a>' +
         '<button class="btn" data-copiar="' + esc(a.url_publica) + '">Copiar link</button>';
@@ -196,11 +388,24 @@
     }).join('') + '</div>';
   }
 
+  function formTimeline(){
+    return formNovo('Registrar no histórico', [
+      [{k:'data', label:'Data', tipo:'date', valor:HOJE, req:true},
+       {k:'tipo', label:'Tipo', tipo:'select', opcoes:TIPOS_TL, valor:'nota'}],
+      [{k:'texto', label:'O que aconteceu', req:true, ph:'Cliente pediu prazo até sexta.'}]
+    ], 'Registrar', function(d){
+      d.cliente_id = idDoSel();
+      return ZyncAdmin.inserir('crm_timeline', d);
+    });
+  }
+
   function blocoTimeline(c){
-    if(!c.timeline.length) return '<div class="bloco"><p>Sem histórico registrado.</p></div>';
+    if(!c.timeline.length) return formTimeline() +
+      '<div class="bloco"><p>Sem histórico registrado.</p></div>';
+    var pre = formTimeline();
     var cor = { reuniao:'var(--info)', proposta:'var(--sand)', fechamento:'var(--ok)',
                 perda:'var(--bad)', pagamento:'var(--ok)', nota:'var(--dim)' };
-    return '<ul class="tl">' + c.timeline.map(function(t){
+    return pre + '<ul class="tl">' + c.timeline.map(function(t){
       return '<li>' +
         '<span class="d nums">' + F.data(t.data) + '</span>' +
         '<span class="eixo"><span class="pt" style="background:' + (cor[t.tipo] || 'var(--dim)') + '"></span></span>' +
@@ -227,7 +432,10 @@
       '<div class="cab"><div>' +
         '<h1>' + esc(c.empresa) + '</h1>' +
         '<div class="meta">' + esc(c.segmento || '—') + (c.cidade ? ' · ' + esc(c.cidade) : '') + '</div>' +
-      '</div><div class="dir"><span class="st st-' + esc(c.status) + '">' + esc(ZyncAdmin.rotuloStatus(c.status)) + '</span></div></div>' +
+      '</div><div class="dir">' +
+        '<select class="selstatus" id="selStatus" aria-label="Situação do cliente">' +
+          opcoes(STATUS, c.status) + '</select>' +
+      '</div></div>' +
 
       '<div class="kpis">' +
         kpi('Mensalidade', c.valor_mensal ? F.brl(c.valor_mensal) : '—') +
@@ -257,14 +465,50 @@
         });
       });
     });
-    /* marcar passo é só visual enquanto o modo for local — o
-       arquivo local não é gravável pelo navegador. */
-    Array.prototype.forEach.call(elMain.querySelectorAll('.passo input'), function(i){
+    ligaForms(elMain);
+
+    /* concluir / reabrir pendência — grava na hora */
+    Array.prototype.forEach.call(elMain.querySelectorAll('[data-passo]'), function(i){
       i.addEventListener('change', function(){
-        c.passos[+i.dataset.p].feito = i.checked;
-        pintaMain();
+        var linha = i.closest('.passo');
+        linha.classList.add('salvando');
+        ZyncAdmin.atualizar('crm_passos', i.dataset.passo, { feito: i.checked })
+          .then(function(r){
+            linha.classList.remove('salvando');
+            if(!r.ok){ i.checked = !i.checked; alert(r.erro); return; }
+            recarregar();
+          });
       });
     });
+
+    /* apagar pendência */
+    Array.prototype.forEach.call(elMain.querySelectorAll('[data-apagar-passo]'), function(b){
+      b.addEventListener('click', function(){
+        var linha = b.closest('.passo');
+        var texto = linha.querySelector('.p').textContent;
+        if(!confirm('Apagar a pendência "' + texto + '"?')) return;
+        linha.classList.add('salvando');
+        ZyncAdmin.remover('crm_passos', b.dataset.apagarPasso).then(function(r){
+          linha.classList.remove('salvando');
+          if(!r.ok){ alert(r.erro); return; }
+          recarregar();
+        });
+      });
+    });
+
+    /* mudar a situação do cliente — a ação central do funil */
+    var sel = document.getElementById('selStatus');
+    if(sel){
+      sel.addEventListener('change', function(){
+        var antes = c.status;
+        sel.disabled = true;
+        ZyncAdmin.atualizar('crm_clientes', c.id, { status: sel.value }).then(function(r){
+          sel.disabled = false;
+          if(!r.ok){ sel.value = antes; alert(r.erro); return; }
+          recarregar();
+        });
+      });
+    }
   }
 
   function kpi(k, v){
@@ -300,6 +544,27 @@
       b.classList.add('on'); estado.filtro = b.dataset.f; pintaLista();
     });
   });
+
+  /* ---------- novo cliente ---------- */
+  (function(){
+    var f = document.querySelector('form[data-f="novo-cliente"]');
+    if(!f) return;
+    FORMS['novo-cliente'] = function(d){
+      /* slug vem da empresa: minúsculas, sem acento, hífen no lugar de espaço */
+      d.slug = String(d.empresa || '')
+        .toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 60);
+      if(!d.slug) return Promise.resolve({ ok:false, erro:'Informe o nome da empresa.' });
+      return ZyncAdmin.inserir('crm_clientes', d).then(function(r){
+        if(r.ok && r.linha) estado.sel = r.linha.slug;
+        return r;
+      });
+    };
+    ligaForms(document.getElementById('novoCliente'));
+  })();
 
   /* ---------- carga ---------- */
   document.getElementById('rodape').textContent = 'modo ' + ZyncAdmin.modo;
