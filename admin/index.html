@@ -107,7 +107,15 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="../area-cliente/config.js"></script>
 <script src="config-admin.js"></script>
-<script src="dados-locais.js" onerror="window.__semArquivo=true"></script>
+<script>
+/* dados-locais.js so existe na maquina de quem roda o modo local.
+   Carregar sempre gerava 404 no console em producao — e console
+   sujo em ferramenta de trabalho e o que faz voce parar de olhar
+   o console. Carrega so quando o modo pede. */
+if ((window.ZYNC_ADMIN || {}).mode === 'local') {
+  document.write('<scr' + 'ipt src="dados-locais.js"></scr' + 'ipt>');
+}
+</script>
 <script src="admin-data.js"></script>
 <script>
 (function(){
