@@ -1,7 +1,7 @@
 Coloque aqui as fotos da lideranca usadas em institucional.html:
 
-  natham.jpg  - foto do Natham Gil
-  daniel.jpg  - foto do Daniel Vaz
+  natham.jpg          - foto do Natham Gil
+  gabriel-santos.jpg  - foto do Gabriel Santos
 
 Recomendado: recorte quadrado ou 3:4 (retrato), rosto na parte de cima,
 minimo 600x800px. Se o arquivo nao existir, o deck mostra um placeholder
