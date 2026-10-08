@@ -29,6 +29,7 @@ var APP_SHELL = [
   '/area-cliente/manifest.webmanifest',
   '/favicon-192.png',
   '/favicon.png',
+  '/icon-maskable-512.png',
   '/apple-touch-icon.png',
 ];
 
