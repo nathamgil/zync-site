@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#0a0a16">
+<meta name="robots" content="noindex,nofollow">
+<title>Zync — Crescimento digital de ponta a ponta (prévia)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a16;--bg2:#0f0f1f;--panel:#13132a;--line:#22223d;
+  --text:#eeecf7;--muted:#9a9ab4;--dim:#5c5c78;
+  --g:#10c98d;--s:#c9a36a;
+  --disp:'Bricolage Grotesque',system-ui,sans-serif;--sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--g);color:var(--bg)}
+.wrap{width:min(1200px,100% - 48px);margin:0 auto}
+.mono{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+.g{color:var(--g)}.s{color:var(--s)}
+
+/* grão sutil para tirar a cara "lisa" de template */
+body::before{content:'';position:fixed;inset:-50%;z-index:100;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation:grain 1.2s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-2%)}100%{transform:translate(0,0)}}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:18px 0;transition:background .3s,backdrop-filter .3s}
+nav.solid{background:rgba(10,10,22,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:500;font-size:1.05rem}
+.logo svg{width:30px;height:30px}
+.logo b{color:var(--s);font-weight:500}
+.nav-r{display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:999px;font-weight:600;font-size:.92rem;transition:transform .25s,background .25s,color .25s;will-change:transform}
+.btn-g{background:var(--g);color:var(--bg)}
+.btn-o{border:1px solid var(--line);color:var(--text)}
+.btn-o:hover{border-color:var(--s);color:var(--s)}
+.btn .arr{display:inline-block;transition:transform .25s}
+.btn:hover .arr{transform:translateX(4px)}
+@media(max-width:640px){.nav-r .btn-o{display:none}}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;position:relative;padding:120px 0 80px;overflow:hidden}
+.hero-glow{position:absolute;width:70vw;height:70vw;max-width:900px;max-height:900px;right:-20vw;top:-10vw;border-radius:50%;
+  background:radial-gradient(circle,rgba(16,201,141,.16),transparent 62%);filter:blur(10px);pointer-events:none}
+.hero-mark{position:absolute;right:6vw;top:50%;width:min(34vw,420px);transform:translateY(-50%);opacity:.95}
+.kicker{display:inline-flex;align-items:center;gap:10px;color:var(--muted);margin-bottom:28px}
+.kicker i{width:8px;height:8px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.h1{font-family:var(--disp);font-weight:800;font-size:clamp(3.2rem,11vw,10rem);line-height:.9;letter-spacing:-.045em}
+.h1 .ln{display:block;overflow:hidden;padding-bottom:.06em}
+.h1 .ln>span{display:inline-block}
+.h1 em{font-style:normal;color:var(--s)}
+.hero-sub{max-width:520px;color:var(--muted);font-size:1.12rem;margin:34px 0 36px}
+.hero-sub b{color:var(--text);font-weight:600}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+@media(max-width:900px){.hero-mark{position:relative;right:auto;top:auto;transform:none;width:120px;margin-bottom:26px;order:-1}.hero .wrap{display:flex;flex-direction:column}}
+
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:20px 0;background:var(--bg2)}
+.mq-track{display:flex;gap:48px;width:max-content;animation:mq 30s linear infinite}
+.mq-track span{font-family:var(--disp);font-size:clamp(1.4rem,3vw,2.2rem);font-weight:600;white-space:nowrap;color:var(--dim)}
+.mq-track span.on{color:var(--text)}
+.mq-track span.st{color:var(--g)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- manifesto ---------- */
+.manifesto{padding:clamp(110px,16vw,200px) 0}
+.manifesto p{font-family:var(--disp);font-weight:600;font-size:clamp(1.8rem,4.4vw,3.6rem);line-height:1.15;letter-spacing:-.02em;max-width:1050px}
+.manifesto .w{opacity:.14;transition:opacity .2s}
+.manifesto .w.hl{color:var(--s)}
+
+/* ---------- motor (pinned) ---------- */
+.motor{position:relative}
+.motor-pin{min-height:100svh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:6vw}
+.motor-l .mono{color:var(--g);margin-bottom:22px;display:block}
+.motor-l h2{font-family:var(--disp);font-size:clamp(2.2rem,4.6vw,4rem);line-height:1;letter-spacing:-.03em;margin-bottom:26px}
+.steps{position:relative;height:220px}
+.step{position:absolute;inset:0;opacity:0;transform:translateY(24px)}
+.step .num{font-family:var(--disp);font-weight:800;font-size:5.5rem;line-height:1;color:var(--s)}
+.step h3{font-family:var(--disp);font-size:1.7rem;margin:8px 0 10px}
+.step p{color:var(--muted);max-width:430px}
+.flow{position:relative;aspect-ratio:1;max-width:520px;width:100%;justify-self:center}
+.flow svg{width:100%;height:100%;overflow:visible}
+.node circle.ring{fill:var(--bg2);stroke:var(--line);stroke-width:2;transition:stroke .3s,fill .3s}
+.node.on circle.ring{stroke:var(--g);fill:#0d2a24}
+.node text{font-family:var(--mono);font-size:13px;fill:var(--muted);text-anchor:middle;letter-spacing:.06em}
+.node.on text{fill:var(--text)}
+.node .ic{fill:none;stroke:var(--dim);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:stroke .3s}
+.node.on .ic{stroke:var(--g)}
+.wire{fill:none;stroke:var(--line);stroke-width:2}
+.wire-on{fill:none;stroke:var(--g);stroke-width:2.5;stroke-linecap:round}
+.center-z path{fill:none;stroke:var(--s);stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:900px){.motor-pin{grid-template-columns:1fr;padding:110px 0 60px;gap:30px}.flow{max-width:340px}.steps{height:200px}}
+
+/* ---------- clientes (horizontal) ---------- */
+.clientes{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
+.cl-head{padding:110px 0 46px}
+.cl-head h2{font-family:var(--disp);font-size:clamp(2.4rem,6vw,5rem);line-height:.95;letter-spacing:-.04em}
+.cl-head p{color:var(--muted);max-width:520px;margin-top:20px}
+.cl-track{display:flex;gap:28px;padding:0 max(24px,calc((100vw - 1200px)/2)) 110px;width:max-content}
+.card{width:min(560px,82vw);flex:none;background:var(--panel);border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .3s,transform .4s}
+.card:hover{border-color:var(--s);transform:translateY(-6px)}
+.shot{aspect-ratio:16/10;overflow:hidden;background:#000;position:relative}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.card:hover .shot img{transform:scale(1.05)}
+.card-b{padding:24px 26px 26px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card-b .mono{color:var(--g)}
+.card-b h3{font-family:var(--disp);font-size:1.8rem;line-height:1}
+.card-b p{color:var(--muted);font-size:.95rem}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tags span{font-family:var(--mono);font-size:.7rem;color:var(--s);border:1px solid var(--line);padding:5px 10px;border-radius:999px}
+.card-b .ver{margin-top:auto;padding-top:8px;font-weight:600;color:var(--text);display:inline-flex;gap:8px}
+.card-b .ver:hover{color:var(--g)}
+.card.next{justify-content:center;align-items:flex-start;padding:46px;background:linear-gradient(160deg,#10241f,var(--panel) 60%);border-color:#1d4a3d}
+.card.next h3{font-family:var(--disp);font-size:clamp(2rem,3.6vw,3rem);line-height:1;margin-bottom:18px}
+.card.next p{color:var(--muted);margin-bottom:28px;max-width:360px}
+@media(max-width:900px){.cl-track{width:auto;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:70px}.card{scroll-snap-align:center}}
+
+/* ---------- serviços ---------- */
+.serv{padding:clamp(110px,14vw,170px) 0}
+.serv-h{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:46px;flex-wrap:wrap}
+.serv-h h2{font-family:var(--disp);font-size:clamp(2.4rem,6vw,5rem);line-height:.95;letter-spacing:-.04em}
+.serv-h p{color:var(--muted);max-width:380px}
+.row{display:grid;grid-template-columns:70px 1fr 1.1fr;align-items:center;gap:24px;padding:30px 0;border-top:1px solid var(--line);position:relative;cursor:default}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row .n{font-family:var(--mono);color:var(--dim);font-size:.85rem}
+.row h3{font-family:var(--disp);font-size:clamp(1.6rem,3.4vw,2.8rem);letter-spacing:-.02em;line-height:1;transition:color .3s,transform .4s}
+.row p{color:var(--muted)}
+.row::before{content:'';position:absolute;left:0;right:0;top:0;bottom:0;background:linear-gradient(90deg,rgba(16,201,141,.07),transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
+.row:hover::before{opacity:1}
+.row:hover h3{color:var(--s);transform:translateX(10px)}
+@media(max-width:760px){.row{grid-template-columns:44px 1fr}.row p{grid-column:2}}
+
+/* ---------- fundador ---------- */
+.founder{padding:0 0 clamp(110px,14vw,170px)}
+.f-grid{display:grid;grid-template-columns:.85fr 1fr;gap:6vw;align-items:center}
+.f-photo{border-radius:26px;overflow:hidden;aspect-ratio:3/4;position:relative;border:1px solid var(--line)}
+.f-photo img{width:100%;height:120%;object-fit:cover;object-position:top;display:block}
+.f-photo .badge{position:absolute;left:18px;bottom:18px;background:rgba(10,10,22,.75);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.f-photo .badge b{display:block;font-family:var(--disp);font-size:1.15rem}
+.f-photo .badge span{font-family:var(--mono);font-size:.7rem;color:var(--s)}
+.f-txt .mono{color:var(--g);display:block;margin-bottom:20px}
+.f-txt h2{font-family:var(--disp);font-size:clamp(2.2rem,4.6vw,3.8rem);line-height:1;letter-spacing:-.03em;margin-bottom:26px}
+.f-txt p{color:var(--muted);font-size:1.08rem;margin-bottom:16px;max-width:520px}
+.f-txt p b{color:var(--text)}
+.f-list{list-style:none;margin:26px 0 34px;display:grid;gap:12px}
+.f-list li{display:flex;gap:12px;align-items:baseline}
+.f-list li::before{content:'→';color:var(--g);font-family:var(--mono)}
+@media(max-width:900px){.f-grid{grid-template-columns:1fr}.f-photo{max-width:420px}}
+
+/* ---------- cta final ---------- */
+.final{padding:clamp(120px,16vw,200px) 0;text-align:center;position:relative;overflow:hidden;border-top:1px solid var(--line)}
+.final::before{content:'';position:absolute;left:50%;top:50%;width:900px;height:900px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(201,163,106,.12),transparent 60%);pointer-events:none}
+.final h2{font-family:var(--disp);font-weight:800;font-size:clamp(3rem,10vw,8.5rem);line-height:.9;letter-spacing:-.045em;position:relative}
+.final p{color:var(--muted);max-width:520px;margin:30px auto 38px;position:relative}
+.final .btn{position:relative;font-size:1.05rem;padding:18px 34px}
+footer{border-top:1px solid var(--line);padding:34px 0;color:var(--dim);font-size:.85rem}
+.f-in{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+.f-in a:hover{color:var(--g)}
+
+/* sem animação para quem pediu menos movimento */
+@media (prefers-reduced-motion: reduce){
+  body::before,.mq-track,.kicker i{animation:none}
+  .manifesto .w{opacity:1}
+  .step{position:static;opacity:1;transform:none;margin-bottom:26px}.steps{height:auto}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="wrap nav-in">
+    <a href="/" class="logo" aria-label="Zync">
+      <svg viewBox="0 0 100 100"><g fill="none" stroke="#10c98d" stroke-width="7" stroke-linecap="round"><path d="M 90.57 60.87 A 42 42 0 0 1 60.87 90.57"/><path d="M 39.13 90.57 A 42 42 0 0 1 9.43 60.87"/><path d="M 9.43 39.13 A 42 42 0 0 1 39.13 9.43"/><path d="M 60.87 9.43 A 42 42 0 0 1 90.57 39.13"/></g><path d="M31 33 H69 L31 67 H69" fill="none" stroke="#c9a36a" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="50" r="6.5" fill="#10c98d"/></svg>
+      <span><b>zync</b>_</span>
+    </a>
+    <div class="nav-r">
+      <a href="/area-cliente/" class="btn btn-o">Área do cliente</a>
+      <a href="https://wa.me/5561982503561" class="btn btn-g mag">Falar com a Zync <span class="arr">→</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <svg class="hero-mark" viewBox="0 0 100 100" aria-hidden="true">
+      <g class="hm-seal"><circle cx="50" cy="50" r="44" fill="none" stroke="#10c98d" stroke-width="1.6" opacity=".9"/><circle cx="50" cy="50" r="38" fill="none" stroke="#10c98d" stroke-width=".6" opacity=".35"/></g>
+      <g class="hm-tick" stroke="#10c98d" stroke-width="2" stroke-linecap="round"><line x1="50" y1="2" x2="50" y2="13"/><line x1="50" y1="87" x2="50" y2="98"/><line x1="2" y1="50" x2="13" y2="50"/><line x1="87" y1="50" x2="98" y2="50"/></g>
+      <path class="hm-z" d="M33 31 H67 L33 69 H67" fill="none" stroke="#c9a36a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="hm-bull"><circle cx="50" cy="50" r="9.5" fill="none" stroke="#10c98d" stroke-width="2"/><circle cx="50" cy="50" r="3.6" fill="#10c98d"/></g>
+    </svg>
+    <div class="kicker mono"><i></i>Salvador · Brasília · atendemos todo o Brasil</div>
+    <h1 class="h1">
+      <span class="ln"><span>Crescimento</span></span>
+      <span class="ln"><span>digital de</span></span>
+      <span class="ln"><span><em>ponta a ponta.</em></span></span>
+    </h1>
+    <p class="hero-sub">Anúncio, site, atendimento com IA no WhatsApp e conteúdo — <b>montados e operados pela mesma mão</b>. Você não junta fornecedor: liga um motor.</p>
+    <div class="hero-ctas">
+      <a href="https://wa.me/5561982503561" class="btn btn-g mag">Quero um diagnóstico grátis <span class="arr">→</span></a>
+      <a href="#clientes" class="btn btn-o">Ver sites que entregamos</a>
+    </div>
+  </div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="mq-track">
+    <span class="on">Tráfego pago</span><span class="st">✦</span><span>Sites que vendem</span><span class="st">✦</span><span class="on">Agentes de IA no WhatsApp</span><span class="st">✦</span><span>Agenda online</span><span class="st">✦</span><span class="on">Conteúdo automatizado</span><span class="st">✦</span><span>Painel em tempo real</span><span class="st">✦</span>
+    <span class="on">Tráfego pago</span><span class="st">✦</span><span>Sites que vendem</span><span class="st">✦</span><span class="on">Agentes de IA no WhatsApp</span><span class="st">✦</span><span>Agenda online</span><span class="st">✦</span><span class="on">Conteúdo automatizado</span><span class="st">✦</span><span>Painel em tempo real</span><span class="st">✦</span>
+  </div>
+</div>
+
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="wrap">
+    <p id="manif">A maioria das empresas contrata um para o site, outro para o anúncio, outro para as redes. Cada um entrega a sua parte e ninguém responde pelo número final. <span data-hl>A Zync responde.</span></p>
+  </div>
+</section>
+
+<!-- MOTOR -->
+<section class="motor" id="motor">
+  <div class="wrap motor-pin">
+    <div class="motor-l">
+      <span class="mono">// como o motor gira</span>
+      <h2>Quatro peças.<br><span class="s">Uma engrenagem.</span></h2>
+      <div class="steps">
+        <div class="step"><div class="num">01</div><h3>O anúncio certo</h3><p>Campanha no Meta e no Google mirando quem já está procurando o que você vende — com cada real rastreado até a conversa.</p></div>
+        <div class="step"><div class="num">02</div><h3>Um site que converte</h3><p>Página rápida, com a sua cara e suas fotos reais, feita pra transformar visita em pedido, reserva ou agendamento.</p></div>
+        <div class="step"><div class="num">03</div><h3>IA no WhatsApp</h3><p>O lead que chega às 23h é respondido às 23h. O agente tira dúvida, qualifica e agenda — e só passa pra você quem está pronto.</p></div>
+        <div class="step"><div class="num">04</div><h3>A venda — e o número</h3><p>Tudo cai num painel que você abre no celular: quanto entrou, quanto custou e o que vamos ajustar na semana seguinte.</p></div>
+      </div>
+    </div>
+    <div class="flow">
+      <svg viewBox="0 0 520 520" aria-hidden="true">
+        <circle cx="260" cy="260" r="180" class="wire"/>
+        <circle cx="260" cy="260" r="180" class="wire-on" id="wireOn" transform="rotate(-90 260 260)"/>
+        <g class="center-z" transform="translate(205 205) scale(1.1)"><path d="M31 33 H69 L31 67 H69"/></g>
+        <circle cx="260" cy="260" r="7" fill="#10c98d"/>
+        <g class="node" transform="translate(260 80)"><circle class="ring" r="46"/><path class="ic" d="M-14 -8 l20 -8 v32 l-20 -8 z M-14 -8 v16 M6 -4 q8 4 0 8"/><text y="72">ANÚNCIO</text></g>
+        <g class="node" transform="translate(440 260)"><circle class="ring" r="46"/><path class="ic" d="M-16 -12 h32 v24 h-32 z M-16 -4 h32"/><text y="72">SITE</text></g>
+        <g class="node" transform="translate(260 440)"><circle class="ring" r="46"/><path class="ic" d="M-14 10 l3 -8 a14 14 0 1 1 6 6 z"/><text y="72">IA · WHATSAPP</text></g>
+        <g class="node" transform="translate(80 260)"><circle class="ring" r="46"/><path class="ic" d="M-14 10 l9 -9 l7 7 l12 -14 M4 -6 h10 v10"/><text y="72">VENDA</text></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTES -->
+<section class="clientes" id="clientes">
+  <div class="wrap cl-head">
+    <span class="mono g">// trabalho entregue</span>
+    <h2 style="margin-top:18px">Não é mockup.<br><span class="s">Está no ar.</span></h2>
+    <p>Negócios reais de Salvador, cada um com o seu jeito. Abra, teste a agenda, faça um pedido.</p>
+  </div>
+  <div class="cl-track" id="track">
+    <article class="card">
+      <div class="shot"><img src="img/trevus.jpg" alt="Site da Trevus Barbearia" loading="lazy"></div>
+      <div class="card-b">
+        <span class="mono">Barbearia · Federação</span>
+        <h3>Trevus Barbearia</h3>
+        <p>Site com agenda por barbeiro, sinal pago na hora do agendamento e planos de assinatura com cobrança mensal.</p>
+        <div class="tags"><span>site</span><span>agenda online</span><span>assinatura</span><span>painel</span></div>
+        <a class="ver" href="https://trevusbarbearia.com.br/" target="_blank" rel="noopener">Abrir o site →</a>
+      </div>
+    </article>
+    <article class="card">
+      <div class="shot"><img src="img/kipaladar.jpg" alt="Site do restaurante Kipaladar" loading="lazy"></div>
+      <div class="card-b">
+        <span class="mono">Restaurante · Federação</span>
+        <h3>Kipaladar</h3>
+        <p>Cardápio com pedido direto no WhatsApp, almoço agendado para a equipe e reserva de mesa — sem comissão de aplicativo.</p>
+        <div class="tags"><span>site</span><span>pedidos</span><span>reservas</span></div>
+        <a class="ver" href="https://nathamgil.github.io/kipaladar/" target="_blank" rel="noopener">Abrir o site →</a>
+      </div>
+    </article>
+    <article class="card">
+      <div class="shot"><img src="img/dany.jpg" alt="Site da nail designer Dany Marinho" loading="lazy"></div>
+      <div class="card-b">
+        <span class="mono">Nail designer · Cajazeiras</span>
+        <h3>Dany Marinho</h3>
+        <p>Site com a identidade dela, agenda por serviço com o próximo horário livre na tela e painel para gerir a semana.</p>
+        <div class="tags"><span>site</span><span>agenda online</span><span>painel</span></div>
+        <a class="ver" href="https://nathamgil.github.io/dany-marinho/" target="_blank" rel="noopener">Abrir o site →</a>
+      </div>
+    </article>
+    <article class="card next">
+      <span class="mono g" style="margin-bottom:18px">// o próximo</span>
+      <h3>Seu negócio <span class="s">aqui.</span></h3>
+      <p>Diagnóstico grátis: a gente olha seu Instagram, seu site e seus anúncios e mostra onde está o dinheiro parado.</p>
+      <a href="https://wa.me/5561982503561" class="btn btn-g mag">Chamar no WhatsApp <span class="arr">→</span></a>
+    </article>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section class="serv">
+  <div class="wrap">
+    <div class="serv-h">
+      <h2>O que a gente<br><span class="s">liga pra você.</span></h2>
+      <p>Pode começar por uma peça. O resultado aparece quando elas giram juntas.</p>
+    </div>
+    <a href="/servicos/trafego-pago.html" class="row"><span class="n">01</span><h3>Tráfego pago</h3><p>Meta e Google com rastreamento até a venda. Verba que tem destino.</p></a>
+    <a href="/servicos/criacao-de-sites.html" class="row"><span class="n">02</span><h3>Sites e agendas</h3><p>Rápidos, com fotos reais e pedido, reserva ou agenda embutidos.</p></a>
+    <a href="/servicos/agentes-de-ia.html" class="row"><span class="n">03</span><h3>IA no WhatsApp</h3><p>Atende, qualifica e agenda 24h — com o seu tom de voz.</p></a>
+    <a href="/servicos/conteudo-automatizado.html" class="row"><span class="n">04</span><h3>Conteúdo</h3><p>Presença constante nas redes sem depender de alguém “ter tempo de postar”.</p></a>
+    <a href="/servicos/" class="row"><span class="n">05</span><h3>Painel em tempo real</h3><p>Seus números no celular, traduzidos para gente — não para analista.</p></a>
+  </div>
+</section>
+
+<!-- FUNDADOR -->
+<section class="founder">
+  <div class="wrap f-grid">
+    <div class="f-photo">
+      <img src="/fotos/natham.jpg" alt="Natham Gil, fundador da Zync" loading="lazy">
+      <div class="badge"><b>Natham Gil</b><span>FUNDADOR · CEO</span></div>
+    </div>
+    <div class="f-txt">
+      <span class="mono">// quem executa</span>
+      <h2>Você fala com quem<br><span class="s">faz o trabalho.</span></h2>
+      <p>Na Zync não existe gerente de conta repassando recado. <b>Quem desenha a estratégia é quem sobe a campanha, monta o site e lê os números com você.</b></p>
+      <p>É uma operação enxuta de propósito: menos camada, mais velocidade — e alguém que responde pelo resultado com nome e sobrenome.</p>
+      <ul class="f-list">
+        <li>Site no ar em dias, não em meses</li>
+        <li>Estrutura no seu nome: se um dia sairmos, ela continua sua</li>
+        <li>Número antes de opinião em toda decisão</li>
+      </ul>
+      <a href="/sobre/" class="btn btn-o">Conhecer a Zync <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="final">
+  <div class="wrap">
+    <h2>Bora ligar<br>o <span class="s">motor?</span></h2>
+    <p>Em 30 minutos de conversa a gente mostra o que faria no seu negócio nos próximos 90 dias. Sem compromisso.</p>
+    <a href="https://wa.me/5561982503561" class="btn btn-g mag">Quero meu diagnóstico <span class="arr">→</span></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap f-in">
+    <span>© 2026 Zync · zynchub.com.br</span>
+    <span><a href="/sobre/">Sobre</a> · <a href="/servicos/">Serviços</a> · <a href="/area-cliente/">Área do cliente</a> · <a href="https://wa.me/5561982503561">WhatsApp</a></span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(function(){
+  const nav=document.getElementById('nav');
+  addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>40),{passive:true});
+
+  // manifesto: quebra em palavras
+  const m=document.getElementById('manif');
+  m.innerHTML=m.innerHTML.replace(/<span data-hl>(.*?)<\/span>/,'§$1§').split(/(\s+)/).map(t=>/^\s+$/.test(t)?t:t).join('');
+  let hl=false;
+  m.innerHTML=m.textContent.split(' ').map(w=>{
+    if(w.startsWith('§'))hl=true;
+    const clean=w.replace(/§/g,'');
+    const out=`<span class="w${hl?' hl':''}">${clean}</span>`;
+    if(w.endsWith('§'))hl=false;
+    return out;
+  }).join(' ');
+
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce||!window.gsap){document.querySelectorAll('.step').forEach(s=>{s.style.opacity=1;s.style.transform='none'});document.querySelectorAll('.node').forEach(n=>n.classList.add('on'));return;}
+
+  gsap.registerPlugin(ScrollTrigger);
+  if(window.Lenis){
+    const lenis=new Lenis({lerp:.09});
+    lenis.on('scroll',ScrollTrigger.update);
+    gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);
+    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();lenis.scrollTo(a.getAttribute('href'),{offset:-60})}));
+  }
+
+  // HERO: linhas sobem, marca monta
+  gsap.from('.h1 .ln>span',{yPercent:110,duration:1.1,ease:'power4.out',stagger:.12,delay:.1});
+  gsap.from('.kicker,.hero-sub,.hero-ctas',{y:24,opacity:0,duration:.9,ease:'power3.out',stagger:.1,delay:.55});
+  const hm=gsap.timeline({delay:.2});
+  hm.from('.hm-seal',{rotation:-30,scale:1.25,opacity:0,transformOrigin:'50% 50%',duration:1.1,ease:'expo.out'})
+    .from('.hm-tick',{scale:1.6,opacity:0,transformOrigin:'50% 50%',duration:1,ease:'expo.out'},'<')
+    .from('.hm-z',{strokeDasharray:200,strokeDashoffset:200,duration:1,ease:'power2.inOut'},'<.2')
+    .from('.hm-bull',{scale:2.4,opacity:0,transformOrigin:'50% 50%',duration:.7,ease:'back.out(2)'},'-=.3');
+  gsap.to('.hero-mark',{rotation:25,yPercent:-30,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+  gsap.to('.hero-glow',{yPercent:30,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+
+  // MANIFESTO: palavras acendem com a rolagem
+  gsap.to('#manif .w',{opacity:1,stagger:.08,ease:'none',scrollTrigger:{trigger:'.manifesto',start:'top 75%',end:'bottom 55%',scrub:true}});
+
+  // MOTOR: seção presa, passos trocam, nós acendem, anel completa
+  const steps=gsap.utils.toArray('.step'), nodes=gsap.utils.toArray('.node');
+  const wire=document.getElementById('wireOn'), C=2*Math.PI*180;
+  wire.style.strokeDasharray=C; wire.style.strokeDashoffset=C;
+  ScrollTrigger.matchMedia({
+    "(min-width: 901px)":()=>mkMotor('+=260%'),
+    "(max-width: 900px)":()=>mkMotor('+=200%')
+  });
+  function mkMotor(end){
+    const tl=gsap.timeline({scrollTrigger:{trigger:'#motor',start:'top top',end:end,pin:'.motor-pin',scrub:.6,
+      onUpdate:s=>{const i=Math.min(3,Math.floor(s.progress*4));nodes.forEach((n,k)=>n.classList.toggle('on',k<=i));}}});
+    steps.forEach((s,i)=>{
+      tl.to(s,{opacity:1,y:0,duration:.5},i);
+      if(i<steps.length-1) tl.to(s,{opacity:0,y:-24,duration:.4},i+.75);
+    });
+    tl.to(wire,{strokeDashoffset:0,ease:'none',duration:steps.length},0);
+    return ()=>tl.kill();
+  }
+
+  // CLIENTES: trilho horizontal preso (desktop); no celular vira arrastar
+  ScrollTrigger.matchMedia({"(min-width: 901px)":()=>{
+    const track=document.getElementById('track');
+    const dist=()=>track.scrollWidth-innerWidth;
+    const tw=gsap.to(track,{x:()=>-dist(),ease:'none',scrollTrigger:{trigger:'.clientes',start:'top top',end:()=>'+='+dist(),pin:true,scrub:.8,invalidateOnRefresh:true}});
+    return ()=>tw.kill();
+  }});
+
+  // entradas
+  gsap.utils.toArray('.row,.f-photo,.f-txt>*,.serv-h>*,.cl-head>*,.final h2,.final p').forEach(el=>{
+    gsap.from(el,{y:40,opacity:0,duration:.9,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
+  });
+  gsap.fromTo('.f-photo img',{yPercent:-8},{yPercent:-16,ease:'none',scrollTrigger:{trigger:'.founder',start:'top bottom',end:'bottom top',scrub:true}});
+
+  // botões magnéticos
+  if(matchMedia('(pointer:fine)').matches){
+    document.querySelectorAll('.mag').forEach(b=>{
+      b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect();gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.25,y:(e.clientY-r.top-r.height/2)*.35,duration:.4,ease:'power3.out'})});
+      b.addEventListener('mouseleave',()=>gsap.to(b,{x:0,y:0,duration:.6,ease:'elastic.out(1,.4)'}));
+    });
+  }
+  addEventListener('load',()=>ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>
