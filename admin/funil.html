@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
+<meta name="theme-color" content="#0a0a16">
+<meta name="robots" content="noindex, nofollow">
+<title>Funil — Zync</title>
+<link rel="stylesheet" href="admin.css?v=20261027">
+<link rel="stylesheet" href="funil.css?v=20261027">
+</head>
+<body>
+
+<div class="grid-bg" aria-hidden="true"></div>
+
+<!-- Porta de entrada. A segurança é a RLS: sem sessão de admin o banco não devolve nada. -->
+<div class="login" id="login" hidden>
+  <form class="login-card" id="loginForm">
+    <div class="brand"><svg class="mira" viewBox="0 0 100 100" aria-hidden="true"><g class="seal" fill="none" stroke-width="7" stroke-linecap="round"><path d="M 90.57 60.87 A 42 42 0 0 1 60.87 90.57"/><path d="M 39.13 90.57 A 42 42 0 0 1 9.43 60.87"/><path d="M 9.43 39.13 A 42 42 0 0 1 39.13 9.43"/><path d="M 60.87 9.43 A 42 42 0 0 1 90.57 39.13"/></g><path class="z" d="M31 33 H69 L31 67 H69" fill="none" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle class="bull" cx="50" cy="50" r="6.5"/></svg><span class="wm"><b>ZYNC</b> <span>painel interno</span></span></div>
+    <h2>Entrar</h2>
+    <label for="li-mail">E-mail</label>
+    <input id="li-mail" type="email" autocomplete="username" required>
+    <label for="li-senha">Senha</label>
+    <input id="li-senha" type="password" autocomplete="current-password" required>
+    <button class="btn pri" id="li-btn" type="submit">Entrar</button>
+    <p class="login-erro" id="li-erro" hidden></p>
+    <p class="rodape">Acesso restrito à equipe Zync.</p>
+  </form>
+</div>
+
+<div class="top">
+  <div class="brand"><svg class="mira" viewBox="0 0 100 100" aria-hidden="true"><g class="seal" fill="none" stroke-width="7" stroke-linecap="round"><path d="M 90.57 60.87 A 42 42 0 0 1 60.87 90.57"/><path d="M 39.13 90.57 A 42 42 0 0 1 9.43 60.87"/><path d="M 9.43 39.13 A 42 42 0 0 1 39.13 9.43"/><path d="M 60.87 9.43 A 42 42 0 0 1 90.57 39.13"/></g><path class="z" d="M31 33 H69 L31 67 H69" fill="none" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle class="bull" cx="50" cy="50" r="6.5"/></svg><span class="wm"><b>ZYNC</b> <span>painel interno</span></span></div>
+  <nav class="nav" aria-label="Seções">
+    <a href="#dashboard" data-v="dashboard">Dashboard</a>
+    <a href="#pipeline" data-v="pipeline">Pipeline</a>
+    <a href="index.html">Fichas</a>
+  </nav>
+  <div class="sp"></div>
+  <span class="quem" id="quem"></span>
+  <button class="btn" id="sair" hidden>Sair</button>
+</div>
+
+<div class="wrap">
+
+  <!-- ================= DASHBOARD ================= -->
+  <section class="view" id="v-dashboard" aria-labelledby="t-dash">
+    <div class="titulo">
+      <div><h1 id="t-dash">Dashboard</h1><p id="hoje"></p></div>
+      <div class="dir"><button class="btn pri" data-novo>+ Novo lead</button></div>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="duas">
+      <div class="bloco">
+        <h3>Fila de contato</h3>
+        <p style="margin-bottom:8px;font-size:14px">Atrasados e de hoje, depois quem está negociando sem data, depois sites prontos que ninguém chamou.</p>
+        <ol class="fila" id="fila"></ol>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+        <div class="bloco">
+          <h3>Leads por etapa</h3>
+          <div class="barras" id="barras"></div>
+        </div>
+        <div class="bloco">
+          <h3>Últimos movimentos</h3>
+          <ul class="hist" id="movs"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PIPELINE ================= -->
+  <section class="view" id="v-pipeline" aria-labelledby="t-pipe">
+    <div class="titulo">
+      <div><h1 id="t-pipe">Pipeline</h1><p>Arraste o card para mudar de etapa. No celular, toque no card e troque a etapa.</p></div>
+      <div class="dir"><button class="btn pri" data-novo>+ Novo lead</button></div>
+    </div>
+    <div class="ferr">
+      <input class="busca" id="busca" type="search" placeholder="Buscar nome, bairro, nicho…" aria-label="Buscar lead">
+      <label class="chk"><input type="checkbox" id="arquivo"> Mostrar não fechou, encerrados e presentes</label>
+    </div>
+    <div class="board" id="board"></div>
+  </section>
+
+</div>
+
+<div class="veu" id="veu" hidden></div>
+<aside class="gaveta" id="gaveta" hidden aria-labelledby="g-nome" role="dialog"></aside>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<footer>Painel interno da Zync · dados protegidos por RLS · <a href="index.html">fichas completas</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../area-cliente/config.js"></script>
+<script src="config-admin.js"></script>
+<script src="admin-data.js?v=20261027"></script>
+<script>
+(function(){
+  'use strict';
+
+  var ETAPAS = [
+    {k:'site_pronto', n:'Site pronto',      d:'ninguém chamou ainda',   c:'var(--sand)'},
+    {k:'contatado',   n:'Contatado',        d:'esperando resposta',     c:'var(--warn)'},
+    {k:'conversa',    n:'Em conversa',      d:'respondeu, está avaliando', c:'var(--info)'},
+    {k:'proposta',    n:'Proposta',         d:'valores apresentados',   c:'var(--accent)'},
+    {k:'cliente',     n:'Cliente',          d:'pagando',                c:'var(--ok)'},
+    {k:'followup',    n:'Follow-up depois', d:'retomar mais pra frente', c:'#c4a5ff'},
+    {k:'perdido',     n:'Não fechou',       d:'',                       c:'var(--bad)', arq:true},
+    {k:'encerrado',   n:'Encerrado',        d:'foi cliente, saiu',      c:'var(--dim)', arq:true},
+    {k:'presente',    n:'Presente',         d:'não cobrar',             c:'var(--sand-2)', arq:true}
+  ];
+  var ETAPA = {}; ETAPAS.forEach(function(e){ ETAPA[e.k] = e; });
+  var ABERTAS = ['site_pronto','contatado','conversa','proposta','followup'];
+  var NEGOCIANDO = ['conversa','proposta'];
+
+  var st = { leads: [], tl: [], busca: '', arquivo: false, aberto: null, view: 'dashboard' };
+  var sb = null;
+  var $ = function(s){ return document.querySelector(s); };
+
+  function esc(s){
+    return String(s === null || s === undefined ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+  function hoje(){ var d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset()*6e4).toISOString().slice(0,10); }
+  function maisDias(n){ var d = new Date(); d.setDate(d.getDate()+n); return new Date(d.getTime() - d.getTimezoneOffset()*6e4).toISOString().slice(0,10); }
+  function dm(iso){ if(!iso) return ''; var p = String(iso).slice(0,10).split('-'); return p[2] + '/' + p[1]; }
+  function brl(v){ return 'R$ ' + Number(v||0).toLocaleString('pt-BR', {maximumFractionDigits:0}); }
+  function seguro(u){ return /^https:\/\//i.test(u || '') ? u : ''; }
+  function wa(w){ var d = String(w||'').replace(/\D/g,''); if(d.length < 10) return ''; if(d.indexOf('55') !== 0) d = '55' + d; return 'https://wa.me/' + d; }
+  function ig(i){ var h = String(i||'').trim().replace(/^@/,'').split(/[\s,]/)[0]; return /^[\w.]+$/.test(h) ? 'https://www.instagram.com/' + h + '/' : ''; }
+  function toast(t, erro){ var e = $('#toast'); e.textContent = t; e.className = 'toast' + (erro ? ' erro' : ''); e.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(function(){ e.hidden = true; }, 3200); }
+
+  /* urgência: ordena a fila e pinta a etiqueta do card */
+  function urg(l){
+    var h = hoje();
+    if(l.proximo_contato){
+      if(l.proximo_contato < h) return {k:'tarde', t:'atrasado ' + dm(l.proximo_contato), o:'0' + l.proximo_contato};
+      if(l.proximo_contato === h) return {k:'hoje', t:'hoje', o:'1'};
+      return {k:'', t:dm(l.proximo_contato), o:'4' + l.proximo_contato};
+    }
+    if(NEGOCIANDO.indexOf(l.etapa) > -1) return {k:'neg', t:'negociando · sem data', o:'2'};
+    if(l.etapa === 'site_pronto') return {k:'', t:'nunca chamado', o:'3'};
+    return {k:'', t:'sem data', o:'5'};
+  }
+
+  /* ================= dados ================= */
+  function carregar(){
+    var P = window.ZYNC_CONFIG || {};
+    if(!P.supabaseUrl || !window.supabase){ toast('Supabase não configurado.', true); return Promise.resolve(); }
+    sb = window.__sbAdmin || (window.__sbAdmin = window.supabase.createClient(P.supabaseUrl, P.supabaseAnonKey));
+    return sb.auth.getUser().then(function(u){
+      if(!u || !u.data || !u.data.user){ mostraLogin(); return; }
+      escondeLogin();
+      return Promise.all([
+        sb.from('crm_clientes').select('*').order('ordem').order('empresa'),
+        sb.from('crm_timeline').select('*').order('data', {ascending:false}).order('criado_em', {ascending:false}).limit(400)
+      ]).then(function(r){
+        if(r[0].error){ toast('Erro ao ler o funil: ' + r[0].error.message, true); return; }
+        st.leads = r[0].data || [];
+        st.tl = (r[1].data) || [];
+        if(!st.leads.length) toast('O banco devolveu zero leads. Sua conta está na tabela admins?', true);
+        pinta();
+      });
+    });
+  }
+
+  function grava(id, dados){
+    return sb.from('crm_clientes').update(dados).eq('id', id).select().then(function(r){
+      if(r.error){ toast('Não salvou: ' + r.error.message, true); return null; }
+      var linha = (r.data || [])[0];
+      if(linha){ st.leads = st.leads.map(function(l){ return l.id === id ? linha : l; }); }
+      return linha;
+    });
+  }
+  function registra(id, tipo, texto, data){
+    var row = { cliente_id: id, tipo: tipo, texto: texto, data: data || hoje() };
+    return sb.from('crm_timeline').insert(row).select().then(function(r){
+      if(!r.error && r.data) st.tl = r.data.concat(st.tl);
+    });
+  }
+
+  /* ================= pintura ================= */
+  function pinta(){
+    var fechados = st.leads.filter(function(l){ return l.etapa === 'cliente'; });
+    var mrr = fechados.reduce(function(s,l){ return s + (Number(l.valor_mensal)||0); }, 0);
+    $('#quem').textContent = st.leads.length + ' no funil · ' + fechados.length + (fechados.length === 1 ? ' cliente' : ' clientes') + (mrr ? ' · ' + brl(mrr) + '/mês' : '');
+    pintaDash(); pintaBoard();
+    if(st.aberto) abre(st.aberto, true);
+  }
+
+  function pintaDash(){
+    var h = hoje();
+    $('#hoje').textContent = new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'}) + ' · ' + st.leads.length + ' leads no funil';
+    var abertos = st.leads.filter(function(l){ return ABERTAS.indexOf(l.etapa) > -1; });
+    var vencidos = abertos.filter(function(l){ return l.proximo_contato && l.proximo_contato <= h; }).length;
+    var semContato = st.leads.filter(function(l){ return l.etapa === 'site_pronto'; }).length;
+    var neg = st.leads.filter(function(l){ return NEGOCIANDO.indexOf(l.etapa) > -1; });
+    var potImpl = neg.reduce(function(s,l){ return s + (Number(l.valor_implantacao)||0); }, 0);
+    var potMes = neg.reduce(function(s,l){ return s + (Number(l.valor_mensal)||0); }, 0);
+    var cli = st.leads.filter(function(l){ return l.etapa === 'cliente'; });
+    var mrr = cli.reduce(function(s,l){ return s + (Number(l.valor_mensal)||0); }, 0);
+    var semana = maisDias(-7);
+    var contatos7 = st.tl.filter(function(t){ return t.tipo === 'contato' && t.data >= semana; }).length;
+    var noar = st.leads.filter(function(l){ return seguro(l.site_url); }).length;
+
+    function k(rot, v, sub, cls){ return '<div class="kpi' + (cls ? ' ' + cls : '') + '"><div class="k">' + rot + '</div><div class="v nums">' + v + '</div>' + (sub ? '<div class="s">' + sub + '</div>' : '') + '</div>'; }
+    $('#kpis').innerHTML =
+      k('Pra chamar até hoje', vencidos, 'próximo contato vencido', vencidos ? 'alerta' : '') +
+      k('Sites sem contato', semContato, 'prontos, ninguém chamou') +
+      k('Negociando', neg.length, (potImpl ? brl(potImpl) + ' implantação' : '') + (potMes ? ' · ' + brl(potMes) + '/mês' : '')) +
+      k('Clientes', cli.length, mrr ? brl(mrr) + '/mês' : '') +
+      k('Contatos em 7 dias', contatos7, 'registrados com “Contatei”') +
+      k('Sites no ar', noar, '');
+
+    var fila = st.leads.filter(function(l){
+      if(ABERTAS.indexOf(l.etapa) < 0 || l.etapa === 'followup' && !(l.proximo_contato && l.proximo_contato <= h)) return false;
+      var u = urg(l); return u.k === 'tarde' || u.k === 'hoje' || u.k === 'neg' || l.etapa === 'site_pronto';
+    }).map(function(l){ return {l:l, u:urg(l)}; })
+      .sort(function(a,b){ return a.u.o.localeCompare(b.u.o) || a.l.empresa.localeCompare(b.l.empresa); }).slice(0, 15);
+    $('#fila').innerHTML = fila.length ? fila.map(function(x){
+      var l = x.l, w = wa(l.whatsapp), i = ig(l.instagram);
+      return '<li><span class="quando ' + x.u.k + '">' + esc(x.u.t) + '</span>' +
+        '<div><div class="nm">' + esc(l.empresa) + '</div><div class="ps">' + esc(l.proximo_passo || [l.segmento, l.cidade].filter(Boolean).join(' · ')) + '</div></div>' +
+        '<div class="ac">' + (w ? '<a class="btn mini" href="' + esc(w) + '" target="_blank" rel="noopener">WhatsApp</a>' : i ? '<a class="btn mini" href="' + esc(i) + '" target="_blank" rel="noopener">Direct</a>' : '') +
+        '<button class="btn mini" data-abre="' + esc(l.id) + '">Abrir</button></div></li>';
+    }).join('') : '<li><p>Fila zerada: ninguém atrasado e todo site pronto já foi chamado.</p></li>';
+
+    var max = 1, cont = {};
+    ETAPAS.forEach(function(e){ cont[e.k] = st.leads.filter(function(l){ return l.etapa === e.k; }).length; max = Math.max(max, cont[e.k]); });
+    $('#barras').innerHTML = ETAPAS.map(function(e){
+      return '<button class="barra" data-etapa="' + e.k + '"><span class="nome">' + esc(e.n) + '</span>' +
+        '<span class="trilho"><span class="enche" style="display:block;width:' + Math.round(cont[e.k]/max*100) + '%;background:' + e.c + '"></span></span>' +
+        '<span class="n nums">' + cont[e.k] + '</span></button>';
+    }).join('');
+
+    var porId = {}; st.leads.forEach(function(l){ porId[l.id] = l; });
+    var movs = st.tl.filter(function(t){ return porId[t.cliente_id]; }).slice(0, 8);
+    $('#movs').innerHTML = movs.length ? movs.map(function(t){
+      return '<li><span class="d">' + dm(t.data) + '</span><span class="t"><b>' + esc(t.tipo) + '</b>' + esc(porId[t.cliente_id].empresa) + ' — ' + esc(t.texto) + '</span></li>';
+    }).join('') : '<li><span class="d"></span><span class="t">Nada registrado ainda. Use “Contatei hoje” ou arraste um card.</span></li>';
+  }
+
+  function cardHtml(l){
+    var u = urg(l);
+    var tags = '';
+    if(l.proximo_contato || u.k === 'neg') tags += '<span class="tag ' + (u.k === 'tarde' ? 'tarde' : u.k === 'hoje' ? 'hoje' : '') + '">' + esc(u.t) + '</span>';
+    if(l.valor_implantacao || l.valor_mensal) tags += '<span class="tag val">' + (l.valor_implantacao ? brl(l.valor_implantacao) : '') + (l.valor_mensal ? (l.valor_implantacao ? ' + ' : '') + brl(l.valor_mensal) + '/m' : '') + '</span>';
+    return '<button class="card" draggable="true" data-id="' + esc(l.id) + '">' +
+      '<span class="nm">' + esc(l.empresa) + '</span>' +
+      '<span class="sb">' + esc([l.segmento, l.cidade].filter(Boolean).join(' · ')) + '</span>' +
+      (l.proximo_passo ? '<span class="sb" style="color:var(--text)">' + esc(l.proximo_passo) + '</span>' : '') +
+      (tags ? '<span class="rodape">' + tags + '</span>' : '') +
+    '</button>';
+  }
+
+  function pintaBoard(){
+    var q = st.busca.trim().toLowerCase();
+    var cols = ETAPAS.filter(function(e){ return st.arquivo || !e.arq; });
+    $('#board').innerHTML = cols.map(function(e){
+      var itens = st.leads.filter(function(l){
+        if(l.etapa !== e.k) return false;
+        if(!q) return true;
+        return [l.empresa, l.segmento, l.cidade, l.instagram, l.review, l.notas, l.proximo_passo].join(' ').toLowerCase().indexOf(q) > -1;
+      }).sort(function(a,b){ return (a.ordem||0) - (b.ordem||0) || urg(a).o.localeCompare(urg(b).o) || a.empresa.localeCompare(b.empresa); });
+      return '<div class="col" data-etapa="' + e.k + '">' +
+        '<div class="col-cab" style="--c:' + e.c + '"><div class="l1"><b>' + esc(e.n) + '</b><span class="n nums">' + itens.length + '</span></div>' +
+        (e.d ? '<small>' + esc(e.d) + '</small>' : '') + '</div>' +
+        '<div class="cards">' + itens.map(cardHtml).join('') + '</div></div>';
+    }).join('');
+  }
+
+  /* ================= arrastar ================= */
+  var arrastado = null;
+  document.addEventListener('dragstart', function(e){
+    var c = e.target.closest && e.target.closest('.card'); if(!c) return;
+    arrastado = c.dataset.id; c.classList.add('arrastando');
+    e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', arrastado);
+  });
+  document.addEventListener('dragend', function(e){
+    var c = e.target.closest && e.target.closest('.card'); if(c) c.classList.remove('arrastando');
+    Array.prototype.forEach.call(document.querySelectorAll('.col.alvo'), function(x){ x.classList.remove('alvo'); });
+  });
+  document.addEventListener('dragover', function(e){
+    var col = e.target.closest && e.target.closest('.col'); if(!col || !arrastado) return;
+    e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+    Array.prototype.forEach.call(document.querySelectorAll('.col.alvo'), function(x){ if(x !== col) x.classList.remove('alvo'); });
+    col.classList.add('alvo');
+  });
+  document.addEventListener('drop', function(e){
+    var col = e.target.closest && e.target.closest('.col'); if(!col || !arrastado) return;
+    e.preventDefault(); col.classList.remove('alvo');
+    var id = arrastado; arrastado = null;
+    var alvoCard = e.target.closest('.card');
+    var irmaos = st.leads.filter(function(l){ return l.etapa === col.dataset.etapa && l.id !== id; })
+      .sort(function(a,b){ return (a.ordem||0) - (b.ordem||0); });
+    var ordem = irmaos.length ? (irmaos[irmaos.length-1].ordem||0) + 1 : 0;
+    if(alvoCard && alvoCard.dataset.id !== id){
+      var alvo = st.leads.filter(function(l){ return l.id === alvoCard.dataset.id; })[0];
+      if(alvo) ordem = (alvo.ordem||0) - 0.5;
+    }
+    mover(id, col.dataset.etapa, ordem);
+  });
+
+  function mover(id, etapa, ordem){
+    var l = st.leads.filter(function(x){ return x.id === id; })[0]; if(!l) return;
+    var antes = l.etapa;
+    var dados = { etapa: etapa };
+    if(ordem !== undefined) dados.ordem = ordem;
+    l.etapa = etapa; if(ordem !== undefined) l.ordem = ordem;
+    pintaBoard(); pintaDash();
+    grava(id, dados).then(function(linha){
+      if(!linha){ l.etapa = antes; pinta(); return; }
+      if(antes !== etapa){
+        registra(id, 'etapa', ETAPA[antes].n + ' → ' + ETAPA[etapa].n).then(function(){ pintaDash(); if(st.aberto === id) abre(id, true); });
+        toast(l.empresa + ' foi para ' + ETAPA[etapa].n + '.');
+      }
+      pinta();
+    });
+  }
+
+  /* ================= gaveta ================= */
+  var CAMPOS = [
+    ['empresa','Nome',''], ['etapa','Etapa','sel'],
+    ['segmento','Nicho',''], ['cidade','Bairro / cidade',''],
+    ['whatsapp','WhatsApp',''], ['instagram','Instagram',''],
+    ['site_url','Link do site','url'], ['proximo_contato','Próximo contato','date'],
+    ['valor_implantacao','Implantação (R$)','num'], ['valor_mensal','Mensalidade (R$)','num'],
+    ['valor_texto','Proposta como foi falada','long'], ['proximo_passo','Próximo passo','long'],
+    ['review','O que o site faz','area'], ['falta','O que falta confirmar','area'], ['notas','Notas','area']
+  ];
+
+  function abre(id, quieto){
+    var l = id ? st.leads.filter(function(x){ return x.id === id; })[0] : { etapa: 'site_pronto', links: [] };
+    if(id && !l) { fecha(); return; }
+    st.aberto = id || '__novo';
+    var g = $('#gaveta');
+    var links = '';
+    if(l.site_url && seguro(l.site_url)) links += '<a class="btn pri mini" href="' + esc(l.site_url) + '" target="_blank" rel="noopener">Abrir site ↗</a>';
+    (l.links || []).forEach(function(x){ if(seguro(x.url)) links += '<a class="btn mini" href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.rotulo) + ' ↗</a>'; });
+    if(wa(l.whatsapp)) links += '<a class="btn mini" href="' + esc(wa(l.whatsapp)) + '" target="_blank" rel="noopener">WhatsApp ↗</a>';
+    if(ig(l.instagram)) links += '<a class="btn mini" href="' + esc(ig(l.instagram)) + '" target="_blank" rel="noopener">Instagram ↗</a>';
+
+    var hist = id ? st.tl.filter(function(t){ return t.cliente_id === id; }) : [];
+    var seq = 0;
+    var form = CAMPOS.map(function(c){
+      var fid = 'g' + (++seq), v = l[c[0]], ctrl;
+      if(c[2] === 'sel') ctrl = '<select id="' + fid + '" name="' + c[0] + '">' + ETAPAS.map(function(e){ return '<option value="' + e.k + '"' + (e.k === l.etapa ? ' selected' : '') + '>' + esc(e.n) + '</option>'; }).join('') + '</select>';
+      else if(c[2] === 'area') ctrl = '<textarea id="' + fid + '" name="' + c[0] + '">' + esc(v || '') + '</textarea>';
+      else ctrl = '<input id="' + fid + '" name="' + c[0] + '" type="' + (c[2] === 'date' ? 'date' : c[2] === 'num' ? 'number' : c[2] === 'url' ? 'url' : 'text') + '"' + (c[2] === 'num' ? ' step="0.01" min="0"' : '') + ' value="' + esc(v === null || v === undefined ? '' : v) + '"' + (c[0] === 'empresa' ? ' required' : '') + '>';
+      return '<div' + (c[2] === 'area' || c[2] === 'long' || c[2] === 'url' ? ' style="grid-column:1/-1"' : '') + '><label for="' + fid + '">' + esc(c[1]) + '</label>' + ctrl + '</div>';
+    }).join('');
+
+    g.innerHTML =
+      '<div class="g-cab"><div><h2 id="g-nome">' + esc(id ? l.empresa : 'Novo lead') + '</h2>' +
+        (id ? '<div class="meta">' + esc(ETAPA[l.etapa] ? ETAPA[l.etapa].n : l.etapa) + (l.ultimo_contato ? ' · último contato ' + dm(l.ultimo_contato) : '') + '</div>' : '') + '</div>' +
+        '<button class="fechar" id="g-fechar" aria-label="Fechar">×</button></div>' +
+      '<div class="g-corpo">' +
+        (links ? '<div class="links">' + links + '</div>' : '') +
+        (id ? '<div class="acoes"><button class="btn ok" id="g-contatei">✓ Contatei hoje</button><a class="btn mini" href="index.html#' + esc(l.slug) + '">Ficha completa</a></div>' : '') +
+        '<form class="form" id="g-form"><div class="par" style="grid-template-columns:repeat(2,minmax(0,1fr))">' + form + '</div>' +
+        '<div class="linha-btn"><button class="btn pri" type="submit">Salvar</button><span class="msg" id="g-msg"></span></div></form>' +
+        (id ? '<div><div class="rot">Histórico</div><ul class="hist">' + (hist.length ? hist.map(function(t){
+          return '<li><span class="d">' + dm(t.data) + '</span><span class="t"><b>' + esc(t.tipo) + '</b>' + esc(t.texto) + '</span></li>';
+        }).join('') : '<li><span class="d"></span><span class="t">Sem registros.</span></li>') + '</ul></div>' : '') +
+      '</div>';
+    g.hidden = false; $('#veu').hidden = false;
+    if(!quieto) $('#g-fechar').focus();
+    $('#g-fechar').onclick = fecha;
+
+    var bc = $('#g-contatei');
+    if(bc) bc.onclick = function(){
+      var passo = $('#g-form [name=proximo_passo]').value.trim();
+      var dados = { ultimo_contato: hoje() };
+      if(l.etapa === 'site_pronto') dados.etapa = 'contatado';
+      if(!l.proximo_contato || l.proximo_contato <= hoje()) dados.proximo_contato = maisDias(3);
+      bc.disabled = true;
+      grava(l.id, dados).then(function(linha){
+        bc.disabled = false; if(!linha) return;
+        registra(l.id, 'contato', passo ? 'Contato feito. Pauta: ' + passo : 'Contato feito.').then(function(){
+          toast('Contato registrado. Próximo em ' + dm(linha.proximo_contato) + ' — ajuste se quiser.');
+          pinta();
+        });
+      });
+    };
+
+    $('#g-form').onsubmit = function(e){
+      e.preventDefault();
+      var d = {};
+      Array.prototype.forEach.call(this.querySelectorAll('[name]'), function(i){
+        var v = String(i.value || '').trim();
+        d[i.name] = v === '' ? null : (i.type === 'number' ? Number(v) : v);
+      });
+      if(!d.empresa){ $('#g-msg').className = 'msg erro'; $('#g-msg').textContent = 'Informe o nome.'; return; }
+      $('#g-msg').className = 'msg'; $('#g-msg').textContent = 'Salvando…';
+      if(id){
+        var mudouEtapa = d.etapa !== l.etapa, antes = l.etapa;
+        grava(id, d).then(function(linha){
+          if(!linha){ $('#g-msg').className = 'msg erro'; $('#g-msg').textContent = 'Não salvou.'; return; }
+          var fim = function(){ pinta(); $('#g-msg').className = 'msg ok'; $('#g-msg').textContent = 'Salvo.'; };
+          if(mudouEtapa) registra(id, 'etapa', ETAPA[antes].n + ' → ' + ETAPA[d.etapa].n).then(fim); else fim();
+        });
+      } else {
+        d.slug = d.empresa.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,50) + '-' + Date.now().toString(36).slice(-4);
+        d.site_criado_em = hoje(); d.desde = hoje();
+        sb.from('crm_clientes').insert(d).select().then(function(r){
+          if(r.error){ $('#g-msg').className = 'msg erro'; $('#g-msg').textContent = r.error.message; return; }
+          st.leads.push(r.data[0]); st.aberto = r.data[0].id; pinta(); toast('Lead criado.');
+        });
+      }
+    };
+  }
+  function fecha(){ st.aberto = null; $('#gaveta').hidden = true; $('#veu').hidden = true; }
+  $('#veu').addEventListener('click', fecha);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && st.aberto) fecha(); });
+
+  /* clique em card (sem arrastar) abre a gaveta */
+  document.addEventListener('click', function(e){
+    var c = e.target.closest('.card'); if(c){ abre(c.dataset.id); return; }
+    var a = e.target.closest('[data-abre]'); if(a){ abre(a.dataset.abre); return; }
+    var n = e.target.closest('[data-novo]'); if(n){ abre(null); return; }
+    var b = e.target.closest('.barra');
+    if(b){ var ek = b.dataset.etapa; if(ETAPA[ek].arq){ st.arquivo = true; $('#arquivo').checked = true; } irPara('pipeline'); pintaBoard();
+      var col = document.querySelector('.col[data-etapa="' + ek + '"]'); if(col) col.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'}); }
+  });
+  $('#busca').addEventListener('input', function(){ st.busca = this.value; pintaBoard(); });
+  $('#arquivo').addEventListener('change', function(){ st.arquivo = this.checked; try{ localStorage.setItem('zf_arq', this.checked ? '1' : ''); }catch(_){} pintaBoard(); });
+  try{ st.arquivo = localStorage.getItem('zf_arq') === '1'; $('#arquivo').checked = st.arquivo; }catch(_){}
+
+  /* ================= navegação ================= */
+  function irPara(v){
+    st.view = v;
+    if(location.hash !== '#' + v) history.replaceState(null, '', '#' + v);
+    Array.prototype.forEach.call(document.querySelectorAll('.view'), function(s){ s.classList.toggle('on', s.id === 'v-' + v); });
+    Array.prototype.forEach.call(document.querySelectorAll('.nav a[data-v]'), function(a){ a.classList.toggle('on', a.dataset.v === v); });
+  }
+  window.addEventListener('hashchange', function(){ var v = location.hash.slice(1); if(v === 'pipeline' || v === 'dashboard') irPara(v); });
+  irPara(location.hash === '#pipeline' ? 'pipeline' : 'dashboard');
+
+  /* ================= login ================= */
+  function mostraLogin(){ $('#login').hidden = false; $('#sair').hidden = true; $('#li-mail').focus(); }
+  function escondeLogin(){ $('#login').hidden = true; $('#sair').hidden = false; }
+  $('#loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = $('#li-btn'), erro = $('#li-erro');
+    erro.hidden = true; btn.disabled = true; btn.textContent = 'Entrando…';
+    ZyncAdmin.entrar($('#li-mail').value, $('#li-senha').value).then(function(r){
+      btn.disabled = false; btn.textContent = 'Entrar';
+      if(!r.ok){ erro.textContent = r.msg; erro.hidden = false; return; }
+      $('#li-senha').value = ''; carregar();
+    });
+  });
+  $('#sair').addEventListener('click', function(){ ZyncAdmin.sair().then(function(){ location.reload(); }); });
+
+  carregar();
+})();
+</script>
+</body>
+</html>

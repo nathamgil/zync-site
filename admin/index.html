@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-title" content="Zync">
 <meta name="robots" content="noindex, nofollow">
 <title>Painel — Zync</title>
-<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="admin.css?v=20261027">
 </head>
 <body>
 
@@ -38,6 +38,11 @@
 
 <div class="top">
   <div class="brand"><svg class="mira" viewBox="0 0 100 100" aria-hidden="true"><g class="seal" fill="none" stroke-width="7" stroke-linecap="round"><path d="M 90.57 60.87 A 42 42 0 0 1 60.87 90.57"/><path d="M 39.13 90.57 A 42 42 0 0 1 9.43 60.87"/><path d="M 9.43 39.13 A 42 42 0 0 1 39.13 9.43"/><path d="M 60.87 9.43 A 42 42 0 0 1 90.57 39.13"/></g><path class="z" d="M31 33 H69 L31 67 H69" fill="none" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle class="bull" cx="50" cy="50" r="6.5"/></svg><span class="wm"><b>ZYNC</b> <span>painel interno</span></span></div>
+  <nav class="nav" aria-label="Seções">
+    <a href="funil.html#dashboard">Dashboard</a>
+    <a href="funil.html#pipeline">Pipeline</a>
+    <a href="index.html" class="on">Fichas</a>
+  </nav>
   <div class="sp"></div>
   <span class="quem" id="quem"></span>
   <button class="btn" id="sair" hidden>Sair</button>
@@ -123,7 +128,7 @@ if ((window.ZYNC_ADMIN || {}).mode === 'local') {
   document.write('<scr' + 'ipt src="dados-locais.js"></scr' + 'ipt>');
 }
 </script>
-<script src="admin-data.js"></script>
+<script src="admin-data.js?v=20261027"></script>
 <script>
 (function(){
   'use strict';
@@ -591,6 +596,8 @@ if ((window.ZYNC_ADMIN || {}).mode === 'local') {
       escondeLogin();
       if(!res.ok){ avisar(res); return; }
       estado.clientes = res.clientes;
+      /* vindo do funil: index.html#slug abre a ficha direto */
+      if(!estado.sel && location.hash.length > 1) estado.sel = decodeURIComponent(location.hash.slice(1));
       var fechados = res.clientes.filter(function(c){ return c.status === 'cliente'; });
       var mrr = fechados.reduce(function(s,c){ return s + (Number(c.valor_mensal) || 0); }, 0);
       document.getElementById('quem').textContent =
