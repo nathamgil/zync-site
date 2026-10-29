@@ -16,18 +16,18 @@
 
 <div class="grid-bg" aria-hidden="true"></div>
 
-<!-- Porta de entrada. A segurança é a RLS: sem sessão de admin o banco não devolve nada. -->
+<!-- Porta de entrada. Os dados ficam num repositório PRIVADO do GitHub: sem um token
+     com acesso a ele, a página não tem o que mostrar. Este HTML é público; os dados não. -->
 <div class="login" id="login" hidden>
   <form class="login-card" id="loginForm">
     <div class="brand"><svg class="mira" viewBox="0 0 100 100" aria-hidden="true"><g class="seal" fill="none" stroke-width="7" stroke-linecap="round"><path d="M 90.57 60.87 A 42 42 0 0 1 60.87 90.57"/><path d="M 39.13 90.57 A 42 42 0 0 1 9.43 60.87"/><path d="M 9.43 39.13 A 42 42 0 0 1 39.13 9.43"/><path d="M 60.87 9.43 A 42 42 0 0 1 90.57 39.13"/></g><path class="z" d="M31 33 H69 L31 67 H69" fill="none" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle class="bull" cx="50" cy="50" r="6.5"/></svg><span class="wm"><b>ZYNC</b> <span>painel interno</span></span></div>
     <h2>Entrar</h2>
-    <label for="li-mail">E-mail</label>
-    <input id="li-mail" type="email" autocomplete="username" required>
-    <label for="li-senha">Senha</label>
-    <input id="li-senha" type="password" autocomplete="current-password" required>
+    <label for="li-token">Chave de acesso</label>
+    <input id="li-token" type="password" autocomplete="current-password" spellcheck="false" placeholder="github_pat_…" required>
+    <label class="chk" style="margin-top:4px"><input type="checkbox" id="li-lembrar" checked> Lembrar neste aparelho</label>
     <button class="btn pri" id="li-btn" type="submit">Entrar</button>
     <p class="login-erro" id="li-erro" hidden></p>
-    <p class="rodape">Acesso restrito à equipe Zync.</p>
+    <p class="rodape">Acesso restrito à equipe Zync. A chave é um token do GitHub com acesso só ao repositório de dados.</p>
   </form>
 </div>
 
@@ -36,7 +36,6 @@
   <nav class="nav" aria-label="Seções">
     <a href="#dashboard" data-v="dashboard">Dashboard</a>
     <a href="#pipeline" data-v="pipeline">Pipeline</a>
-    <a href="index.html">Fichas</a>
   </nav>
   <div class="sp"></div>
   <span class="quem" id="quem"></span>
@@ -90,12 +89,8 @@
 <aside class="gaveta" id="gaveta" hidden aria-labelledby="g-nome" role="dialog"></aside>
 <div class="toast" id="toast" hidden role="status"></div>
 
-<footer>Painel interno da Zync · dados protegidos por RLS · <a href="index.html">fichas completas</a></footer>
+<footer>Painel interno da Zync · dados num repositório privado · <span id="sync">—</span></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="../area-cliente/config.js"></script>
-<script src="config-admin.js"></script>
-<script src="admin-data.js?v=20261027"></script>
 <script>
 (function(){
   'use strict';
@@ -116,7 +111,6 @@
   var NEGOCIANDO = ['conversa','proposta'];
 
   var st = { leads: [], tl: [], busca: '', arquivo: false, aberto: null, view: 'dashboard' };
-  var sb = null;
   var $ = function(s){ return document.querySelector(s); };
 
   function esc(s){
@@ -146,40 +140,116 @@
     return {k:'', t:'sem data', o:'5'};
   }
 
-  /* ================= dados ================= */
-  function carregar(){
-    var P = window.ZYNC_CONFIG || {};
-    if(!P.supabaseUrl || !window.supabase){ toast('Supabase não configurado.', true); return Promise.resolve(); }
-    sb = window.__sbAdmin || (window.__sbAdmin = window.supabase.createClient(P.supabaseUrl, P.supabaseAnonKey));
-    return sb.auth.getUser().then(function(u){
-      if(!u || !u.data || !u.data.user){ mostraLogin(); return; }
-      escondeLogin();
-      return Promise.all([
-        sb.from('crm_clientes').select('*').order('ordem').order('empresa'),
-        sb.from('crm_timeline').select('*').order('data', {ascending:false}).order('criado_em', {ascending:false}).limit(400)
-      ]).then(function(r){
-        if(r[0].error){ toast('Erro ao ler o funil: ' + r[0].error.message, true); return; }
-        st.leads = r[0].data || [];
-        st.tl = (r[1].data) || [];
-        if(!st.leads.length) toast('O banco devolveu zero leads. Sua conta está na tabela admins?', true);
-        pinta();
+  /* ================= dados =================
+     Tudo mora em crm.json, num repositório PRIVADO do GitHub, lido e gravado pela API
+     com o token de quem entrou. Cada mudança vira um commit (histórico grátis).
+     Mudanças são aplicadas na tela na hora e enviadas em lote; se outra pessoa gravou
+     antes (conflito de sha), relê o arquivo, reaplica o que estava pendente e tenta de novo. */
+  var GH = { repo: 'nathamgil/zync-crm', path: 'crm.json', branch: 'main' };
+  var CHAVE = 'zync_crm_token';
+  var db = { versao: 1, clientes: [], timeline: [] }, sha = null, token = null;
+  var pendentes = [], enviando = false, timerEnvio = null;
+
+  function lerToken(){ try{ return localStorage.getItem(CHAVE) || sessionStorage.getItem(CHAVE); }catch(_){ return null; } }
+  function guardaToken(t, lembrar){ try{ (lembrar ? localStorage : sessionStorage).setItem(CHAVE, t); }catch(_){} }
+  function apagaToken(){ try{ localStorage.removeItem(CHAVE); sessionStorage.removeItem(CHAVE); }catch(_){} }
+
+  function api(metodo, corpo){
+    return fetch('https://api.github.com/repos/' + GH.repo + '/contents/' + GH.path + (metodo === 'GET' ? '?ref=' + GH.branch + '&t=' + Date.now() : ''), {
+      method: metodo, cache: 'no-store',
+      headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' },
+      body: corpo ? JSON.stringify(corpo) : undefined
+    });
+  }
+  function de64(b){ var bin = atob(b.replace(/\s/g,'')), u = new Uint8Array(bin.length); for(var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new TextDecoder().decode(u); }
+  function para64(s){ var u = new TextEncoder().encode(s), bin = ''; for(var i = 0; i < u.length; i += 0x8000) bin += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(bin); }
+
+  function lerArquivo(){
+    return api('GET').then(function(r){
+      if(r.status === 401) throw { login: true, msg: 'Chave inválida ou vencida.' };
+      if(r.status === 404 || r.status === 403) throw { login: true, msg: 'Essa chave não tem acesso ao repositório de dados.' };
+      if(!r.ok) throw { msg: 'GitHub respondeu ' + r.status + '.' };
+      return r.json();
+    }).then(function(j){
+      sha = j.sha;
+      db = JSON.parse(de64(j.content));
+      db.clientes = db.clientes || []; db.timeline = db.timeline || [];
+    });
+  }
+  function sincroniza(){
+    st.leads = db.clientes;
+    st.tl = db.timeline.slice().sort(function(a,b){ return (b.data||'').localeCompare(a.data||'') || (b.criado_em||'').localeCompare(a.criado_em||''); });
+  }
+  function marcaSync(t){ var e = $('#sync'); if(e) e.textContent = t; }
+
+  /* aplica a mudança já, e agenda o envio */
+  function muda(fn, msg){
+    fn(db); sincroniza();
+    pendentes.push({ fn: fn, msg: msg });
+    marcaSync('salvando…');
+    clearTimeout(timerEnvio); timerEnvio = setTimeout(envia, 600);
+  }
+  function envia(tentativa){
+    if(enviando || !pendentes.length) return;
+    enviando = true;
+    var lote = pendentes.slice();
+    var msg = lote.length === 1 ? lote[0].msg : lote.length + ' mudanças no funil';
+    api('PUT', { message: msg, content: para64(JSON.stringify(db, null, 1)), sha: sha, branch: GH.branch }).then(function(r){
+      if(r.ok) return r.json().then(function(j){
+        sha = j.content.sha; pendentes = pendentes.slice(lote.length); enviando = false;
+        marcaSync('salvo ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}));
+        if(pendentes.length) envia();
       });
+      if((r.status === 409 || r.status === 422) && (tentativa||0) < 3){
+        /* alguém gravou antes: relê e reaplica o que é nosso */
+        return lerArquivo().then(function(){
+          pendentes.forEach(function(p){ p.fn(db); }); sincroniza(); pinta();
+          enviando = false; envia((tentativa||0) + 1);
+        });
+      }
+      enviando = false;
+      if(r.status === 401 || r.status === 403) { toast('A chave não pode gravar. Crie com permissão de escrita.', true); marcaSync('NÃO salvo'); return; }
+      toast('Não salvou (GitHub ' + r.status + '). Tentando de novo em 10 s.', true); marcaSync('NÃO salvo — tentando de novo');
+      setTimeout(envia, 10000);
+    }).catch(function(){
+      enviando = false; marcaSync('sem internet — tentando de novo'); setTimeout(envia, 10000);
+    });
+  }
+  window.addEventListener('beforeunload', function(e){ if(pendentes.length){ e.preventDefault(); e.returnValue = ''; } });
+
+  function carregar(){
+    token = lerToken();
+    if(!token){ mostraLogin(); return Promise.resolve(); }
+    marcaSync('carregando…');
+    return lerArquivo().then(function(){
+      escondeLogin(); sincroniza(); pinta();
+      marcaSync('atualizado ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}));
+    }).catch(function(e){
+      if(e && e.login){ apagaToken(); mostraLogin(e.msg); return; }
+      toast('Não consegui ler os dados: ' + (e && e.msg || 'sem internet'), true); marcaSync('erro ao carregar');
     });
   }
 
+  function agora(){ return new Date().toISOString(); }
+  function uid(p){ return p + '-' + (crypto.randomUUID ? crypto.randomUUID().slice(0, 13) : Date.now().toString(36) + Math.random().toString(36).slice(2, 7)); }
+  function acha(d, id){ return d.clientes.filter(function(x){ return x.id === id; })[0]; }
+
+  /* mantém a assinatura antiga (Promise da linha gravada) para o resto da página */
   function grava(id, dados){
-    return sb.from('crm_clientes').update(dados).eq('id', id).select().then(function(r){
-      if(r.error){ toast('Não salvou: ' + r.error.message, true); return null; }
-      var linha = (r.data || [])[0];
-      if(linha){ st.leads = st.leads.map(function(l){ return l.id === id ? linha : l; }); }
-      return linha;
-    });
+    var l = acha(db, id); if(!l) return Promise.resolve(null);
+    muda(function(d){ var x = acha(d, id); if(x){ Object.assign(x, dados); x.atualizado_em = agora(); } }, 'Atualiza ' + l.empresa);
+    return Promise.resolve(acha(db, id));
   }
   function registra(id, tipo, texto, data){
-    var row = { cliente_id: id, tipo: tipo, texto: texto, data: data || hoje() };
-    return sb.from('crm_timeline').insert(row).select().then(function(r){
-      if(!r.error && r.data) st.tl = r.data.concat(st.tl);
-    });
+    var row = { id: uid('t'), cliente_id: id, tipo: tipo, texto: texto, data: data || hoje(), criado_em: agora() };
+    var l = acha(db, id);
+    muda(function(d){ if(!d.timeline.some(function(t){ return t.id === row.id; })) d.timeline.push(row); }, (tipo === 'etapa' ? 'Etapa: ' : 'Contato: ') + (l ? l.empresa : id));
+    return Promise.resolve(row);
+  }
+  function cria(dados){
+    var row = Object.assign({ id: uid('c'), links: [], ordem: 0, criado_em: agora() }, dados);
+    muda(function(d){ if(!acha(d, row.id)) d.clientes.push(row); }, 'Novo lead: ' + row.empresa);
+    return Promise.resolve(row);
   }
 
   /* ================= pintura ================= */
@@ -359,7 +429,7 @@
         '<button class="fechar" id="g-fechar" aria-label="Fechar">×</button></div>' +
       '<div class="g-corpo">' +
         (links ? '<div class="links">' + links + '</div>' : '') +
-        (id ? '<div class="acoes"><button class="btn ok" id="g-contatei">✓ Contatei hoje</button><a class="btn mini" href="index.html#' + esc(l.slug) + '">Ficha completa</a></div>' : '') +
+        (id ? '<div class="acoes"><button class="btn ok" id="g-contatei">✓ Contatei hoje</button></div>' : '') +
         '<form class="form" id="g-form"><div class="par" style="grid-template-columns:repeat(2,minmax(0,1fr))">' + form + '</div>' +
         '<div class="linha-btn"><button class="btn pri" type="submit">Salvar</button><span class="msg" id="g-msg"></span></div></form>' +
         (id ? '<div><div class="rot">Histórico</div><ul class="hist">' + (hist.length ? hist.map(function(t){
@@ -404,11 +474,8 @@
         });
       } else {
         d.slug = d.empresa.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,50) + '-' + Date.now().toString(36).slice(-4);
-        d.site_criado_em = hoje(); d.desde = hoje();
-        sb.from('crm_clientes').insert(d).select().then(function(r){
-          if(r.error){ $('#g-msg').className = 'msg erro'; $('#g-msg').textContent = r.error.message; return; }
-          st.leads.push(r.data[0]); st.aberto = r.data[0].id; pinta(); toast('Lead criado.');
-        });
+        d.site_criado_em = hoje();
+        cria(d).then(function(row){ st.aberto = row.id; pinta(); toast('Lead criado.'); });
       }
     };
   }
@@ -440,19 +507,29 @@
   irPara(location.hash === '#pipeline' ? 'pipeline' : 'dashboard');
 
   /* ================= login ================= */
-  function mostraLogin(){ $('#login').hidden = false; $('#sair').hidden = true; $('#li-mail').focus(); }
+  function mostraLogin(msg){
+    $('#login').hidden = false; $('#sair').hidden = true;
+    var erro = $('#li-erro'); erro.hidden = !msg; if(msg) erro.textContent = msg;
+    $('#li-token').focus();
+  }
   function escondeLogin(){ $('#login').hidden = true; $('#sair').hidden = false; }
   $('#loginForm').addEventListener('submit', function(e){
     e.preventDefault();
-    var btn = $('#li-btn'), erro = $('#li-erro');
-    erro.hidden = true; btn.disabled = true; btn.textContent = 'Entrando…';
-    ZyncAdmin.entrar($('#li-mail').value, $('#li-senha').value).then(function(r){
-      btn.disabled = false; btn.textContent = 'Entrar';
-      if(!r.ok){ erro.textContent = r.msg; erro.hidden = false; return; }
-      $('#li-senha').value = ''; carregar();
-    });
+    var btn = $('#li-btn'), t = $('#li-token').value.trim();
+    if(!t) return;
+    $('#li-erro').hidden = true; btn.disabled = true; btn.textContent = 'Entrando…';
+    guardaToken(t, $('#li-lembrar').checked);
+    $('#li-token').value = '';
+    carregar().then(function(){ btn.disabled = false; btn.textContent = 'Entrar'; });
   });
-  $('#sair').addEventListener('click', function(){ ZyncAdmin.sair().then(function(){ location.reload(); }); });
+  $('#sair').addEventListener('click', function(){
+    if(pendentes.length && !confirm('Ainda há mudanças salvando. Sair mesmo assim?')) return;
+    apagaToken(); location.reload();
+  });
+  /* voltar para a aba: relê, para ver o que o sócio mudou */
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible' && token && !pendentes.length && !enviando && !st.aberto) carregar();
+  });
 
   carregar();
 })();
